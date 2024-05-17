@@ -1,0 +1,35 @@
+// =============================================================================
+// Global CSS reset
+// =============================================================================
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--gradient-background);
+    min-height: 100vh;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+img,
+svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+}

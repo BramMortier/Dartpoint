@@ -15,9 +15,9 @@ api.doc("/doc", {
     openapi: "3.0.0",
     info: {
         version: "1.0.0",
-        title: "JWT auth flow",
+        title: "Dartpoint",
         description:
-            "An example API that has a JWT auth flow built in for authentication & authorization. It makes use of refresh and accestokens to protect the API's resources",
+            "This is the central api that serves as a backbone for the dartpoint platform. It handles authentication and authorization. Realtime datastreaming using Pusher.js and CRUD operations on the PostgreSQL database",
     },
 });
 

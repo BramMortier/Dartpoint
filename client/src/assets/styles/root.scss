@@ -1,0 +1,56 @@
+// =============================================================================
+// Color propreties
+// =============================================================================
+:root {
+    --clr-turqoise-500: #14a085;
+    --clr-turqoise-700: #147763;
+
+    --gradient-turqoise: linear-gradient(90deg, var(--clr-turqoise-500), var(--clr-turqoise-700));
+
+    --clr-red-500: #d8483c;
+    --clr-red-700: #b52426;
+
+    --gradient-red: linear-gradient(90deg, var(--clr-red-500), var(--clr-red-700));
+
+    --clr-neutral-100: #dedede;
+    --clr-neutral-200: #dedede;
+    --clr-neutral-300: #dedede;
+    --clr-neutral-400: #939393;
+    --clr-neutral-500: #515151;
+    --clr-neutral-600: #363636;
+    --clr-neutral-700: #292929;
+    --clr-neutral-800: #151516;
+    --clr-neutral-900: #121212;
+
+    --gradient-background: linear-gradient(120deg, var(--clr-neutral-900), var(--clr-black));
+
+    --clr-black: #000;
+    --clr-white: #fff;
+
+    --clr-error-border: #d8483c;
+    --clr-error-glow: #d8493c80;
+}
+
+// =============================================================================
+// Extra propreties
+// =============================================================================
+:root {
+    $border-radius-values: (5, 10, 15, 20);
+
+    @each $value in $border-radius-values {
+        --border-radius-#{$value}: #{$value}px;
+    }
+
+    --border-radius-round: 100%;
+}
+
+// =============================================================================
+// Spacing propreties
+// =============================================================================
+:root {
+    $spacing-values: (1, 4, 8, 12, 16, 20, 24, 32, 48, 64, 80, 96, 112, 128, 144, 160);
+
+    @each $value in $spacing-values {
+        --space-#{$value}: #{calc($value / 16)}rem;
+    }
+}

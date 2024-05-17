@@ -1,0 +1,142 @@
+@use "@/assets/styles/mixins.scss" as *;
+
+// =============================================================================
+// Typography propreties
+// =============================================================================
+:root {
+    --font: "Campton", sans-serif;
+
+    $font-size-values: (16, 18, 20, 24, 32, 48, 64, 96, 256);
+
+    @each $size in $font-size-values {
+        --fs-#{$size}: #{calc($size / 16)}rem;
+    }
+
+    $font-weight-values: (400, 500);
+
+    @each $weight in $font-weight-values {
+        --fw-#{$weight}: #{$weight};
+    }
+
+    $line-height-values: (
+        "none": 1,
+        "tight": 1.1,
+        "narrow": 1.4,
+        "spacious": 1.6,
+        "wide": 1.8,
+        "double": 2
+    );
+
+    @each $key, $value in $line-height-values {
+        --lh-#{$key}: #{$value};
+    }
+
+    $letter-spacing-values: (1, 2, 3, 4, 5);
+
+    @each $value in $letter-spacing-values {
+        --ls-#{$value}: #{$value};
+    }
+}
+
+// =============================================================================
+// Heading typos
+// =============================================================================
+h1,
+.typo-h1 {
+    font-size: var(--fs-32);
+    font-family: var(--font);
+    font-weight: 500;
+    line-height: var(--lh-tight);
+    color: var(--clr-neutral-100);
+
+    @include styles-for(tablet) {
+        font-size: var(--fs-48);
+    }
+
+    @include styles-for(desktop) {
+        font-size: var(--fs-64);
+    }
+}
+
+h2,
+.typo-h2 {
+    font-size: var(--fs-24);
+    font-family: var(--font);
+    font-weight: 500;
+    line-height: var(--lh-narrow);
+    color: var(--clr-neutral-100);
+
+    @include styles-for(desktop) {
+        font-size: var(--fs-32);
+    }
+}
+
+h3,
+.typo-h3 {
+    font-size: var(--fs-20);
+    font-family: var(--font);
+    font-weight: 500;
+    line-height: var(--lh-narrow);
+    color: var(--clr-neutral-100);
+
+    @include styles-for(desktop) {
+        font-size: var(--fs-24);
+    }
+}
+
+h4,
+.typo-h4 {
+    font-size: var(--fs-16);
+    font-family: var(--font);
+    font-weight: 500;
+    line-height: var(--lh-spacious);
+    color: var(--clr-neutral-100);
+
+    @include styles-for(desktop) {
+        font-size: var(--fs-20);
+    }
+}
+
+// =============================================================================
+// Body typos
+// =============================================================================
+p,
+.typo-body {
+    font-size: var(--fs-16);
+    font-family: var(--font);
+    font-weight: 400;
+    line-height: var(--lh-spacious);
+    color: var(--clr-neutral-400);
+
+    @include styles-for(desktop) {
+        font-size: var(--fs-18);
+    }
+}
+
+p.typo-body-large {
+    font-size: var(--fs-16);
+    font-family: var(--font);
+    font-weight: 400;
+    line-height: var(--lh-spacious);
+    color: var(--clr-neutral-400);
+
+    @include styles-for(desktop) {
+        font-size: var(--fs-24);
+    }
+}
+
+// =============================================================================
+// Extra typos
+// =============================================================================
+label,
+.typo-label {
+    font-size: var(--fs-16);
+    font-family: var(--font);
+    font-weight: var(--fw-500);
+    line-height: var(--lh-spacious);
+    color: var(--clr-neutral-100);
+
+    @include styles-for(desktop) {
+        font-size: var(--fs-20);
+    }
+}

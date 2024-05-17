@@ -1,8 +1,4 @@
 // =============================================================================
-// SCSS module imports
+// Icon component exports
 // =============================================================================
-@use "./root.scss";
-@use "./mixins.scss";
-@use "./reset.scss";
-@use "./typography.scss";
-@use "./fonts.scss";
+export { default as WordmarkHorizontalLight } from "@/components/icons/WordmarkHorizontalLight.vue"
