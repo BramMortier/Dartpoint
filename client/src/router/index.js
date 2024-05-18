@@ -1,24 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router"
 
+import { generalRoutes } from "@/router/routes/general"
+import { profileRoutes } from "@/router/routes/profile"
+import { gameRoutes } from "@/router/routes/game"
+import { authRoutes } from "@/router/routes/auth"
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
-    routes: [
-        {
-            path: "/register",
-            name: "registerPage",
-            component: () => import("@/views/RegisterPage.vue")
-        },
-        {
-            path: "/login",
-            name: "loginPage",
-            component: () => import("@/views/LoginPage.vue")
-        },
-        {
-            path: "/playground",
-            name: "playgroundPage",
-            component: () => import("@/views/PlaygroundPage.vue")
-        }
-    ]
+    routes: [...authRoutes, ...profileRoutes, ...gameRoutes, ...generalRoutes]
 })
 
 export default router

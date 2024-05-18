@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <div>DashboardPage</div>
+    <h1>DashboardPage</h1>
 </template>
 
 <style scoped lang="scss"></style>

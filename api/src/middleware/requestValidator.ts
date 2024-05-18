@@ -1,7 +1,13 @@
+// =============================================================================
+// Imports
+// =============================================================================
 import { MiddlewareHandler } from "hono";
 import { formattedErrorResponse } from "../utils/formattedResponse";
 import { ZodSchema } from "zod/lib";
 
+// =============================================================================
+// Middleware handler
+// =============================================================================
 export const validateRequest = (schema: ZodSchema): MiddlewareHandler => {
     // TODO: add the validated object to the c.req.valid prop
     return async (c, next) => {

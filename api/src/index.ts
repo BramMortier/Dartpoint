@@ -1,3 +1,6 @@
+// =============================================================================
+// Imports
+// =============================================================================
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 
@@ -9,6 +12,12 @@ import { userRouter } from "./router/users";
 import { authRouter } from "./router/auth";
 import { protectedRouter } from "./router/protected";
 
+import { pusher } from "./config/pusher";
+// TODO: add path aliases
+
+// =============================================================================
+// Initialize Hono with OpenAPI
+// =============================================================================
 const api = new OpenAPIHono();
 
 api.doc("/doc", {
@@ -21,7 +30,19 @@ api.doc("/doc", {
     },
 });
 
+// =============================================================================
+// Routes & middleware configuration
+// =============================================================================
 api.get("/ui", swaggerUI({ url: "/doc" }));
+
+// =============================================================================
+// Pusher event test
+// =============================================================================
+api.get("/pusher", (c) => {
+    pusher.trigger("test-channel", "test-event", { message: "Hello from pusher" });
+
+    return c.json("test event send");
+});
 
 api.use(cors());
 api.use(logger());

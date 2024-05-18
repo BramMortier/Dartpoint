@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <div>EnterGameCodePage</div>
+    <h1>EnterGameCodePage</h1>
 </template>
 
 <style scoped lang="scss"></style>

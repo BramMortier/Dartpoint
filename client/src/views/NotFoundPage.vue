@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <h1>GameSettingsPage</h1>
+    <h1>404Page</h1>
 </template>
 
 <style scoped lang="scss"></style>

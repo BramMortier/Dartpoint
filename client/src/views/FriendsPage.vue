@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <div>FriendsPage</div>
+    <h1>FriendsPage</h1>
 </template>
 
 <style scoped lang="scss"></style>

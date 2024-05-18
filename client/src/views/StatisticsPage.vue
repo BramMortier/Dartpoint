@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <div>StatisticsPage</div>
+    <h1>StatisticsPage</h1>
 </template>
 
 <style scoped lang="scss"></style>

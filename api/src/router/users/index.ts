@@ -1,9 +1,15 @@
+// =============================================================================
+// Imports
+// =============================================================================
 import { OpenAPIHono } from "@hono/zod-openapi";
 
 import { getUsersRoute, getUsersHandler } from "./getUsers";
 import { getUserHandler, getUserRoute } from "./getUser";
 import { deleteUserHandler, deleteUserRoute } from "./deleteUser";
 
+// =============================================================================
+// Router configuration
+// =============================================================================
 const userRouter = new OpenAPIHono();
 
 userRouter.openapi(getUsersRoute, getUsersHandler);

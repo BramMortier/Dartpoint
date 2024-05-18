@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <div>GameHistoryPage</div>
+    <h1>GameHistoryPage</h1>
 </template>
 
 <style scoped lang="scss"></style>

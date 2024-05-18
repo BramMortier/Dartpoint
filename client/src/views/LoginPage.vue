@@ -68,7 +68,6 @@ const testLogout = async () => {
                 <BaseButton>Login</BaseButton>
             </Form>
         </BaseContainer>
-        <!-- <BaseButton @click="testLogout" class="base-button--secondary">Logout</BaseButton> -->
     </div>
 </template>
 

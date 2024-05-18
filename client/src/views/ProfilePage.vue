@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <div>ProfilePage</div>
+    <h1>ProfilePage</h1>
 </template>
 
 <style scoped lang="scss"></style>
