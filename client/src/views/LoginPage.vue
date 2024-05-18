@@ -77,8 +77,7 @@ const testLogout = async () => {
 .login-page {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-
-    padding: var(--space-32);
+    gap: var(--space-32);
 
     &__form {
         display: flex;
