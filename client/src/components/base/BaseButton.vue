@@ -41,6 +41,10 @@ const props = defineProps({
     &:focus {
         cursor: pointer;
         box-shadow: 0 0 0 6px var(--clr-neutral-700);
+
+        @include styles-for(desktop) {
+            box-shadow: 0 0 0 8px var(--clr-neutral-700);
+        }
     }
 
     @include styles-for(desktop) {

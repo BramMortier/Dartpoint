@@ -1,7 +1,6 @@
 <script setup>
 import { Form } from "vee-validate"
 import * as yup from "yup"
-import { BaseButton, BaseInput, BaseContainer, BaseIcon } from "@/components/base"
 
 const handleSubmit = async (values) => {
     console.log(values)

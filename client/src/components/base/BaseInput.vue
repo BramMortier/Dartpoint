@@ -3,13 +3,16 @@
 // Imports
 // =============================================================================
 import { useField } from "vee-validate"
+import { ref } from "vue"
 
 // =============================================================================
 // Props & Events
 // =============================================================================
 const props = defineProps({
+    id: String,
     name: { type: String, required: true },
     type: { type: String, default: "text" },
+    hint: String,
     label: String,
     placeholder: String
 })
@@ -17,23 +20,51 @@ const props = defineProps({
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const isPasswordVisible = ref(props.type === "password" ? false : true)
+
 const { value, errorMessage } = useField(() => props.name)
+
+// =============================================================================
+// Functions
+// =============================================================================
+const togglePasswordVisibility = () => {
+    isPasswordVisible.value = !isPasswordVisible.value
+}
 </script>
 
 <template>
     <div class="base-input">
         <div v-if="props.label" class="base-input__top">
-            <label :for="props.name">{{ props.label }}</label>
+            <label :for="props.id">{{ props.label }}</label>
         </div>
-        <input
-            class="base-input__field"
-            :class="{ 'base-input__field--error': errorMessage }"
-            v-model="value"
-            :type="props.type"
-            :name="props.name"
-            :placeholder="props.placeholder"
-            autocomplete="off"
-        />
+
+        <p class="base-input__hint" v-if="props.hint">{{ props.hint }}</p>
+
+        <div class="base-input__field-container">
+            <input
+                class="base-input__field"
+                :id="props.id"
+                :class="{ 'base-input__field--error': errorMessage }"
+                :type="isPasswordVisible ? 'text' : 'password'"
+                :name="props.name"
+                :placeholder="props.placeholder"
+                v-model="value"
+                autocomplete="off"
+            />
+
+            <div
+                v-if="props.type === 'password'"
+                @click="togglePasswordVisibility"
+                class="base-input__visibility-toggle"
+            >
+                <BaseIcon
+                    class="base-input__visibility-toggle-icon"
+                    :name="isPasswordVisible ? 'eye-open' : 'eye-closed'"
+                />
+            </div>
+        </div>
+
+        <p class="typo-error-message" v-if="errorMessage">{{ errorMessage }}</p>
     </div>
 </template>
 
@@ -52,6 +83,49 @@ const { value, errorMessage } = useField(() => props.name)
 
     &__top {
         display: flex;
+    }
+
+    &__hint {
+        margin-bottom: var(--space-4);
+
+        @include styles-for(desktop) {
+            margin-bottom: var(--space-8);
+        }
+    }
+
+    &__visibility-toggle {
+        position: absolute;
+        right: var(--space-16);
+        top: 50%;
+        transform: translateY(-50%);
+
+        @include styles-for(desktop) {
+            right: var(--space-24);
+        }
+
+        & > .base-icon {
+            width: 1.5rem;
+            color: var(--clr-neutral-400);
+
+            transition: all ease-in 0.15s;
+
+            @include styles-for(desktop) {
+                width: 2rem;
+            }
+
+            &:hover {
+                cursor: pointer;
+                color: var(--clr-neutral-100);
+            }
+        }
+    }
+
+    &__field-container {
+        position: relative;
+
+        @include styles-for(desktop) {
+            max-width: 50rem;
+        }
     }
 
     &__field {
@@ -76,7 +150,6 @@ const { value, errorMessage } = useField(() => props.name)
             font-size: var(--fs-18);
             padding-inline: var(--space-24);
             height: 4rem;
-            max-width: 50rem;
         }
 
         &:hover,

@@ -1,7 +1,14 @@
-<script setup></script>
+<script setup>
+// =============================================================================
+// Props & Events
+// =============================================================================
+const props = defineProps({
+    class: String
+})
+</script>
 
 <template>
-    <div class="base-container">
+    <div class="base-container" :class="props.class">
         <slot></slot>
     </div>
 </template>

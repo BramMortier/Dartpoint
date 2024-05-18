@@ -19,9 +19,11 @@
     "vee-validate": "^4.12.8",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
+    "wretch": "^2.8.1",
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.13.4",
     "@rushstack/eslint-patch": "^1.8.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-prettier": "^9.0.0",

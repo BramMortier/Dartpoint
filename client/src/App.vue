@@ -2,16 +2,13 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import PlaygroundPage from "@/views/PlaygroundPage.vue"
+import { RouterView } from "vue-router"
 </script>
 
 <template>
     <div class="app">
-        <PlaygroundPage />
+        <RouterView />
     </div>
 </template>
 
-<style scoped lang="scss">
-.app {
-}
-</style>
+<style scoped lang="scss"></style>

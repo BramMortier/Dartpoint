@@ -2,7 +2,7 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { WordmarkHorizontalLight } from "@/components/icons"
+import { WordmarkHorizontalLight, EyeClosed, EyeOpen } from "@/components/icons"
 
 // =============================================================================
 // Props & Events
@@ -15,12 +15,14 @@ const props = defineProps({
 // Composables, Refs & Computed
 // =============================================================================
 const iconMap = {
-    "wordmark-horizontal-light": WordmarkHorizontalLight
+    "wordmark-horizontal-light": WordmarkHorizontalLight,
+    "eye-open": EyeOpen,
+    "eye-closed": EyeClosed
 }
 </script>
 
 <template>
-    <component :class="props.class" :is="iconMap[props.name]" />
+    <component class="base-icon" :class="props.class" :is="iconMap[props.name]" />
 </template>
 
 <style scoped lang="scss"></style>

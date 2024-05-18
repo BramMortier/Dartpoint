@@ -5,6 +5,7 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { setCookie } from "hono/cookie";
 import { sign } from "hono/jwt";
 import { Handler } from "hono";
+import { SignatureKey } from "hono/utils/jwt/jws";
 import { db } from "../../config/db";
 
 import { userSchema } from "../../models/user";
@@ -106,7 +107,7 @@ export const loginHandler: Handler = async (c) => {
             iat: Math.floor(Date.now() / 1000),
         };
 
-        const accessToken = await sign(tokenPayload, process.env.JWT_SECRET);
+        const accessToken = await sign(tokenPayload, process.env.JWT_SECRET as SignatureKey);
 
         setCookie(c, "token", accessToken, {
             httpOnly: true,
