@@ -25,11 +25,11 @@ useSeoMeta({
     ogDescription: description
 })
 
-// const channel = pusher.subscribe("test-channel")
+const channel = pusher.subscribe("test-channel")
 
-// channel.bind("test-event", (data) => {
-//     console.log(data)
-// })
+channel.bind("test-event", (data) => {
+    console.log(data)
+})
 </script>
 
 <template>

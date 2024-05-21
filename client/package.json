@@ -16,6 +16,7 @@
   "dependencies": {
     "@unhead/vue": "^1.9.10",
     "@vueuse/core": "^10.9.0",
+    "ky": "^1.2.4",
     "pinia": "^2.1.7",
     "pusher-js": "^8.4.0-rc2",
     "sass": "^1.77.1",

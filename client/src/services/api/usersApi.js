@@ -1,7 +1,7 @@
 import { apiClient } from "@/services/api/client"
 
 const getUsers = async () => {
-    return await apiClient.url("/users").get().json()
+    return apiClient.get("/users").json()
 }
 
 export const userApi = {

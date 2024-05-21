@@ -1,3 +1,3 @@
-import wretch from "wretch"
+import ky from "ky"
 
-export const apiClient = wretch("http://localhost:3000", { mode: "cors" })
+export const apiClient = ky.create({ prefixUrl: "http://localhost:3000", throwHttpErrors: false })

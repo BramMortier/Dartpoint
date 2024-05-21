@@ -25,7 +25,7 @@ const { width: screenWidth } = useWindowSize()
     <header class="header">
         <BaseIcon
             class="header__logo"
-            :name="screenWidth > 768 ? 'logo-wordmark-horizontal-light' : 'logo-icon-light'"
+            :name="screenWidth > 768 ? 'logo-wordmark-horizontal' : 'logo-icon'"
         />
 
         <div v-if="isLoggedIn" class="header__connected-board">
@@ -47,7 +47,7 @@ const { width: screenWidth } = useWindowSize()
                 <div class="header__user-status">
                     <div></div>
 
-                    <p>Online, Browsing Dashboard</p>
+                    <p>Online, Chilling</p>
 
                     <BaseIcon name="chevron-down" />
                 </div>
@@ -79,6 +79,7 @@ const { width: screenWidth } = useWindowSize()
         max-height: 2.75rem;
         height: 100%;
         width: auto;
+        color: var(--clr-neutral-100);
 
         @include styles-for(tablet) {
             max-height: 3rem;
@@ -155,6 +156,7 @@ const { width: screenWidth } = useWindowSize()
             width: 1rem;
             border-radius: var(--border-radius-round);
             background: var(--gradient-turqoise);
+            border: 2px solid var(--clr-turqoise-500);
         }
 
         & > .base-icon {
