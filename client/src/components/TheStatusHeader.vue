@@ -66,17 +66,23 @@ const { width: screenWidth } = useWindowSize()
 @use "@/assets/styles/mixins.scss" as *;
 
 .header {
-    display: grid;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    grid-template-columns: 1fr 2fr;
 
     @include styles-for(desktop) {
+        display: grid;
         grid-template-columns: repeat(3, 1fr);
     }
 
     &__logo {
-        height: 3rem;
-        width: fit-content;
+        max-height: 2.75rem;
+        height: 100%;
+        width: auto;
+
+        @include styles-for(tablet) {
+            max-height: 3rem;
+        }
     }
 
     &__connected-board {
@@ -106,15 +112,19 @@ const { width: screenWidth } = useWindowSize()
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: var(--space-24);
+        gap: var(--space-16);
+
+        @include styles-for(desktop) {
+            gap: var(--space-24);
+        }
     }
 
     &__user-profile-picture {
         width: 3.125rem;
         height: 3.125rem;
         border-radius: var(--border-radius-10);
-        outline: 2px solid var(--clr-turqoise-500);
-        outline-offset: 4px;
+        border: 2px solid var(--clr-turqoise-500);
+        padding: var(--space-4);
 
         @include styles-for(tablet) {
             width: 4.375rem;
@@ -125,7 +135,6 @@ const { width: screenWidth } = useWindowSize()
     &__user-info {
         display: flex;
         align-items: flex-end;
-        height: fit-content;
         justify-content: center;
         flex-direction: column;
         gap: var(--space-4);

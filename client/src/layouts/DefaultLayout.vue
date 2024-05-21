@@ -40,7 +40,15 @@ import { TheStatusHeader } from "@/components/index"
         grid-column: 3 / 4;
         display: flex;
         flex-direction: column;
-        gap: var(--space-32);
+        gap: var(--space-16);
+
+        @include styles-for(tablet) {
+            gap: var(--space-24);
+        }
+
+        @include styles-for(desktop) {
+            gap: var(--space-32);
+        }
     }
 
     main {
