@@ -95,6 +95,7 @@ const togglePasswordVisibility = () => {
 
     &__visibility-toggle {
         position: absolute;
+        display: flex;
         right: var(--space-16);
         top: 50%;
         transform: translateY(-50%);

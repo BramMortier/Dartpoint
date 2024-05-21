@@ -93,8 +93,13 @@ const handleRegisterFormSubmit = async (values) => {
 
 .register-page {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: var(--space-32);
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-16);
+
+    @include styles-for(tablet) {
+        grid-template-columns: repeat(12, 1fr);
+        gap: var(--space-32);
+    }
 
     &__form {
         display: flex;

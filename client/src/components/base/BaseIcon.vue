@@ -2,7 +2,13 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { WordmarkHorizontalLight, EyeClosed, EyeOpen } from "@/components/icons"
+import {
+    LogoWordmarkHorizontalLight,
+    LogoIconLight,
+    EyeClosed,
+    EyeOpen,
+    ChevronDown
+} from "@/components/icons"
 
 // =============================================================================
 // Props & Events
@@ -15,9 +21,11 @@ const props = defineProps({
 // Composables, Refs & Computed
 // =============================================================================
 const iconMap = {
-    "wordmark-horizontal-light": WordmarkHorizontalLight,
+    "logo-wordmark-horizontal-light": LogoWordmarkHorizontalLight,
+    "logo-icon-light": LogoIconLight,
     "eye-open": EyeOpen,
-    "eye-closed": EyeClosed
+    "eye-closed": EyeClosed,
+    "chevron-down": ChevronDown
 }
 </script>
 

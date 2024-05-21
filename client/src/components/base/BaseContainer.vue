@@ -8,9 +8,9 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="base-container" :class="props.class">
+    <section class="base-container" :class="props.class">
         <slot></slot>
-    </div>
+    </section>
 </template>
 
 <style scoped lang="scss">

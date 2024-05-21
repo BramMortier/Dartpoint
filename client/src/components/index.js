@@ -1,4 +1,4 @@
 // =============================================================================
-// Layout component exports
+// General component exports
 // =============================================================================
-export { default as DefaultLayout } from "@/layouts/DefaultLayout.vue"
+export { default as TheStatusHeader } from "@/components/TheStatusHeader.vue"

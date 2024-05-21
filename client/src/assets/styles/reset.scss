@@ -15,7 +15,6 @@ html {
 
 body {
     background: var(--gradient-background);
-    min-height: 100vh;
 }
 
 ol,
@@ -23,8 +22,7 @@ ul {
     list-style: none;
 }
 
-img,
-svg {
+img {
     width: 100%;
     height: auto;
     display: block;
