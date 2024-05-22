@@ -6,7 +6,7 @@ import { RouterView } from "vue-router"
 import { pusher } from "@/services/pusher/index"
 import { useSeoMeta } from "@unhead/vue"
 import { useRoute } from "vue-router"
-import { computed, onMounted } from "vue"
+import { computed } from "vue"
 import { DefaultLayout } from "@/layouts/index"
 
 // =============================================================================
@@ -25,7 +25,7 @@ useSeoMeta({
     ogDescription: description
 })
 
-const channel = pusher.subscribe("test-channel")
+const channel = pusher.subscribe("friend-requests")
 
 channel.bind("test-event", (data) => {
     console.log(data)

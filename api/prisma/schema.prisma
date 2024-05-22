@@ -19,7 +19,11 @@ model User {
     updatedAt DateTime @default(now())
 
     ownedBoards Board[]
-    boards      BoardUsers[]
+
+    boards BoardUsers[]
+
+    friends   UserFriends[] @relation("friends")
+    friendsOf UserFriends[] @relation("friends-of")
 
     @@map("users")
 }
@@ -52,4 +56,17 @@ model BoardUsers {
 
     @@id([userId, boardId])
     @@map("board_users")
+}
+
+model UserFriends {
+    user     User @relation("friends", fields: [userId], references: [id], map: "friends")
+    userId   Int
+    friend   User @relation("friends-of", fields: [userId], references: [id], map: "friends-of")
+    friendId Int
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+
+    @@id([userId, friendId])
+    @@map("user_friends")
 }

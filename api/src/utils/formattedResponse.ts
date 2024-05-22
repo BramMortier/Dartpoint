@@ -10,7 +10,7 @@ export const formattedSuccesResponse = (
     c: Context,
     status: number,
     message?: string,
-    body?: object
+    body?: any
 ) => {
     return c.json({ status, message, body }, { status });
 };
@@ -19,7 +19,7 @@ export const formattedErrorResponse = (
     c: Context,
     status: number,
     message?: string,
-    error?: object
+    error?: any
 ) => {
     return c.json({ status, message, error }, { status });
 };
