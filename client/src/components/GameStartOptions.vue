@@ -100,6 +100,11 @@
             align-items: center;
             gap: var(--space-16);
             z-index: 1;
+
+            & > .base-icon {
+                height: 1.25rem;
+                width: auto;
+            }
         }
     }
 

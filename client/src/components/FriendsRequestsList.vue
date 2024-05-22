@@ -17,7 +17,9 @@
 </script>
 
 <template>
-    <h2>FriendsRequestsList</h2>
+    <div class="friends-requests-list">
+        <h2>Recent friend requests</h2>
+    </div>
 </template>
 
 <style scoped lang="scss"></style>

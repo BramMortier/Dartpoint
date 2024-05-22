@@ -1,7 +1,9 @@
 <template>
-    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="37" height="24" viewBox="0 0 37 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
-            d="M-1.16074e-06 11.75L15.2125 11.75L8.225 18.7375L10 20.5L20 10.5L10 0.5L8.2375 2.2625L15.2125 9.25L-1.3793e-06 9.25L-1.16074e-06 11.75Z"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M31.1285 10.6204L22.4541 1.94878L24.4057 -1.09331e-06L36.4043 11.9986L24.4057 24L22.4541 22.0485L31.1285 13.3768L0.000484397 13.3768L0.000484638 10.6204L31.1285 10.6204Z"
             fill="currentColor"
         />
     </svg>

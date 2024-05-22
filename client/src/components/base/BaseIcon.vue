@@ -8,7 +8,8 @@ import {
     EyeClosed,
     EyeOpen,
     ChevronDown,
-    ArrowRight
+    ArrowRight,
+    ArrowLeft
 } from "@/components/icons"
 
 // =============================================================================
@@ -27,7 +28,8 @@ const iconMap = {
     "eye-open": EyeOpen,
     "eye-closed": EyeClosed,
     "chevron-down": ChevronDown,
-    "arrow-right": ArrowRight
+    "arrow-right": ArrowRight,
+    "arrow-left": ArrowLeft
 }
 </script>
 

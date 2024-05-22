@@ -12,7 +12,24 @@ export const profileRoutes = [
     {
         path: "/profile/friends",
         name: "FriendsPage",
-        component: () => import("@/views/FriendsPage.vue")
+        component: () => import("@/views/FriendsPage.vue"),
+        children: [
+            {
+                path: "",
+                name: "FriendsList",
+                component: () => import("@/components/FriendsList.vue")
+            },
+            {
+                path: "send-request",
+                name: "FriendsSendRequest",
+                component: () => import("@/components/FriendsSendRequest.vue")
+            },
+            {
+                path: "requests",
+                name: "FriendsRequestsList",
+                component: () => import("@/components/FriendsRequestsList.vue")
+            }
+        ]
     },
     {
         path: "/profile/games",

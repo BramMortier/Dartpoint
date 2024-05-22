@@ -11,7 +11,7 @@ const props = defineProps({
 <template>
     <section
         class="base-container"
-        :class="[props.class, { 'base-container--clickable': props.isClickable }]"
+        :class="[props.class, { 'base-container--not-clickable': props.isClickable }]"
     >
         <slot></slot>
     </section>
@@ -35,7 +35,7 @@ const props = defineProps({
         gap: var(--space-32);
     }
 
-    &--clickable {
+    &--not-clickable {
         &:hover,
         &:focus {
             cursor: pointer;

@@ -3,6 +3,7 @@
 // Imports
 // =============================================================================
 import { FriendsList, FriendsRequestsList, FriendsSendRequest } from "@/components/index"
+import { useRouter, RouterView } from "vue-router"
 import { ref } from "vue"
 
 // =============================================================================
@@ -12,43 +13,30 @@ import { ref } from "vue"
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-const tabOptions = {
-    list: "list",
-    requestsList: "requests-list",
-    sendRequest: "send-request"
-}
-const activeTab = ref("list")
+const router = useRouter()
 
 // =============================================================================
 // Functions
 // =============================================================================
-const changeTab = (tab) => {
-    activeTab.value = tab
-    console.log(activeTab.value)
-}
 </script>
 
 <template>
     <div class="friends-page">
         <BaseContainer class="friends-page__list" :is-clickable="false">
-            <FriendsList v-if="activeTab === tabOptions.list" />
-
-            <FriendsRequestsList v-if="activeTab === tabOptions.requestsList" />
-
-            <FriendsSendRequest v-if="activeTab === tabOptions.sendRequest" />
+            <RouterView />
         </BaseContainer>
 
         <div class="friends-page__action-buttons">
             <BaseContainer
                 class="friends-page__add-friends"
-                @click="changeTab(tabOptions.sendRequest)"
+                @click="router.push({ name: 'FriendsSendRequest' })"
             >
                 <h2>Add Friends</h2>
             </BaseContainer>
 
             <BaseContainer
                 class="friends-page__friend-requests"
-                @click="changeTab(tabOptions.requestsList)"
+                @click="router.push({ name: 'FriendsRequestsList' })"
             >
                 <p class="typo-body-large">New request(s)</p>
 
@@ -82,8 +70,12 @@ const changeTab = (tab) => {
 
     &__list {
         grid-column: span 8;
-        min-height: 400px;
-        max-height: 500px;
+        max-height: 800px;
+        overflow-y: scroll;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
 
         @include styles-for(desktop) {
             max-height: unset;
@@ -111,10 +103,10 @@ const changeTab = (tab) => {
     &__friend-requests {
         justify-content: flex-end;
         width: 100%;
-        height: max(33vh, 160px);
+        height: 180px;
 
         @include styles-for(tablet) {
-            height: max(33vh, 200px);
+            height: 200px;
         }
 
         @include styles-for(desktop) {
