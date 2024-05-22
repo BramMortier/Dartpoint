@@ -18,6 +18,7 @@ const validationSchema = yup.object({
         <BaseContainer class="playground-page__buttons">
             <BaseButton> Primary button </BaseButton>
             <BaseButton class="base-button--secondary"> Secondary button </BaseButton>
+            <BaseButton class="base-button--tertiary">Tertiary button</BaseButton>
         </BaseContainer>
         <BaseContainer class="playground-page__inputs">
             <Form @submit="handleSubmit" :validation-schema="validationSchema">

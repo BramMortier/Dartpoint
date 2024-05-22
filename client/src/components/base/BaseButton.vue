@@ -19,6 +19,7 @@ const props = defineProps({
 .base-button {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-16);
 
     height: 3.125rem;
@@ -57,6 +58,16 @@ const props = defineProps({
     &--secondary {
         background: var(--gradient-turqoise);
         border-color: var(--clr-turqoise-500);
+    }
+
+    &--tertiary {
+        background: var(--clr-black);
+        border: 1px solid var(--clr-neutral-600);
+
+        &:hover,
+        &:focus {
+            border-color: var(--clr-neutral-500);
+        }
     }
 }
 </style>

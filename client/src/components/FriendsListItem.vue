@@ -39,7 +39,7 @@ const props = defineProps({
     background-color: var(--clr-neutral-700);
     border: 1px solid var(--clr-neutral-500);
     border-radius: var(--border-radius-10);
-    padding: var(--space-12) var(--space-16);
+    padding: var(--space-16);
 
     &--offline {
         opacity: 50%;

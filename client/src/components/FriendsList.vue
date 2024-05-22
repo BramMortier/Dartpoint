@@ -8,6 +8,10 @@ import { computed, ref } from "vue"
 // =============================================================================
 // Props & Events
 // =============================================================================
+const props = defineProps({
+    options: Object
+})
+
 const placeholderData = ref([
     { displayName: "Bram Mortier", isOnline: true, status: "In game" },
     { displayName: "Seppe Rogge", isOnline: true, status: "In Lobby" },
@@ -31,7 +35,7 @@ const offlineFriends = computed(() => placeholderData.value.filter((user) => !us
 
 <template>
     <div class="friends-list">
-        <h2>Friends</h2>
+        <h2>Your Friends</h2>
 
         <div class="friends-list__online-group">
             <p class="typo-body-large">Online</p>

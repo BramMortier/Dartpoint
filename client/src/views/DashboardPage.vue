@@ -38,7 +38,7 @@ import { FriendsList, GameStartOptions } from "@/components/index"
             </BaseContainer>
         </div>
 
-        <BaseContainer :is-clickable="false" class="dashboard-page__friends-list">
+        <BaseContainer class="dashboard-page__friends-list" :is-clickable="false">
             <FriendsList />
         </BaseContainer>
     </div>
@@ -64,8 +64,6 @@ import { FriendsList, GameStartOptions } from "@/components/index"
     }
 
     &__action-buttons {
-        grid-column: span 12;
-
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: minmax(500px, 40vh) minmax(160px, 20vh) minmax(160px, 20vh);
@@ -84,7 +82,6 @@ import { FriendsList, GameStartOptions } from "@/components/index"
     }
 
     &__start-game {
-        display: flex;
         flex-direction: column-reverse;
         justify-content: space-between;
 
@@ -96,8 +93,6 @@ import { FriendsList, GameStartOptions } from "@/components/index"
     }
 
     &__profile {
-        display: flex;
-        flex-direction: column;
         justify-content: flex-end;
         grid-column: span 2;
 
@@ -107,8 +102,6 @@ import { FriendsList, GameStartOptions } from "@/components/index"
     }
 
     &__dartboards {
-        display: flex;
-        flex-direction: column;
         justify-content: flex-end;
         grid-column: span 2;
 
