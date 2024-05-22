@@ -5,6 +5,7 @@
 import { FriendsList, FriendsRequestsList, FriendsSendRequest } from "@/components/index"
 import { useRouter, RouterView } from "vue-router"
 import { ref } from "vue"
+import { authApi } from "@/services/api"
 
 // =============================================================================
 // Props & Events
@@ -18,11 +19,17 @@ const router = useRouter()
 // =============================================================================
 // Functions
 // =============================================================================
+const handleTestAuth = async () => {
+    const { status, message, body } = await authApi.getAuth()
+
+    console.log(status, message, body)
+}
 </script>
 
 <template>
     <div class="friends-page">
         <BaseContainer class="friends-page__list" :is-clickable="false">
+            <BaseButton @click="handleTestAuth">Test Auth</BaseButton>
             <RouterView />
         </BaseContainer>
 

@@ -44,7 +44,7 @@ api.get("/pusher", (c) => {
     return c.json("test event send");
 });
 
-api.use(cors());
+api.use(cors({ origin: "http://localhost:5173", credentials: true }));
 api.use(logger());
 api.use(prettyJSON());
 

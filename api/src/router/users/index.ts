@@ -13,9 +13,16 @@ import { sendFriendRequestHandler, sendFriendRequestRoute } from "./sendFriendRe
 // =============================================================================
 const userRouter = new OpenAPIHono();
 
+// GET /api/users
 userRouter.openapi(getUsersRoute, getUsersHandler);
+
+// GET /api/users/{id}
 userRouter.openapi(getUserRoute, getUserHandler);
+
+// DELETE /api/users/{id}
 userRouter.openapi(deleteUserRoute, deleteUserHandler);
+
+// POST /api/users/friend-request
 userRouter.openapi(sendFriendRequestRoute, sendFriendRequestHandler);
 
 export { userRouter };

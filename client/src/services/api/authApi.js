@@ -1,5 +1,9 @@
 import { apiClient } from "@/services/api/client"
 
+const getAuth = async () => {
+    return await apiClient.get("auth").json()
+}
+
 const register = async (requestBody) => {
     return await apiClient.post("auth/register", { json: requestBody }).json()
 }
@@ -13,6 +17,7 @@ const logout = async () => {
 }
 
 export const authApi = {
+    getAuth,
     register,
     login,
     logout

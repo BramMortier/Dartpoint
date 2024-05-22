@@ -39,7 +39,7 @@ const router = useRouter()
                 placeholder="Type a friend code to send a friend request"
             />
 
-            <BaseButton>Send request</BaseButton>
+            <BaseButton class="base-button--secondary">Send request</BaseButton>
         </Form>
     </div>
 </template>
