@@ -2,8 +2,9 @@
 // Breakpoint mixin
 // =============================================================================
 $breakpoints: (
-    "desktop": 1599px,
-    "tablet": 767px
+    "large-phone": 420px,
+    "tablet": 767px,
+    "desktop": 1599px
 );
 
 @mixin styles-for($size) {
