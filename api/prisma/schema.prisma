@@ -13,7 +13,7 @@ model User {
     displayName String
     password    String
     country     String?
-    guest       Boolean @default(false)
+    isGuest     Boolean @default(false)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now())
@@ -29,12 +29,12 @@ model User {
 }
 
 model Board {
-    id         Int     @id @default(autoincrement())
-    ownerId    Int
-    name       String
-    code       String
-    visibility Boolean @default(false)
-    country    String
+    id        Int     @id @default(autoincrement())
+    ownerId   Int
+    name      String
+    code      String
+    isVisible Boolean @default(false)
+    country   String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now())
@@ -63,6 +63,8 @@ model UserFriends {
     userId   Int
     friend   User @relation("friends-of", fields: [userId], references: [id], map: "friends-of")
     friendId Int
+
+    isAccepted Boolean
 
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now())

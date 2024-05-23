@@ -4,6 +4,9 @@
 // =============================================================================
 import { Form } from "vee-validate"
 import { useRouter } from "vue-router"
+import { useAuthStore } from "@/stores/authStore"
+import { userApi } from "@/services/api"
+import * as yup from "yup"
 
 // =============================================================================
 // Props & Events
@@ -13,10 +16,28 @@ import { useRouter } from "vue-router"
 // Composables, Refs & Computed
 // =============================================================================
 const router = useRouter()
+const { authenticatedUser } = useAuthStore()
+
+const friendRequestFormValidationSchema = yup.object({
+    code: yup.string().required("Invalid friend code!")
+})
 
 // =============================================================================
 // Functions
 // =============================================================================
+const handleFriendRequestFormSubmit = async (values) => {
+    const requestBody = {
+        isAccepted: false,
+        userId: authenticatedUser.id,
+        friendId: values.code
+    }
+
+    console.log(requestBody)
+
+    const { status, message, body } = await userApi.sendFriendRequest(requestBody)
+
+    console.log(status, message, body)
+}
 </script>
 
 <template>
@@ -31,10 +52,16 @@ const router = useRouter()
             <p>You can add new friends using their mystery unique proprety for now</p>
         </div>
 
-        <Form class="friends-send-request__form">
+        <Form
+            @submit="handleFriendRequestFormSubmit"
+            :validation-schema="friendRequestFormValidationSchema"
+            id="friend-request-form"
+            class="friends-send-request__form"
+        >
             <BaseInput
-                id="send-request-friend-code"
-                name="friend-code"
+                id="friend-request-form-code"
+                type="number"
+                name="code"
                 label="Friend code"
                 placeholder="Type a friend code to send a friend request"
             />

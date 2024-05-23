@@ -67,12 +67,9 @@ export const getAuthHandler: Handler = async (c) => {
             where: { id: decodedToken.payload.sub },
         });
 
-        return formattedSuccesResponse(
-            c,
-            200,
-            getAuthRoute.responses[200].description,
-            authenticatedUser
-        );
+        return formattedSuccesResponse(c, 200, getAuthRoute.responses[200].description, {
+            user: authenticatedUser,
+        });
     } catch (error) {
         console.error(error);
         return formattedErrorResponse(c, 500, getAuthRoute.responses[500].description);

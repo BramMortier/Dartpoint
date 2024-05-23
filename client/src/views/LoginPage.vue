@@ -4,11 +4,14 @@
 // =============================================================================
 import { Form } from "vee-validate"
 import { authApi } from "@/services/api/index"
+import { useRouter } from "vue-router"
 import * as yup from "yup"
 
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const router = useRouter()
+
 const loginFormValidationSchema = yup.object({
     email: yup.string().email("invalid email").required("an email is required!"),
     password: yup.string().required("a password is required required!")
@@ -22,17 +25,9 @@ const handleLoginFormSubmit = async (values) => {
         password: values.password
     }
 
-    console.log(requestBody)
-
     const { status, message, body } = await authApi.login(requestBody)
 
-    console.log(status, message, body)
-}
-
-const testLogout = async () => {
-    const { status, message, body } = await authApi.logout()
-
-    console.log(status, message, body)
+    if (status === 200) setTimeout(() => router.push({ name: "DashboardPage" }), 1000)
 }
 </script>
 
@@ -49,17 +44,16 @@ const testLogout = async () => {
             >
                 <div class="login-page__form-fields">
                     <BaseInput
-                        id="login-email"
+                        id="login-form-email"
                         name="email"
                         type="email"
                         label="Email"
                         placeholder="Type your email"
                     />
 
-                    <BaseInput
-                        id="login-password"
+                    <BasePasswordInput
+                        id="login-form-password"
                         name="password"
-                        type="password"
                         label="Password"
                         placeholder="Choose a password"
                     />

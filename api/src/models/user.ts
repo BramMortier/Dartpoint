@@ -8,7 +8,7 @@ import { z } from "@hono/zod-openapi";
 // =============================================================================
 export const userSchema = z
     .object({
-        id: z.string(),
+        id: z.number(),
         displayName: z.string(),
         email: z.string(),
         password: z.string(),

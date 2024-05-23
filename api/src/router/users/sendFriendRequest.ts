@@ -13,8 +13,9 @@ import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/for
 // Request Schemas
 // =============================================================================
 const requestSchema = z.object({
-    user_id: z.string(),
-    friend_id: z.string(),
+    isAccepted: z.boolean(),
+    userId: z.number(),
+    friendId: z.number(),
 });
 
 // =============================================================================
@@ -79,7 +80,7 @@ export const sendFriendRequestHandler: Handler = async (c) => {
     try {
         const body = await c.req.json();
 
-        const user = await db.user.findUnique({ where: { email: body.friend_id } });
+        const user = await db.user.findUnique({ where: { id: body.friendId } });
         if (!user) {
             return formattedErrorResponse(
                 c,
@@ -88,7 +89,9 @@ export const sendFriendRequestHandler: Handler = async (c) => {
             );
         }
 
-        const createdFriendRequest = await db.userFriends.create({
+        // TODO: check if friend request already is pending or accepted
+
+        await db.userFriends.create({
             data: body,
         });
 

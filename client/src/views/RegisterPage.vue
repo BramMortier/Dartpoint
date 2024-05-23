@@ -58,25 +58,23 @@ const handleRegisterFormSubmit = async (values) => {
                     />
 
                     <BaseInput
-                        id="register-email"
+                        id="register-form-email"
                         name="email"
                         type="email"
                         label="Email"
                         placeholder="Type your email"
                     />
 
-                    <BaseInput
-                        id="register-password"
+                    <BasePasswordInput
+                        id="register-form-password"
                         name="password"
-                        type="password"
                         label="Password"
                         placeholder="Choose a password"
                     />
 
-                    <BaseInput
-                        id="register-password-confirm"
+                    <BasePasswordInput
+                        id="register-form-password-confirm"
                         name="confirmPassword"
-                        type="password"
                         label="Confirm password"
                         placeholder="Confirm your password"
                     />

@@ -43,7 +43,7 @@ export const registerRoute = createRoute({
             content: {
                 "application/json": {
                     schema: SuccesResponseSchema.extend({
-                        data: userSchema,
+                        data: z.object({ user: userSchema }),
                     }),
                 },
             },
@@ -98,12 +98,9 @@ export const registerHandler: Handler = async (c) => {
             data: body,
         });
 
-        return formattedSuccesResponse(
-            c,
-            201,
-            registerRoute.responses[201].description,
-            createdUser
-        );
+        return formattedSuccesResponse(c, 201, registerRoute.responses[201].description, {
+            user: createdUser,
+        });
     } catch (error) {
         console.error(error);
         return formattedErrorResponse(c, 500, registerRoute.responses[500].description);

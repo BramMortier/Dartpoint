@@ -11,7 +11,6 @@ import { ref } from "vue"
 const props = defineProps({
     id: String,
     name: { type: String, required: true },
-    type: { type: String, default: "text" },
     hint: String,
     label: String,
     placeholder: String
@@ -20,11 +19,16 @@ const props = defineProps({
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const isPasswordVisible = ref(false)
+
 const { value, errorMessage } = useField(() => props.name)
 
 // =============================================================================
 // Functions
 // =============================================================================
+const togglePasswordVisibility = () => {
+    isPasswordVisible.value = !isPasswordVisible.value
+}
 </script>
 
 <template>
@@ -35,16 +39,25 @@ const { value, errorMessage } = useField(() => props.name)
 
         <p class="base-input__hint" v-if="props.hint">{{ props.hint }}</p>
 
-        <input
-            class="base-input__field"
-            :id="props.id"
-            :class="{ 'base-input__field--error': errorMessage }"
-            :type="props.type"
-            :name="props.name"
-            :placeholder="props.placeholder"
-            v-model="value"
-            autocomplete="off"
-        />
+        <div class="base-input__field-container">
+            <input
+                class="base-input__field"
+                :id="props.id"
+                :class="{ 'base-input__field--error': errorMessage }"
+                :type="isPasswordVisible ? 'text' : 'password'"
+                :name="props.name"
+                :placeholder="props.placeholder"
+                v-model="value"
+                autocomplete="off"
+            />
+
+            <div @click="togglePasswordVisibility" class="base-input__visibility-toggle">
+                <BaseIcon
+                    class="base-input__visibility-toggle-icon"
+                    :name="isPasswordVisible ? 'eye-open' : 'eye-closed'"
+                />
+            </div>
+        </div>
 
         <p class="typo-error-message" v-if="errorMessage">{{ errorMessage }}</p>
     </div>
@@ -75,9 +88,44 @@ const { value, errorMessage } = useField(() => props.name)
         }
     }
 
+    &__visibility-toggle {
+        position: absolute;
+        display: flex;
+        right: var(--space-16);
+        top: 50%;
+        transform: translateY(-50%);
+
+        @include styles-for(desktop) {
+            right: var(--space-24);
+        }
+
+        & > .base-icon {
+            width: 1.5rem;
+            color: var(--clr-neutral-400);
+
+            transition: all ease-in 0.15s;
+
+            @include styles-for(desktop) {
+                width: 2rem;
+            }
+
+            &:hover {
+                cursor: pointer;
+                color: var(--clr-neutral-100);
+            }
+        }
+    }
+
+    &__field-container {
+        position: relative;
+
+        @include styles-for(desktop) {
+            max-width: 50rem;
+        }
+    }
+
     &__field {
         height: 3.125rem;
-        max-width: 50rem;
         width: 100%;
         border-radius: var(--border-radius-10);
         padding-inline: var(--space-16);
