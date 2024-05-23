@@ -7,7 +7,8 @@
 // Props & Events
 // =============================================================================
 const props = defineProps({
-    user: Object
+    user: Object,
+    showProfilePicture: Boolean
 })
 
 // =============================================================================
@@ -21,21 +22,22 @@ const props = defineProps({
 
 <template>
     <li class="friends-list-item" :class="{ 'friends-list-item--offline': !user.isOnline }">
-        <h3>{{ user.displayName }}</h3>
+        <div v-if="props.showProfilePicture" class="friends-list-item__profile-picture"></div>
 
-        <div class="friends-list-item__status">
-            <div></div>
+        <div class="friends-list-item__info">
+            <h3>{{ user.displayName }}</h3>
 
-            <p>{{ user.isOnline ? "Online," : "Offline" }} {{ user.status }}</p>
+            <div class="friends-list-item__status">
+                <div></div>
+
+                <p>{{ user.isOnline ? "Online," : "Offline" }} {{ user.status }}</p>
+            </div>
         </div>
     </li>
 </template>
 
 <style scoped lang="scss">
 .friends-list-item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
     background-color: var(--clr-neutral-700);
     border: 1px solid var(--clr-neutral-500);
     border-radius: var(--border-radius-10);
@@ -48,6 +50,12 @@ const props = defineProps({
             background: var(--clr-neutral-500);
             border: none;
         }
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
     }
 
     &__status {

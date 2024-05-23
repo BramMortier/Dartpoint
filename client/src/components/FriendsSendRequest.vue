@@ -34,7 +34,7 @@ const handleFriendRequestFormSubmit = async (values) => {
 
     console.log(requestBody)
 
-    const { status, message, body } = await userApi.sendFriendRequest(requestBody)
+    const { status, message, body } = await userApi.createFriendRequest(requestBody)
 
     console.log(status, message, body)
 }

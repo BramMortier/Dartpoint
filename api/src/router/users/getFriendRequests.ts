@@ -5,8 +5,8 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
 import { db } from "../../config/db";
 
-import { userSchema } from "../../models/user";
-import { SuccesResponseSchema, ErrorResponseSchema } from "../../models/response";
+import { friendRequestSchema } from "../../models/friendRequest";
+import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
 import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
 
 // =============================================================================
@@ -14,7 +14,7 @@ import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/for
 // =============================================================================
 const paramsSchema = z.object({
     id: z.string().openapi({
-        param: { name: "id", description: "ID for user to retrieve", in: "path" },
+        param: { name: "id", description: "ID for user's friend requests te retrieve", in: "path" },
         example: "46",
     }),
 });
@@ -22,10 +22,10 @@ const paramsSchema = z.object({
 // =============================================================================
 // Route defenition
 // =============================================================================
-export const getUserRoute = createRoute({
+export const getFriendRequestsRoute = createRoute({
     method: "get",
-    path: "/{id}",
-    summary: "Get a single user by their ID",
+    path: "/{id}/friend-requests",
+    summary: "Get a users outgoing and incomming friend requests",
     request: {
         params: paramsSchema,
     },
@@ -34,11 +34,11 @@ export const getUserRoute = createRoute({
             content: {
                 "application/json": {
                     schema: SuccesResponseSchema.extend({
-                        data: z.object({ user: userSchema }),
+                        data: z.object({ requests: z.array(friendRequestSchema) }),
                     }),
                 },
             },
-            description: "Successfully retrieved user",
+            description: "Successfully retrieved friend requests",
         },
         500: {
             content: {
@@ -55,15 +55,17 @@ export const getUserRoute = createRoute({
 // =============================================================================
 // Route handler
 // =============================================================================
-export const getUserHandler: Handler = async (c) => {
+export const getFriendRequestsHandler: Handler = async (c) => {
     try {
         const userIdParam = c.req.param("id");
 
-        const user = await db.user.findUnique({ where: { id: Number(userIdParam) } });
+        const requests = await db.userFriends.findMany({ where: { userId: Number(userIdParam) } });
 
-        return formattedSuccesResponse(c, 200, getUserRoute.responses[200].description, user);
+        return formattedSuccesResponse(c, 200, getFriendRequestsRoute.responses[200].description, {
+            requests: requests,
+        });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, getUserRoute.responses[500].description);
+        return formattedErrorResponse(c, 500, getFriendRequestsRoute.responses[500].description);
     }
 };

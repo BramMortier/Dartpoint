@@ -3,6 +3,9 @@
 // Imports
 // =============================================================================
 import { useRouter, RouterView } from "vue-router"
+import { userApi } from "@/services/api"
+import { useAuthStore } from "@/stores/authStore"
+import { onMounted, ref } from "vue"
 
 // =============================================================================
 // Props & Events
@@ -12,6 +15,17 @@ import { useRouter, RouterView } from "vue-router"
 // Composables, Refs & Computed
 // =============================================================================
 const router = useRouter()
+const { authenticatedUser } = useAuthStore()
+
+const requests = ref(null)
+
+// =============================================================================
+// Lifecycle hooks
+// =============================================================================
+onMounted(async () => {
+    const { status, message, body } = await userApi.getFriendRequests(authenticatedUser.id)
+    requests.value = body.requests
+})
 
 // =============================================================================
 // Functions
@@ -40,7 +54,7 @@ const router = useRouter()
 
                 <div>
                     <h2>Friend requests</h2>
-                    <h2>0</h2>
+                    <h2>{{ requests?.length }}</h2>
                 </div>
             </BaseContainer>
         </div>

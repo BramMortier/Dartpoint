@@ -21,9 +21,9 @@ const requestSchema = z.object({
 // =============================================================================
 // Route defenition
 // =============================================================================
-export const sendFriendRequestRoute = createRoute({
+export const createFriendRequestRoute = createRoute({
     method: "post",
-    path: "/friend-request",
+    path: "/friend-requests",
     summary: "Send a friend request to a user",
     request: {
         body: {
@@ -76,7 +76,7 @@ export const sendFriendRequestRoute = createRoute({
 // =============================================================================
 // Route handler
 // =============================================================================
-export const sendFriendRequestHandler: Handler = async (c) => {
+export const createFriendRequestHandler: Handler = async (c) => {
     try {
         const body = await c.req.json();
 
@@ -85,7 +85,7 @@ export const sendFriendRequestHandler: Handler = async (c) => {
             return formattedErrorResponse(
                 c,
                 400,
-                sendFriendRequestRoute.responses[400].description
+                createFriendRequestRoute.responses[400].description
             );
         }
 
@@ -95,9 +95,9 @@ export const sendFriendRequestHandler: Handler = async (c) => {
             data: body,
         });
 
-        return formattedSuccesResponse(c, 200, sendFriendRequestRoute.responses[200].description);
+        return formattedSuccesResponse(c, 200, createFriendRequestRoute.responses[200].description);
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, sendFriendRequestRoute.responses[500].description);
+        return formattedErrorResponse(c, 500, createFriendRequestRoute.responses[500].description);
     }
 };

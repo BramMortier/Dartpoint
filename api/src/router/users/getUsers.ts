@@ -45,7 +45,10 @@ export const getUsersRoute = createRoute({
 export const getUsersHandler: Handler = async (c) => {
     try {
         const users = await db.user.findMany();
-        return formattedSuccesResponse(c, 200, getUsersRoute.responses[200].description, users);
+
+        return formattedSuccesResponse(c, 200, getUsersRoute.responses[200].description, {
+            users: users,
+        });
     } catch (error) {
         console.error(error);
         return formattedErrorResponse(c, 500, getUsersRoute.responses[500].description);
