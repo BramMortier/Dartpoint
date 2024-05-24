@@ -7,12 +7,10 @@ import { ref } from "vue"
 // =============================================================================
 // Store configuration
 // =============================================================================
-export const useAuthStore = defineStore("auth", () => {
-    const authenticatedUser = ref(null)
+export const useGameStore = defineStore("game", () => {
+    const gameSettings = ref({})
+    const players = ref({})
+    const history = ref({})
 
-    const setUser = (user) => {
-        authenticatedUser.value = user
-    }
-
-    return { authenticatedUser, setUser }
+    return { gameSettings, players, history }
 })

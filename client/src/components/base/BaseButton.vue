@@ -67,6 +67,7 @@ const props = defineProps({
         &:hover,
         &:focus {
             border-color: var(--clr-neutral-500);
+            box-shadow: unset;
         }
     }
 }

@@ -26,7 +26,7 @@ const registerFormValidationSchema = yup.object({
 // =============================================================================
 const handleRegisterFormSubmit = async (values) => {
     const requestBody = {
-        displayName: values.displayName,
+        displayName: values.displayname,
         email: values.email,
         password: values.password
     }
@@ -51,7 +51,7 @@ const handleRegisterFormSubmit = async (values) => {
                 <div class="register-page__form-fields">
                     <BaseInput
                         id="register-display-name"
-                        name="displayName"
+                        name="displayname"
                         label="Display name"
                         placeholder="Choose a display name"
                         hint="Your display name will show to other players online. You can always change it later."

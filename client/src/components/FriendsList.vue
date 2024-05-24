@@ -15,10 +15,10 @@ const props = defineProps({
 const placeholderData = ref([
     { displayName: "Bram Mortier", isOnline: true, status: "In game" },
     { displayName: "Seppe Rogge", isOnline: true, status: "In Lobby" },
-    { displayName: "Manu Van Leirberghe", isOnline: false, status: undefined },
-    { displayName: "Karen Mortier", isOnline: false, status: undefined },
+    { displayName: "Manu Van Leirberghe", isOnline: false },
+    { displayName: "Karen Mortier", isOnline: false },
     { displayName: "Martina Maeyens", isOnline: true, status: "In game" },
-    { displayName: "Fien Haelvoet", isOnline: false, status: undefined },
+    { displayName: "Fien Haelvoet", isOnline: false },
     { displayName: "Edward Maeyens", isOnline: true, status: "Chilling" }
 ])
 // =============================================================================
@@ -43,10 +43,12 @@ const offlineFriends = computed(() => placeholderData.value.filter((user) => !us
             <ul class="friends-list__online-group-list">
                 <FriendsListItem
                     v-for="user in onlineFriends"
-                    :user="user"
+                    :name="user.displayName"
+                    :status="`Online, ${user.status}`"
+                    :is-online="user.isOnline"
                     :show-profile-picture="true"
                 >
-                    <BaseButton class="base-button--tertiary">Play</BaseButton>
+                    <BaseButton class="base-button--tertiary"> Play </BaseButton>
                 </FriendsListItem>
             </ul>
         </div>
@@ -57,7 +59,8 @@ const offlineFriends = computed(() => placeholderData.value.filter((user) => !us
             <ul class="friends-list__offline-group-list">
                 <FriendsListItem
                     v-for="user in offlineFriends"
-                    :user="user"
+                    status="Offline"
+                    :name="user.displayName"
                     :show-profile-picture="true"
                 />
             </ul>

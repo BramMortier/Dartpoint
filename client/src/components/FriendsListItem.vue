@@ -8,6 +8,11 @@
 // =============================================================================
 const props = defineProps({
     user: Object,
+    name: String,
+    isOnline: Boolean,
+    status: String,
+    connectedBoard: String,
+    showStatusIndicator: { type: Boolean, default: true },
     showProfilePicture: Boolean
 })
 
@@ -21,23 +26,25 @@ const props = defineProps({
 </script>
 
 <template>
-    <li class="friends-list-item" :class="{ 'friends-list-item--offline': !user.isOnline }">
+    <li class="friends-list-item" :class="{ 'friends-list-item--offline': !props.isOnline }">
         <div>
             <div v-if="props.showProfilePicture" class="friends-list-item__profile-picture"></div>
 
             <div class="friends-list-item__info">
-                <h3>{{ user.displayName }}</h3>
+                <h3>{{ props.name }}</h3>
 
                 <div class="friends-list-item__status">
-                    <div></div>
+                    <div v-if="showStatusIndicator"></div>
 
-                    <p>{{ user.isOnline ? "Online," : "Offline" }} {{ user.status }}</p>
+                    <p>{{ props.status }}</p>
                 </div>
+
+                <p>{{ props.connectedBoard }}</p>
             </div>
         </div>
 
         <div class="friends-list-item__action-buttons">
-            <slot />
+            <slot></slot>
         </div>
     </li>
 </template>

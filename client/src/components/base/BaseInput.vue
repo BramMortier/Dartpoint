@@ -99,6 +99,11 @@ const { value, errorMessage } = useField(() => props.name)
             height: 4rem;
         }
 
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
         &:hover,
         &:focus {
             box-shadow: 0 0 0 4px var(--clr-neutral-700);

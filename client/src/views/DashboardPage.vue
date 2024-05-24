@@ -5,6 +5,8 @@
 import { FriendsList, GameStartOptions } from "@/components/index"
 import { useRouter } from "vue-router"
 
+import cryptoRandomString from "crypto-random-string"
+
 // =============================================================================
 // Props & Events
 // =============================================================================
@@ -22,7 +24,15 @@ const router = useRouter()
 <template>
     <div class="dashboard-page">
         <div class="dashboard-page__action-buttons">
-            <BaseContainer class="dashboard-page__start-game">
+            <BaseContainer
+                class="dashboard-page__start-game"
+                @click="
+                    router.push({
+                        name: 'GameSettingsPage',
+                        params: { id: cryptoRandomString({ length: 8, type: 'distinguishable' }) }
+                    })
+                "
+            >
                 <GameStartOptions />
 
                 <h1>

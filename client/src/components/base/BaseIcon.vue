@@ -12,7 +12,9 @@ import {
     ArrowLeft,
     Medal,
     History,
-    Statistics
+    Statistics,
+    CopyToClipboard,
+    Plus
 } from "@/components/icons"
 
 // =============================================================================
@@ -33,8 +35,10 @@ const iconMap = {
     "chevron-down": ChevronDown,
     "arrow-right": ArrowRight,
     "arrow-left": ArrowLeft,
+    "copy-to-clipboard": CopyToClipboard,
     history: History,
     medal: Medal,
+    plus: Plus,
     statistics: Statistics
 }
 </script>

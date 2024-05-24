@@ -59,7 +59,7 @@ const handleFriendRequestFormSubmit = async (values) => {
             class="friends-send-request__form"
         >
             <BaseInput
-                id="friend-request-form-code"
+                id="friend-request-code"
                 type="number"
                 name="code"
                 label="Friend code"
