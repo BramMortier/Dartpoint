@@ -3,18 +3,20 @@
 // Imports
 // =============================================================================
 import { useWindowSize } from "@vueuse/core"
+import { useAuthStore } from "@/stores/authStore"
+import { useRouter } from "vue-router"
+import { storeToRefs } from "pinia"
 
 // =============================================================================
 // Props & Events
 // =============================================================================
-const props = defineProps({
-    isLoggedIn: Boolean
-})
 
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const { authenticatedUser } = storeToRefs(useAuthStore())
 const { width: screenWidth } = useWindowSize()
+const router = useRouter()
 
 // =============================================================================
 // Functions
@@ -26,9 +28,10 @@ const { width: screenWidth } = useWindowSize()
         <BaseIcon
             class="header__logo"
             :name="screenWidth > 768 ? 'logo-wordmark-horizontal' : 'logo-icon'"
+            @click="router.push({ name: 'DashboardPage' })"
         />
 
-        <div v-if="isLoggedIn" class="header__connected-board">
+        <div v-if="authenticatedUser" class="header__connected-board">
             <h4>Connected board</h4>
 
             <div class="header__connected-board-info">
@@ -40,9 +43,9 @@ const { width: screenWidth } = useWindowSize()
             </div>
         </div>
 
-        <div v-if="isLoggedIn" class="header__user">
+        <div v-if="authenticatedUser" class="header__user">
             <div class="header__user-info">
-                <h4>Bram Mortier</h4>
+                <h4>{{ authenticatedUser?.displayName }}</h4>
 
                 <div class="header__user-status">
                     <div></div>
@@ -80,6 +83,10 @@ const { width: screenWidth } = useWindowSize()
         height: 100%;
         width: auto;
         color: var(--clr-neutral-100);
+
+        &:hover {
+            cursor: pointer;
+        }
 
         @include styles-for(tablet) {
             max-height: 3rem;

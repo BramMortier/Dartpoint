@@ -3,6 +3,7 @@
 // =============================================================================
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
+import { pusher } from "../../config/pusher";
 import { validateRequest } from "../../middleware/requestValidator";
 import { db } from "../../config/db";
 
@@ -17,6 +18,8 @@ const requestSchema = z.object({
     userId: z.number(),
     friendId: z.number(),
 });
+
+// TODO: use scheme and .pick() instead of hard coded
 
 // =============================================================================
 // Route defenition
@@ -80,8 +83,10 @@ export const createFriendRequestHandler: Handler = async (c) => {
     try {
         const body = await c.req.json();
 
-        const user = await db.user.findUnique({ where: { id: body.friendId } });
-        if (!user) {
+        const requestSender = await db.user.findUnique({ where: { id: body.userId } });
+        const requestReciever = await db.user.findUnique({ where: { id: body.friendId } });
+
+        if (!requestReciever || !requestSender) {
             return formattedErrorResponse(
                 c,
                 400,
@@ -94,6 +99,8 @@ export const createFriendRequestHandler: Handler = async (c) => {
         await db.userFriends.create({
             data: body,
         });
+
+        pusher.trigger("friend-requests", "new-request", { requestSender: requestSender });
 
         return formattedSuccesResponse(c, 200, createFriendRequestRoute.responses[200].description);
     } catch (error) {

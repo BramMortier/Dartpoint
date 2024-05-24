@@ -3,6 +3,7 @@
 // Imports
 // =============================================================================
 import { FriendsList, GameStartOptions } from "@/components/index"
+import { useRouter } from "vue-router"
 
 // =============================================================================
 // Props & Events
@@ -11,6 +12,7 @@ import { FriendsList, GameStartOptions } from "@/components/index"
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const router = useRouter()
 
 // =============================================================================
 // Functions
@@ -29,7 +31,10 @@ import { FriendsList, GameStartOptions } from "@/components/index"
                 </h1>
             </BaseContainer>
 
-            <BaseContainer class="dashboard-page__profile">
+            <BaseContainer
+                class="dashboard-page__profile"
+                @click="router.push({ name: 'ProfilePage' })"
+            >
                 <h2>Profile & statistics</h2>
             </BaseContainer>
 

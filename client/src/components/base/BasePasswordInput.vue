@@ -118,10 +118,6 @@ const togglePasswordVisibility = () => {
 
     &__field-container {
         position: relative;
-
-        @include styles-for(desktop) {
-            max-width: 50rem;
-        }
     }
 
     &__field {

@@ -77,7 +77,6 @@ const { value, errorMessage } = useField(() => props.name)
 
     &__field {
         height: 3.125rem;
-        max-width: 50rem;
         width: 100%;
         border-radius: var(--border-radius-10);
         padding-inline: var(--space-16);

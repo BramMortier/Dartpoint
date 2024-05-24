@@ -44,7 +44,7 @@ const handleFriendRequestFormSubmit = async (values) => {
     <div class="friends-send-request">
         <div class="friends-send-request__explanation">
             <div>
-                <BaseIcon name="arrow-left" @click="router.push({ name: 'FriendsList' })" />
+                <BaseIcon name="arrow-left" @click="router.back()" />
 
                 <h2>Add new friends</h2>
             </div>

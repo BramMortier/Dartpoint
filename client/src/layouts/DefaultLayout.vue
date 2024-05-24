@@ -8,7 +8,7 @@ import { TheStatusHeader } from "@/components/index"
 <template>
     <div class="default-layout">
         <div class="default-layout__content">
-            <TheStatusHeader :is-logged-in="true" />
+            <TheStatusHeader />
 
             <main>
                 <slot />

@@ -9,7 +9,10 @@ import {
     EyeOpen,
     ChevronDown,
     ArrowRight,
-    ArrowLeft
+    ArrowLeft,
+    Medal,
+    History,
+    Statistics
 } from "@/components/icons"
 
 // =============================================================================
@@ -29,7 +32,10 @@ const iconMap = {
     "eye-closed": EyeClosed,
     "chevron-down": ChevronDown,
     "arrow-right": ArrowRight,
-    "arrow-left": ArrowLeft
+    "arrow-left": ArrowLeft,
+    history: History,
+    medal: Medal,
+    statistics: Statistics
 }
 </script>
 

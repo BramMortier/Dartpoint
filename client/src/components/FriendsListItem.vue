@@ -22,22 +22,32 @@ const props = defineProps({
 
 <template>
     <li class="friends-list-item" :class="{ 'friends-list-item--offline': !user.isOnline }">
-        <div v-if="props.showProfilePicture" class="friends-list-item__profile-picture"></div>
+        <div>
+            <div v-if="props.showProfilePicture" class="friends-list-item__profile-picture"></div>
 
-        <div class="friends-list-item__info">
-            <h3>{{ user.displayName }}</h3>
+            <div class="friends-list-item__info">
+                <h3>{{ user.displayName }}</h3>
 
-            <div class="friends-list-item__status">
-                <div></div>
+                <div class="friends-list-item__status">
+                    <div></div>
 
-                <p>{{ user.isOnline ? "Online," : "Offline" }} {{ user.status }}</p>
+                    <p>{{ user.isOnline ? "Online," : "Offline" }} {{ user.status }}</p>
+                </div>
             </div>
+        </div>
+
+        <div class="friends-list-item__action-buttons">
+            <slot />
         </div>
     </li>
 </template>
 
 <style scoped lang="scss">
 .friends-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
     background-color: var(--clr-neutral-700);
     border: 1px solid var(--clr-neutral-500);
     border-radius: var(--border-radius-10);
@@ -50,6 +60,19 @@ const props = defineProps({
             background: var(--clr-neutral-500);
             border: none;
         }
+    }
+
+    & > div {
+        display: flex;
+        align-items: center;
+        gap: var(--space-24);
+    }
+
+    &__profile-picture {
+        width: 70px;
+        height: 70px;
+        border-radius: var(--border-radius-10);
+        background-color: var(--clr-neutral-800);
     }
 
     &__info {

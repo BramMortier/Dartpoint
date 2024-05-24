@@ -28,12 +28,10 @@ router.beforeEach(async (to) => {
     if (!to.meta.protected) return
     const { status, message, body } = await authApi.getAuth()
 
+    if (status !== 200) return { name: "loginPage" }
+
     setUser(body.user)
     console.log(message, body)
-
-    if (status !== 200) {
-        return { name: "loginPage" }
-    }
 })
 
 export default router

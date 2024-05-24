@@ -25,9 +25,9 @@ useSeoMeta({
     ogDescription: description
 })
 
-const channel = pusher.subscribe("friend-requests")
+const friendRequestsChannel = pusher.subscribe("friend-requests")
 
-channel.bind("test-event", (data) => {
+friendRequestsChannel.bind("new-request", (data) => {
     console.log(data)
 })
 </script>

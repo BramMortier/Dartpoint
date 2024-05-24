@@ -41,7 +41,13 @@ const offlineFriends = computed(() => placeholderData.value.filter((user) => !us
             <p class="typo-body-large">Online</p>
 
             <ul class="friends-list__online-group-list">
-                <FriendsListItem v-for="user in onlineFriends" :user="user" />
+                <FriendsListItem
+                    v-for="user in onlineFriends"
+                    :user="user"
+                    :show-profile-picture="true"
+                >
+                    <BaseButton class="base-button--tertiary">Play</BaseButton>
+                </FriendsListItem>
             </ul>
         </div>
 
@@ -49,7 +55,11 @@ const offlineFriends = computed(() => placeholderData.value.filter((user) => !us
             <p class="typo-body-large">Offline</p>
 
             <ul class="friends-list__offline-group-list">
-                <FriendsListItem v-for="user in offlineFriends" :user="user" />
+                <FriendsListItem
+                    v-for="user in offlineFriends"
+                    :user="user"
+                    :show-profile-picture="true"
+                />
             </ul>
         </div>
     </div>

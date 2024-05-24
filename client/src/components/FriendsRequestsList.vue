@@ -37,7 +37,7 @@ onMounted(async () => {
 <template>
     <div class="friends-requests-list">
         <div>
-            <BaseIcon name="arrow-left" @click="router.push({ name: 'FriendsList' })" />
+            <BaseIcon name="arrow-left" @click="router.back()" />
 
             <h2>Recent friend requests</h2>
         </div>
