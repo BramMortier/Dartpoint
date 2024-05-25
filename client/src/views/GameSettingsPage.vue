@@ -5,6 +5,9 @@
 import { Form } from "vee-validate"
 import { useRouter, useRoute } from "vue-router"
 import { FriendsListItem } from "@/components/index"
+import { useGameStore } from "@/stores/gameStore"
+import { storeToRefs } from "pinia"
+import * as yup from "yup"
 
 // =============================================================================
 // Props & Events
@@ -15,6 +18,7 @@ import { FriendsListItem } from "@/components/index"
 // =============================================================================
 const route = useRoute()
 const router = useRouter()
+const { gameSettings, players } = storeToRefs(useGameStore())
 
 const startingScoreOptions = ["170", "301", "501", "701"]
 const legsOptions = ["1 leg", "3 legs", "5 legs", "Custom"]
@@ -29,9 +33,25 @@ const placeholderData = [
     }
 ]
 
+const configurationValidationSchema = yup.object({
+    startingScore: yup.string(),
+    legs: yup.string()
+})
+
 // =============================================================================
 // Functions
 // =============================================================================
+const handleConfigurationFormSubmit = (values) => {
+    console.log(values)
+
+    gameSettings.value = {
+        gameType: "Classic / X01",
+        startingScore: values.startingScore,
+        legs: values.legs
+    }
+
+    players.value = placeholderData
+}
 </script>
 
 <template>
@@ -84,24 +104,29 @@ const placeholderData = [
                 throw three darts.
             </p>
 
-            <Form id="game-settings-form" class="game-settings-page__configuration-form">
-                <h3>Starting score</h3>
+            <Form
+                id="game-settings-form"
+                class="game-settings-page__configuration-form"
+                @submit="handleConfigurationFormSubmit"
+                :validation-schema="configurationValidationSchema"
+            >
+                <div class="game-settings-page__configuration-form-fields">
+                    <BaseOptions
+                        id="game-settings-starting-score"
+                        name="startingScore"
+                        label="Starting score"
+                        :options="startingScoreOptions"
+                        :default-option="startingScoreOptions[1]"
+                    />
 
-                <BaseOptionButtons
-                    id="game-settings-starting-score"
-                    name="starting-score"
-                    :options="startingScoreOptions"
-                    :default-option="startingScoreOptions[1]"
-                />
-
-                <h3>Race to (legs)</h3>
-
-                <BaseOptionButtons
-                    id="game-settings-legs"
-                    name="legs"
-                    :options="legsOptions"
-                    :default-option="legsOptions[1]"
-                />
+                    <BaseOptions
+                        id="game-settings-legs"
+                        name="legs"
+                        label="Race to"
+                        :options="legsOptions"
+                        :default-option="legsOptions[1]"
+                    />
+                </div>
 
                 <div class="game-settings-page__configuration-action-buttons">
                     <BaseButton>Quit lobby</BaseButton>
@@ -216,6 +241,13 @@ const placeholderData = [
     }
 
     &__configuration-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    &__configuration-form-fields {
         display: flex;
         flex-direction: column;
         gap: var(--space-24);

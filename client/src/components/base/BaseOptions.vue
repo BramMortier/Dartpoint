@@ -2,6 +2,8 @@
 // =============================================================================
 // Imports
 // =============================================================================
+import { useField } from "vee-validate"
+import { onMounted } from "vue"
 
 // =============================================================================
 // Props & Events
@@ -9,43 +11,65 @@
 const props = defineProps({
     id: String,
     name: { type: String, required: true },
+    label: String,
     options: Array,
     defaultOption: String
 })
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const { value, errorMessage } = useField(() => props.name)
+
+// =============================================================================
+// Lifecycle hooks
+// =============================================================================
+onMounted(() => (value.value = props.defaultOption))
 
 // =============================================================================
 // Functions
 // =============================================================================
+const changeOption = (option) => {
+    value.value = option
+}
 </script>
 
 <template>
-    <div class="base-option-buttons">
-        <BaseInput :id="props.id" :name="props.name" type="hidden" />
+    <div class="base-options">
+        <label :for="props.id">{{ props.label }}</label>
 
-        <button
-            v-for="option in props.options"
-            class="base-option-buttons__option"
-            :class="{ 'base-option-buttons__option--selected': props.defaultOption === option }"
-        >
-            {{ option }}
-        </button>
+        <input :id="props.id" v-model="value" :name="props.name" type="hidden" />
+
+        <div class="base-options__options">
+            <button
+                v-for="option in props.options"
+                type="button"
+                class="base-options__option"
+                :class="{ 'base-options__option--selected': value === option }"
+                @click="changeOption(option)"
+            >
+                {{ option }}
+            </button>
+        </div>
     </div>
 </template>
 
 <style scoped lang="scss">
 @use "@/assets/styles/mixins.scss" as *;
 
-.base-option-buttons {
+.base-options {
     display: flex;
-    flex-wrap: wrap;
-    column-gap: var(--space-64);
-    row-gap: var(--space-16);
+    flex-direction: column;
+    gap: var(--space-8);
 
-    & > .base-input {
+    & > input {
         display: none;
+    }
+
+    &__options {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: var(--space-64);
+        row-gap: var(--space-16);
     }
 
     &__option {

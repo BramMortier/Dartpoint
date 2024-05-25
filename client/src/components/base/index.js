@@ -6,10 +6,10 @@ import BaseInput from "@/components/base/BaseInput.vue"
 import BasePasswordInput from "@/components/base/BasePasswordInput.vue"
 import BaseContainer from "@/components/base/BaseContainer.vue"
 import BaseIcon from "@/components/base/BaseIcon.vue"
-import BaseOptionButtons from "@/components/base/BaseOptionButtons.vue"
+import BaseOptions from "@/components/base/BaseOptions.vue"
 
 export const BaseComponents = {
-    BaseOptionButtons,
+    BaseOptions,
     BasePasswordInput,
     BaseButton,
     BaseInput,

@@ -2,6 +2,7 @@
 // Imports
 // =============================================================================
 import { defineStore } from "pinia"
+import { useLocalStorage } from "@vueuse/core"
 import { ref } from "vue"
 
 // =============================================================================
@@ -12,5 +13,11 @@ export const useGameStore = defineStore("game", () => {
     const players = ref({})
     const history = ref({})
 
-    return { gameSettings, players, history }
+    const quitGame = () => {
+        gameSettings.value = {}
+        players.value = {}
+        history.value = {}
+    }
+
+    return { gameSettings, players, history, quitGame }
 })
