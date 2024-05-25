@@ -18,7 +18,7 @@ import * as yup from "yup"
 // =============================================================================
 const route = useRoute()
 const router = useRouter()
-const { gameSettings, players } = storeToRefs(useGameStore())
+const { gameSettings, players, gameHistory } = storeToRefs(useGameStore())
 
 const startingScoreOptions = ["170", "301", "501", "701"]
 const legsOptions = ["1 leg", "3 legs", "5 legs", "Custom"]
@@ -39,6 +39,10 @@ const configurationValidationSchema = yup.object({
 })
 
 // =============================================================================
+// Lifecycle hooks
+// =============================================================================
+
+// =============================================================================
 // Functions
 // =============================================================================
 const handleConfigurationFormSubmit = (values) => {
@@ -51,6 +55,16 @@ const handleConfigurationFormSubmit = (values) => {
     }
 
     players.value = placeholderData
+
+    router.push({ name: "GamePage" })
+}
+
+const handleQuit = () => {
+    gameSettings.value = {}
+    players.value = {}
+    gameHistory.value = {}
+
+    router.push({ name: "DashboardPage" })
 }
 </script>
 
@@ -129,7 +143,7 @@ const handleConfigurationFormSubmit = (values) => {
                 </div>
 
                 <div class="game-settings-page__configuration-action-buttons">
-                    <BaseButton>Quit lobby</BaseButton>
+                    <BaseButton type="button" @click="handleQuit">Quit lobby</BaseButton>
                     <BaseButton class="base-button--secondary">Start game</BaseButton>
                 </div>
             </Form>
