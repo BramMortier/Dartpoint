@@ -6,7 +6,7 @@ import { FriendsListItem } from "@/components/index"
 import { userApi } from "@/services/api"
 import { useAuthStore } from "@/stores/authStore"
 import { useRouter } from "vue-router"
-import { onMounted, ref } from "vue"
+import { onMounted, ref, computed } from "vue"
 import { timeSince } from "@/helpers"
 
 // =============================================================================
@@ -21,6 +21,19 @@ const router = useRouter()
 
 const requests = ref(null)
 
+const outgoingRequests = computed(() => {
+    return (
+        requests.value &&
+        requests.value.filter((request) => request.userId === authenticatedUser.id)
+    )
+})
+
+const incommingRequests = computed(() => {
+    return (
+        requests.value &&
+        requests.value.filter((request) => request.userId !== authenticatedUser.id)
+    )
+})
 // =============================================================================
 // Lifecycle hooks
 // =============================================================================
@@ -34,6 +47,23 @@ onMounted(async () => {
 // =============================================================================
 // Functions
 // =============================================================================
+const cancelFriendRequest = async (requestSender, requestReceiver) => {
+    const { status, message, body } = await userApi.deleteFriendRequest(
+        requestSender,
+        requestReceiver
+    )
+
+    router.go()
+}
+
+const denyFriendRequest = async (requestSender, requestReceiver) => {
+    const { status, message, body } = await userApi.deleteFriendRequest(
+        requestReceiver,
+        requestSender
+    )
+
+    router.go()
+}
 </script>
 
 <template>
@@ -49,14 +79,19 @@ onMounted(async () => {
 
             <ul>
                 <FriendsListItem
-                    v-for="request in requests"
+                    v-for="request in outgoingRequests"
                     :name="request.friend.displayName"
                     :is-online="true"
                     :status="`Sent ${timeSince(new Date(request.createdAt))} ago`"
                     :show-profile-picture="true"
                     :show-status-indicator="false"
                 >
-                    <BaseButton class="base-button--tertiary"> Cancel request </BaseButton>
+                    <BaseButton
+                        class="base-button--tertiary"
+                        @click="cancelFriendRequest(request.userId, request.friendId)"
+                    >
+                        Cancel request
+                    </BaseButton>
                 </FriendsListItem>
             </ul>
         </div>
@@ -66,13 +101,18 @@ onMounted(async () => {
 
             <ul>
                 <FriendsListItem
-                    v-for="request in requests"
+                    v-for="request in incommingRequests"
                     :name="request.friend.displayName"
                     :is-online="true"
                     status="Online, in game"
                     :show-profile-picture="true"
                 >
-                    <BaseButton class="base-button--primary"> Deny </BaseButton>
+                    <BaseButton
+                        class="base-button--primary"
+                        @click="denyFriendRequest(request.userId, request.friendId)"
+                    >
+                        Deny
+                    </BaseButton>
 
                     <BaseButton class="base-button--secondary"> Accept </BaseButton>
                 </FriendsListItem>
@@ -85,7 +125,7 @@ onMounted(async () => {
 .friends-requests-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-24);
+    gap: var(--space-32);
 
     &__title {
         display: flex;
@@ -103,6 +143,12 @@ onMounted(async () => {
         display: flex;
         flex-direction: column;
         gap: var(--space-12);
+
+        & > ul {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-16);
+        }
     }
 }
 </style>

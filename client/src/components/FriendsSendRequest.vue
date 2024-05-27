@@ -9,23 +9,19 @@ import { userApi } from "@/services/api"
 import * as yup from "yup"
 
 // =============================================================================
-// Props & Events
-// =============================================================================
-
-// =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
 const router = useRouter()
 const { authenticatedUser } = useAuthStore()
 
-const friendRequestFormValidationSchema = yup.object({
+const sendFriendRequestFormValidationSchema = yup.object({
     code: yup.string().required("Invalid friend code!")
 })
 
 // =============================================================================
 // Functions
 // =============================================================================
-const handleFriendRequestFormSubmit = async (values) => {
+const SendFriendRequestFormSubmit = async (values) => {
     const requestBody = {
         isAccepted: false,
         userId: authenticatedUser.id,
@@ -37,6 +33,8 @@ const handleFriendRequestFormSubmit = async (values) => {
     const { status, message, body } = await userApi.createFriendRequest(requestBody)
 
     console.log(status, message, body)
+
+    router.go()
 }
 </script>
 
@@ -53,13 +51,13 @@ const handleFriendRequestFormSubmit = async (values) => {
         </div>
 
         <Form
-            @submit="handleFriendRequestFormSubmit"
-            :validation-schema="friendRequestFormValidationSchema"
-            id="friend-request-form"
+            @submit="SendFriendRequestFormSubmit"
+            :validation-schema="sendFriendRequestFormValidationSchema"
+            id="send-friend-request-form"
             class="friends-send-request__form"
         >
             <BaseInput
-                id="friend-request-code"
+                id="send-friend-request-code"
                 type="number"
                 name="code"
                 label="Friend code"

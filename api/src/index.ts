@@ -3,6 +3,7 @@
 // =============================================================================
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
+import { SwaggerTheme, SwaggerThemeNameEnum } from "swagger-themes";
 
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
@@ -12,13 +13,17 @@ import { userRouter } from "./router/users";
 import { authRouter } from "./router/auth";
 import { protectedRouter } from "./router/protected";
 
-import { pusher } from "./config/pusher";
 // TODO: add path aliases
 
 // =============================================================================
 // Initialize Hono with OpenAPI
 // =============================================================================
 const api = new OpenAPIHono();
+
+const swaggerTheme = new SwaggerTheme();
+const gruvboxTheme = swaggerTheme.getBuffer(SwaggerThemeNameEnum.GRUVBOX);
+
+console.log(gruvboxTheme);
 
 api.doc("/doc", {
     openapi: "3.0.0",
@@ -33,16 +38,9 @@ api.doc("/doc", {
 // =============================================================================
 // Routes & middleware configuration
 // =============================================================================
+swaggerUI({ url: "/doc" });
+
 api.get("/ui", swaggerUI({ url: "/doc" }));
-
-// =============================================================================
-// Pusher event test
-// =============================================================================
-api.get("/pusher", (c) => {
-    pusher.trigger("test-channel", "test-event", { message: "Hello from pusher" });
-
-    return c.json("test event send");
-});
 
 api.use(cors({ origin: "http://localhost:5173", credentials: true }));
 api.use(logger());

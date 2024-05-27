@@ -7,16 +7,17 @@ import { pusher } from "../../config/pusher";
 import { validateRequest } from "../../middleware/requestValidator";
 import { db } from "../../config/db";
 
+import { friendRequestSchema } from "../../models/friendRequest";
 import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
 import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
 
 // =============================================================================
 // Request Schemas
 // =============================================================================
-const requestSchema = z.object({
-    isAccepted: z.boolean(),
-    userId: z.number(),
-    friendId: z.number(),
+const requestSchema = friendRequestSchema.pick({
+    userId: true,
+    friendId: true,
+    isAccepted: true,
 });
 
 // TODO: use scheme and .pick() instead of hard coded
@@ -96,13 +97,20 @@ export const createFriendRequestHandler: Handler = async (c) => {
 
         // TODO: check if friend request already is pending or accepted
 
-        await db.userFriends.create({
+        const createdRequest = await db.userFriends.create({
             data: body,
         });
 
-        pusher.trigger("friend-requests", "new-request", { requestSender: requestSender });
+        pusher.trigger(`friend-requests-${requestReciever.id}`, "new-request", {
+            requestSender: requestSender,
+        });
 
-        return formattedSuccesResponse(c, 200, createFriendRequestRoute.responses[200].description);
+        return formattedSuccesResponse(
+            c,
+            200,
+            createFriendRequestRoute.responses[200].description,
+            { createdRequest: createdRequest }
+        );
     } catch (error) {
         console.error(error);
         return formattedErrorResponse(c, 500, createFriendRequestRoute.responses[500].description);

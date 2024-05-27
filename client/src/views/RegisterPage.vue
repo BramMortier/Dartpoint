@@ -24,7 +24,7 @@ const registerFormValidationSchema = yup.object({
 // =============================================================================
 // Functions
 // =============================================================================
-const handleRegisterFormSubmit = async (values) => {
+const RegisterFormSubmit = async (values) => {
     const requestBody = {
         displayName: values.displayName,
         email: values.email,
@@ -47,7 +47,7 @@ const handleRegisterFormSubmit = async (values) => {
             <Form
                 id="register-form"
                 class="register-page__form"
-                @submit="handleRegisterFormSubmit"
+                @submit="RegisterFormSubmit"
                 :validation-schema="registerFormValidationSchema"
             >
                 <div class="register-page__form-fields">

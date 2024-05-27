@@ -19,7 +19,7 @@ const loginFormValidationSchema = yup.object({
 // =============================================================================
 // Functions
 // =============================================================================
-const handleLoginFormSubmit = async (values) => {
+const LoginFormSubmit = async (values) => {
     const requestBody = {
         email: values.email,
         password: values.password
@@ -41,7 +41,7 @@ const handleLoginFormSubmit = async (values) => {
             <Form
                 id="login-form"
                 class="login-page__form"
-                @submit="handleLoginFormSubmit"
+                @submit="LoginFormSubmit"
                 :validation-schema="loginFormValidationSchema"
             >
                 <div class="login-page__form-fields">

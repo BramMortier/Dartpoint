@@ -9,6 +9,7 @@ import { deleteUserHandler, deleteUserRoute } from "./deleteUser";
 import { createFriendRequestHandler, createFriendRequestRoute } from "./createFriendRequest";
 import { getFriendRequestsHandler, getFriendRequestsRoute } from "./getFriendRequests";
 import { deleteFriendRequestsHandler, deleteFriendRequestsRoute } from "./deleteFriendRequest";
+import { patchFriendRequestHandler, patchFriendRequestRoute } from "./patchFriendRequest";
 
 // =============================================================================
 // Router configuration
@@ -32,5 +33,8 @@ userRouter.openapi(createFriendRequestRoute, createFriendRequestHandler);
 
 // DELETE /api/users/{userId}/friend-requests/{friendId}
 userRouter.openapi(deleteFriendRequestsRoute, deleteFriendRequestsHandler);
+
+// PATCH /api/users/{userId}/friend-requests/{friendId}
+userRouter.openapi(patchFriendRequestRoute, patchFriendRequestHandler);
 
 export { userRouter };
