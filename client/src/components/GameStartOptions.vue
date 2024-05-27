@@ -2,6 +2,9 @@
 // =============================================================================
 // Imports
 // =============================================================================
+import { useRouter } from "vue-router"
+
+import cryptoRandomString from "crypto-random-string"
 
 // =============================================================================
 // Props & Events
@@ -10,6 +13,7 @@
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const router = useRouter()
 
 // =============================================================================
 // Functions
@@ -18,7 +22,15 @@
 
 <template>
     <div class="game-start-options">
-        <div class="game-start-options__create-game">
+        <div
+            class="game-start-options__create-game"
+            @click.stop="
+                router.push({
+                    name: 'GameSettingsPage',
+                    params: { id: cryptoRandomString({ length: 8, type: 'distinguishable' }) }
+                })
+            "
+        >
             <BaseIcon class="game-start-options__deco" name="logo-icon" />
 
             <div>

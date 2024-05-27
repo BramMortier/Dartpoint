@@ -43,7 +43,7 @@ const handleFriendRequestFormSubmit = async (values) => {
 <template>
     <div class="friends-send-request">
         <div class="friends-send-request__explanation">
-            <div>
+            <div class="friends-send-request__title">
                 <BaseIcon name="arrow-left" @click="router.back()" />
 
                 <h2>Add new friends</h2>
@@ -81,16 +81,16 @@ const handleFriendRequestFormSubmit = async (values) => {
         display: flex;
         flex-direction: column;
         gap: var(--space-12);
+    }
 
-        & > div {
-            display: flex;
-            align-items: center;
-            gap: var(--space-24);
-            color: var(--clr-neutral-100);
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: var(--space-24);
+        color: var(--clr-neutral-100);
 
-            & > .base-icon:hover {
-                cursor: pointer;
-            }
+        & > .base-icon:hover {
+            cursor: pointer;
         }
     }
 

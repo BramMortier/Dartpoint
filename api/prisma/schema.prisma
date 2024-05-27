@@ -59,9 +59,9 @@ model BoardUsers {
 }
 
 model UserFriends {
-    user     User @relation("friends", fields: [userId], references: [id], map: "friends")
+    user     User @relation("friends", fields: [userId], references: [id])
     userId   Int
-    friend   User @relation("friends-of", fields: [userId], references: [id], map: "friends-of")
+    friend   User @relation("friends-of", fields: [friendId], references: [id])
     friendId Int
 
     isAccepted Boolean

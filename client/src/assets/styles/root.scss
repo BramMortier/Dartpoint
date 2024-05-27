@@ -35,7 +35,7 @@
 // Extra propreties
 // =============================================================================
 :root {
-    $border-radius-values: (5, 10, 15, 20);
+    $border-radius-values: (3, 5, 10, 15, 20);
 
     @each $value in $border-radius-values {
         --border-radius-#{$value}: #{$value}px;

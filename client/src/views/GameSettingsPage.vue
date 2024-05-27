@@ -3,11 +3,14 @@
 // Imports
 // =============================================================================
 import { Form } from "vee-validate"
-import { useRouter, useRoute } from "vue-router"
 import { FriendsListItem } from "@/components/index"
-import { useGameStore } from "@/stores/gameStore"
-import { storeToRefs } from "pinia"
+import { onMounted } from "vue"
 import * as yup from "yup"
+
+import { useRouter, useRoute } from "vue-router"
+import { useGameStore } from "@/stores/gameStore"
+import { useAuthStore } from "@/stores/authStore"
+import { storeToRefs } from "pinia"
 
 // =============================================================================
 // Props & Events
@@ -18,20 +21,14 @@ import * as yup from "yup"
 // =============================================================================
 const route = useRoute()
 const router = useRouter()
-const { gameSettings, players, gameHistory } = storeToRefs(useGameStore())
+
+const { authenticatedUser } = storeToRefs(useAuthStore())
+
+const { gameSettings, players } = storeToRefs(useGameStore())
+const { resetGame } = useGameStore()
 
 const startingScoreOptions = ["170", "301", "501", "701"]
 const legsOptions = ["1 leg", "3 legs", "5 legs", "Custom"]
-
-const placeholderData = [
-    { displayName: "Mar10a", isOnline: true, status: "Ready", connectedBoard: "ER45H78D" },
-    {
-        displayName: "DrBruinbeer",
-        isOnline: true,
-        status: "Ready",
-        connectedBoard: "NO BOARD"
-    }
-]
 
 const configurationValidationSchema = yup.object({
     startingScore: yup.string(),
@@ -41,6 +38,10 @@ const configurationValidationSchema = yup.object({
 // =============================================================================
 // Lifecycle hooks
 // =============================================================================
+onMounted(() => {
+    resetGame()
+    players.value = [...players.value, authenticatedUser.value]
+})
 
 // =============================================================================
 // Functions
@@ -54,17 +55,7 @@ const handleConfigurationFormSubmit = (values) => {
         legs: values.legs
     }
 
-    players.value = placeholderData
-
     router.push({ name: "GamePage" })
-}
-
-const handleQuit = () => {
-    gameSettings.value = {}
-    players.value = {}
-    gameHistory.value = {}
-
-    router.push({ name: "DashboardPage" })
 }
 </script>
 
@@ -78,16 +69,16 @@ const handleQuit = () => {
                     <h2>Lobby</h2>
                 </div>
 
-                <p class="typo-body-large">{{ placeholderData.length }} Players</p>
+                <p class="typo-body-large">{{ players.length }} Players</p>
 
                 <ul class="game-settings-page__lobby-players-list">
                     <FriendsListItem
-                        v-for="player in placeholderData"
+                        v-for="player in players"
                         :show-profile-picture="true"
-                        :is-online="player.isOnline"
+                        :is-online="true"
                         :name="player.displayName"
-                        :status="`Online, ${player.status}`"
-                        :connected-board="player.connectedBoard"
+                        status="Online, Ready"
+                        connected-board="Dartshop Aalter"
                     />
 
                     <div class="game-settings-page__lobby-add-player">
@@ -143,7 +134,9 @@ const handleQuit = () => {
                 </div>
 
                 <div class="game-settings-page__configuration-action-buttons">
-                    <BaseButton type="button" @click="handleQuit">Quit lobby</BaseButton>
+                    <BaseButton type="button" @click="router.push({ name: 'DashboardPage' })">
+                        Quit lobby
+                    </BaseButton>
                     <BaseButton class="base-button--secondary">Start game</BaseButton>
                 </div>
             </Form>
@@ -258,6 +251,7 @@ const handleQuit = () => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        gap: var(--space-64);
         height: 100%;
     }
 

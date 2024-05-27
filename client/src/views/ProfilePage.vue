@@ -35,7 +35,7 @@ const router = useRouter()
 
             <BaseContainer
                 class="profile-page__friends"
-                @click="router.push({ name: 'FriendsList' })"
+                @click="router.push({ name: 'FriendsPage' })"
             >
                 <h2>Friends</h2>
             </BaseContainer>

@@ -25,6 +25,8 @@ const handleLoginFormSubmit = async (values) => {
         password: values.password
     }
 
+    console.log(requestBody)
+
     const { status, message, body } = await authApi.login(requestBody)
 
     if (status === 200) setTimeout(() => router.push({ name: "DashboardPage" }), 1000)

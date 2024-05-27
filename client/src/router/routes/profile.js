@@ -25,7 +25,7 @@ export const profileRoutes = [
         children: [
             {
                 path: "",
-                name: "FriendsList",
+                name: "FriendsPage",
                 component: () => import("@/components/FriendsList.vue"),
                 meta: {
                     protected: true,

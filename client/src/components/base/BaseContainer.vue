@@ -4,6 +4,8 @@
 // =============================================================================
 const props = defineProps({
     class: String,
+    backgroundImage: String,
+    backgroundImageDarkness: { type: Number, default: 0.4 },
     isClickable: { type: Boolean, default: true }
 })
 </script>
@@ -12,6 +14,12 @@ const props = defineProps({
     <section
         class="base-container"
         :class="[props.class, { 'base-container--not-clickable': props.isClickable }]"
+        :style="{
+            backgroundImage: props.backgroundImage
+                ? `linear-gradient(rgba(0, 0, 0, ${backgroundImageDarkness}),
+                       rgba(0, 0, 0, ${backgroundImageDarkness})), url(${props.backgroundImage})`
+                : 'none'
+        }"
     >
         <slot></slot>
     </section>
@@ -29,6 +37,10 @@ const props = defineProps({
     border: 1px solid var(--clr-neutral-600);
     border-radius: var(--border-radius-20);
     transition: all ease-in 0.15s;
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 
     @include styles-for(desktop) {
         padding: var(--space-24);

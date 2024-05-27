@@ -7,6 +7,8 @@ import { useAuthStore } from "@/stores/authStore"
 import { useRouter } from "vue-router"
 import { storeToRefs } from "pinia"
 
+import { profilePicturePlaceholder } from "@/assets/images"
+
 // =============================================================================
 // Props & Events
 // =============================================================================
@@ -58,7 +60,7 @@ const router = useRouter()
 
             <img
                 class="header__user-profile-picture"
-                src="@/assets/images/profile-picture-placeholder.webp"
+                :src="profilePicturePlaceholder"
                 alt="profile-picture-placeholder"
             />
         </div>

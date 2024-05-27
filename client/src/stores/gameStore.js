@@ -10,8 +10,14 @@ import { ref } from "vue"
 // =============================================================================
 export const useGameStore = defineStore("game", () => {
     const gameSettings = useStorage("game-settings", {})
-    const players = useStorage("players", {})
-    const gameHistory = useStorage("game-history", {})
+    const players = useStorage("players", [])
+    const gameInfo = useStorage("game-info", {})
 
-    return { gameSettings, players, gameHistory }
+    const resetGame = () => {
+        gameSettings.value = {}
+        players.value = []
+        gameInfo.value = {}
+    }
+
+    return { gameSettings, players, gameInfo, resetGame }
 })

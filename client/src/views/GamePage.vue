@@ -3,6 +3,9 @@
 // Imports
 // =============================================================================
 import { GameFreeplay, GameCompetition, GamePlayerCard } from "@/components/index"
+import { useGameStore } from "@/stores/gameStore"
+import { storeToRefs } from "pinia"
+
 // =============================================================================
 // Props & Events
 // =============================================================================
@@ -10,6 +13,7 @@ import { GameFreeplay, GameCompetition, GamePlayerCard } from "@/components/inde
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const { gameSettings } = storeToRefs(useGameStore())
 
 // =============================================================================
 // Functions
@@ -41,9 +45,9 @@ import { GameFreeplay, GameCompetition, GamePlayerCard } from "@/components/inde
         </div>
 
         <BaseContainer class="game-page__main" :is-clickable="false">
-            <GameFreeplay />
+            <GameFreeplay v-if="gameSettings?.gameType === 'Freeplay'" />
 
-            <GameCompetition />
+            <GameCompetition v-else-if="gameSettings?.gameType === 'Classic / X01'" />
         </BaseContainer>
     </div>
 </template>

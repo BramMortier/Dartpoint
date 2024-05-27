@@ -30,6 +30,14 @@ export const getAuthRoute = createRoute({
             },
             description: "Valid session",
         },
+        400: {
+            content: {
+                "application/json": {
+                    schema: ErrorResponseSchema,
+                },
+            },
+            description: "User not found",
+        },
         401: {
             content: {
                 "application/json": {
@@ -66,6 +74,9 @@ export const getAuthHandler: Handler = async (c) => {
         const authenticatedUser = await db.user.findUnique({
             where: { id: decodedToken.payload.sub },
         });
+
+        if (!authenticatedUser)
+            return formattedErrorResponse(c, 400, getAuthRoute.responses[400].description);
 
         return formattedSuccesResponse(c, 200, getAuthRoute.responses[200].description, {
             user: authenticatedUser,

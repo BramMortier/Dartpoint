@@ -59,7 +59,10 @@ export const getFriendRequestsHandler: Handler = async (c) => {
     try {
         const userIdParam = c.req.param("id");
 
-        const requests = await db.userFriends.findMany({ where: { userId: Number(userIdParam) } });
+        const requests = await db.userFriends.findMany({
+            where: { userId: Number(userIdParam) },
+            include: { friend: true, user: true },
+        });
 
         return formattedSuccesResponse(c, 200, getFriendRequestsRoute.responses[200].description, {
             requests: requests,

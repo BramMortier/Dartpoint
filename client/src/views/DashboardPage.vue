@@ -3,7 +3,12 @@
 // Imports
 // =============================================================================
 import { FriendsList, GameStartOptions } from "@/components/index"
+import { useGameStore } from "@/stores/gameStore"
+import { useAuthStore } from "@/stores/authStore"
+import { storeToRefs } from "pinia"
 import { useRouter } from "vue-router"
+
+import { startGameBackdrop, profileAndStatsBackdrop, myBoardsBackdrop } from "@/assets/images"
 
 import cryptoRandomString from "crypto-random-string"
 
@@ -15,10 +20,27 @@ import cryptoRandomString from "crypto-random-string"
 // Composables, Refs & Computed
 // =============================================================================
 const router = useRouter()
+const { authenticatedUser } = storeToRefs(useAuthStore())
+const { gameSettings, players } = storeToRefs(useGameStore())
+const { resetGame } = useGameStore()
 
 // =============================================================================
 // Functions
 // =============================================================================
+const startFreeplayGame = () => {
+    resetGame()
+
+    players.value = [...players.value, authenticatedUser.value]
+
+    gameSettings.value = {
+        gameType: "Freeplay"
+    }
+
+    router.push({
+        name: "GamePage",
+        params: { id: cryptoRandomString({ length: 8, type: "distinguishable" }) }
+    })
+}
 </script>
 
 <template>
@@ -26,12 +48,8 @@ const router = useRouter()
         <div class="dashboard-page__action-buttons">
             <BaseContainer
                 class="dashboard-page__start-game"
-                @click="
-                    router.push({
-                        name: 'GameSettingsPage',
-                        params: { id: cryptoRandomString({ length: 8, type: 'distinguishable' }) }
-                    })
-                "
+                :background-image="startGameBackdrop"
+                @click="startFreeplayGame"
             >
                 <GameStartOptions />
 
@@ -43,12 +61,14 @@ const router = useRouter()
 
             <BaseContainer
                 class="dashboard-page__profile"
+                :background-image="profileAndStatsBackdrop"
+                :background-image-darkness="0.2"
                 @click="router.push({ name: 'ProfilePage' })"
             >
                 <h2>Profile & statistics</h2>
             </BaseContainer>
 
-            <BaseContainer class="dashboard-page__dartboards">
+            <BaseContainer class="dashboard-page__dartboards" :background-image="myBoardsBackdrop">
                 <h2>My dartboards</h2>
             </BaseContainer>
         </div>
