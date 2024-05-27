@@ -13,8 +13,8 @@ import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/for
 // Request Schemas
 // =============================================================================
 const paramsSchema = z.object({
-    id: z.string().openapi({
-        param: { name: "id", description: "ID for user to delete", in: "path" },
+    userId: z.string().openapi({
+        param: { name: "userId", description: "ID for user to retrieve", in: "path" },
         example: "65",
     }),
 });
@@ -24,7 +24,7 @@ const paramsSchema = z.object({
 // =============================================================================
 export const deleteUserRoute = createRoute({
     method: "delete",
-    path: "/{id}",
+    path: "/{userId}",
     summary: "Delete a single user by their ID",
     request: {
         params: paramsSchema,
@@ -56,7 +56,7 @@ export const deleteUserRoute = createRoute({
 // Route handler
 // =============================================================================
 export const deleteUserHandler: Handler = async (c) => {
-    const userId = c.req.param("id");
+    const userId = c.req.param("userId");
 
     try {
         const deletedUser = await db.user.delete({

@@ -5,8 +5,8 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
 import { db } from "../../config/db";
 
-import { userSchema } from "../../models/user";
-import { SuccesResponseSchema, ErrorResponseSchema } from "../../models/response";
+import { friendRequestSchema } from "../../models/friendRequest";
+import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
 import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
 
 // =============================================================================
@@ -14,18 +14,30 @@ import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/for
 // =============================================================================
 const paramsSchema = z.object({
     userId: z.string().openapi({
-        param: { name: "userId", description: "ID for user to retrieve", in: "path" },
+        param: {
+            name: "userId",
+            description: "ID for request sender",
+            in: "path",
+        },
         example: "46",
+    }),
+    friendId: z.string().openapi({
+        param: {
+            name: "friendId",
+            description: "ID for request reciever",
+            in: "path",
+        },
+        example: "73",
     }),
 });
 
 // =============================================================================
 // Route defenition
 // =============================================================================
-export const getUserRoute = createRoute({
-    method: "get",
-    path: "/{userId}",
-    summary: "Get a single user by their ID",
+export const deleteFriendRequestsRoute = createRoute({
+    method: "delete",
+    path: "/{userId}/friend-requests/{friendId}",
+    summary: "Delete a friend request",
     request: {
         params: paramsSchema,
     },
@@ -34,11 +46,11 @@ export const getUserRoute = createRoute({
             content: {
                 "application/json": {
                     schema: SuccesResponseSchema.extend({
-                        data: z.object({ user: userSchema }),
+                        data: z.object({ requests: z.array(friendRequestSchema) }),
                     }),
                 },
             },
-            description: "Successfully retrieved user",
+            description: "Successfully deleted request",
         },
         500: {
             content: {
@@ -55,15 +67,28 @@ export const getUserRoute = createRoute({
 // =============================================================================
 // Route handler
 // =============================================================================
-export const getUserHandler: Handler = async (c) => {
+export const deleteFriendRequestsHandler: Handler = async (c) => {
     try {
         const userIdParam = c.req.param("userId");
+        const friendIdParam = c.req.param("friendId");
 
-        const user = await db.user.findUnique({ where: { id: Number(userIdParam) } });
+        const deletedRequest = await db.userFriends.delete({
+            where: {
+                userId_friendId: {
+                    userId: Number(userIdParam),
+                    friendId: Number(friendIdParam),
+                },
+            },
+        });
 
-        return formattedSuccesResponse(c, 200, getUserRoute.responses[200].description, user);
+        return formattedSuccesResponse(
+            c,
+            200,
+            deleteFriendRequestsRoute.responses[200].description,
+            { deletedRequest: deletedRequest }
+        );
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, getUserRoute.responses[500].description);
+        return formattedErrorResponse(c, 500, deleteFriendRequestsRoute.responses[500].description);
     }
 };

@@ -13,8 +13,12 @@ import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/for
 // Request Schemas
 // =============================================================================
 const paramsSchema = z.object({
-    id: z.string().openapi({
-        param: { name: "id", description: "ID for user's friend requests te retrieve", in: "path" },
+    userId: z.string().openapi({
+        param: {
+            name: "userId",
+            description: "ID for user's friend requests te retrieve",
+            in: "path",
+        },
         example: "46",
     }),
 });
@@ -24,7 +28,7 @@ const paramsSchema = z.object({
 // =============================================================================
 export const getFriendRequestsRoute = createRoute({
     method: "get",
-    path: "/{id}/friend-requests",
+    path: "/{userId}/friend-requests",
     summary: "Get a users outgoing and incomming friend requests",
     request: {
         params: paramsSchema,
@@ -57,7 +61,7 @@ export const getFriendRequestsRoute = createRoute({
 // =============================================================================
 export const getFriendRequestsHandler: Handler = async (c) => {
     try {
-        const userIdParam = c.req.param("id");
+        const userIdParam = c.req.param("userId");
 
         const requests = await db.userFriends.findMany({
             where: { userId: Number(userIdParam) },

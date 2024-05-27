@@ -8,6 +8,7 @@ import { getUserHandler, getUserRoute } from "./getUser";
 import { deleteUserHandler, deleteUserRoute } from "./deleteUser";
 import { createFriendRequestHandler, createFriendRequestRoute } from "./createFriendRequest";
 import { getFriendRequestsHandler, getFriendRequestsRoute } from "./getFriendRequests";
+import { deleteFriendRequestsHandler, deleteFriendRequestsRoute } from "./deleteFriendRequest";
 
 // =============================================================================
 // Router configuration
@@ -17,16 +18,19 @@ const userRouter = new OpenAPIHono();
 // GET /api/users
 userRouter.openapi(getUsersRoute, getUsersHandler);
 
-// GET /api/users/{id}
+// GET /api/users/{userId}
 userRouter.openapi(getUserRoute, getUserHandler);
 
-// DELETE /api/users/{id}
+// DELETE /api/users/{userId}
 userRouter.openapi(deleteUserRoute, deleteUserHandler);
 
-// GET /api/users/{id}/friend-requests
+// GET /api/users/{userId}/friend-requests
 userRouter.openapi(getFriendRequestsRoute, getFriendRequestsHandler);
 
 // POST /api/users/friend-requests
 userRouter.openapi(createFriendRequestRoute, createFriendRequestHandler);
+
+// DELETE /api/users/{userId}/friend-requests/{friendId}
+userRouter.openapi(deleteFriendRequestsRoute, deleteFriendRequestsHandler);
 
 export { userRouter };
