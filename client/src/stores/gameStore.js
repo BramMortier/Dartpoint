@@ -3,7 +3,6 @@
 // =============================================================================
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
-import { ref } from "vue"
 
 // =============================================================================
 // Store configuration

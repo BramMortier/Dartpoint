@@ -2,13 +2,15 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { TheStatusHeader } from "@/components/index"
+import { TheStatusHeader, TheModalWindow } from "@/components/index"
 </script>
 
 <template>
     <div class="default-layout">
         <div class="default-layout__content">
             <TheStatusHeader />
+
+            <TheModalWindow />
 
             <main>
                 <slot />

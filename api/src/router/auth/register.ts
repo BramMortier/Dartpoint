@@ -15,6 +15,7 @@ import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/for
 // =============================================================================
 export const requestSchema = userSchema.pick({
     displayName: true,
+    dartpointId: true,
     email: true,
     password: true,
     country: true,

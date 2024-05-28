@@ -3,7 +3,7 @@
 // Imports
 // =============================================================================
 import { useRouter, RouterView } from "vue-router"
-import { userApi } from "@/services/api"
+import { friendRequestsApi } from "@/services/api"
 import { useAuthStore } from "@/stores/authStore"
 import { onMounted, ref } from "vue"
 
@@ -23,7 +23,7 @@ const requests = ref(null)
 // Lifecycle hooks
 // =============================================================================
 onMounted(async () => {
-    const { status, message, body } = await userApi.getFriendRequests(authenticatedUser.id)
+    const { status, message, body } = await friendRequestsApi.getFriendRequests()
     requests.value = body.requests
 })
 

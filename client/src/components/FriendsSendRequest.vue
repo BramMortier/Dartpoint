@@ -4,37 +4,48 @@
 // =============================================================================
 import { Form } from "vee-validate"
 import { useRouter } from "vue-router"
-import { useAuthStore } from "@/stores/authStore"
-import { userApi } from "@/services/api"
+import { useModalStore } from "@/stores/modalStore"
+import { friendRequestsApi } from "@/services/api"
+import { FriendsDuplicateRequestModal } from "@/components/index"
 import * as yup from "yup"
 
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
 const router = useRouter()
-const { authenticatedUser } = useAuthStore()
+const { openModal } = useModalStore()
 
 const sendFriendRequestFormValidationSchema = yup.object({
-    code: yup.string().required("Invalid friend code!")
+    id: yup.string().required("Invalid friend code!")
 })
 
 // =============================================================================
 // Functions
 // =============================================================================
-const SendFriendRequestFormSubmit = async (values) => {
+const SendFriendRequestFormSubmit = async (values, { resetForm }) => {
     const requestBody = {
         isAccepted: false,
-        userId: authenticatedUser.id,
-        friendId: values.code
+        friendId: values.id
     }
 
-    console.log(requestBody)
+    const { status, message, body, error } =
+        await friendRequestsApi.createFriendRequest(requestBody)
 
-    const { status, message, body } = await userApi.createFriendRequest(requestBody)
+    console.log(status, message, body, error)
 
-    console.log(status, message, body)
+    if (status === 409 && !error.isAccepted)
+        openModal({
+            component: FriendsDuplicateRequestModal,
+            props: { requestSender: error.requestSender, isAccepted: false }
+        })
 
-    router.go()
+    if (error.isAccepted)
+        openModal({
+            component: FriendsDuplicateRequestModal,
+            props: { requestSender: error.requestSender, isAccepted: true }
+        })
+
+    resetForm()
 }
 </script>
 
@@ -47,7 +58,7 @@ const SendFriendRequestFormSubmit = async (values) => {
                 <h2>Add new friends</h2>
             </div>
 
-            <p>You can add new friends using their mystery unique proprety for now</p>
+            <p class="typo-body-large">You can add new friends using their dartpointID</p>
         </div>
 
         <Form
@@ -57,11 +68,11 @@ const SendFriendRequestFormSubmit = async (values) => {
             class="friends-send-request__form"
         >
             <BaseInput
-                id="send-friend-request-code"
-                type="number"
-                name="code"
-                label="Friend code"
-                placeholder="Type a friend code to send a friend request"
+                id="send-friend-request-id"
+                type="text"
+                name="id"
+                label="Dartpoint ID"
+                placeholder="Type a friend's dartpointID to send a request"
             />
 
             <BaseButton class="base-button--secondary">Send request</BaseButton>

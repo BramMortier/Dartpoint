@@ -2,21 +2,19 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { FriendsListItem } from "@/components/index"
-import { userApi } from "@/services/api"
-import { useAuthStore } from "@/stores/authStore"
+import { FriendsListItem, FriendsDuplicateRequestModal } from "@/components/index"
+import { friendRequestsApi } from "@/services/api"
 import { useRouter } from "vue-router"
 import { onMounted, ref, computed } from "vue"
 import { timeSince } from "@/helpers"
 
-// =============================================================================
-// Props & Events
-// =============================================================================
+import { useAuthStore } from "@/stores/authStore"
+import { storeToRefs } from "pinia"
 
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-const { authenticatedUser } = useAuthStore()
+const { authenticatedUser } = storeToRefs(useAuthStore())
 const router = useRouter()
 
 const requests = ref(null)
@@ -24,43 +22,49 @@ const requests = ref(null)
 const outgoingRequests = computed(() => {
     return (
         requests.value &&
-        requests.value.filter((request) => request.userId === authenticatedUser.id)
+        requests.value.filter((request) => request.userId === authenticatedUser.value.id)
     )
 })
 
 const incommingRequests = computed(() => {
     return (
         requests.value &&
-        requests.value.filter((request) => request.userId !== authenticatedUser.id)
+        requests.value.filter((request) => request.userId !== authenticatedUser.value.id)
     )
 })
 // =============================================================================
 // Lifecycle hooks
 // =============================================================================
 onMounted(async () => {
-    const { status, message, body } = await userApi.getFriendRequests(authenticatedUser.id)
-
-    console.log(body)
+    const { status, message, body } = await friendRequestsApi.getFriendRequests()
 
     requests.value = body.requests
 })
+
 // =============================================================================
 // Functions
 // =============================================================================
-const cancelFriendRequest = async (requestSender, requestReceiver) => {
-    const { status, message, body } = await userApi.deleteFriendRequest(
+const acceptFriendRequest = async (requestSender) => {
+    const requestBody = {
+        isAccepted: true
+    }
+
+    const { status, message, body } = await friendRequestsApi.patchFriendRequest(
         requestSender,
-        requestReceiver
+        requestBody
     )
 
     router.go()
 }
 
-const denyFriendRequest = async (requestSender, requestReceiver) => {
-    const { status, message, body } = await userApi.deleteFriendRequest(
-        requestReceiver,
-        requestSender
-    )
+const cancelFriendRequest = async (requestReceiver) => {
+    const { status, message, body } = await friendRequestsApi.deleteFriendRequest(requestReceiver)
+
+    router.go()
+}
+
+const denyFriendRequest = async (requestSender) => {
+    const { status, message, body } = await friendRequestsApi.deleteFriendRequest(requestSender)
 
     router.go()
 }
@@ -88,7 +92,7 @@ const denyFriendRequest = async (requestSender, requestReceiver) => {
                 >
                     <BaseButton
                         class="base-button--tertiary"
-                        @click="cancelFriendRequest(request.userId, request.friendId)"
+                        @click="cancelFriendRequest(request.friendId)"
                     >
                         Cancel request
                     </BaseButton>
@@ -102,19 +106,24 @@ const denyFriendRequest = async (requestSender, requestReceiver) => {
             <ul>
                 <FriendsListItem
                     v-for="request in incommingRequests"
-                    :name="request.friend.displayName"
+                    :name="request.user.displayName"
                     :is-online="true"
                     status="Online, in game"
                     :show-profile-picture="true"
                 >
                     <BaseButton
                         class="base-button--primary"
-                        @click="denyFriendRequest(request.userId, request.friendId)"
+                        @click="denyFriendRequest(request.friendId)"
                     >
                         Deny
                     </BaseButton>
 
-                    <BaseButton class="base-button--secondary"> Accept </BaseButton>
+                    <BaseButton
+                        class="base-button--secondary"
+                        @click="acceptFriendRequest(request.userId)"
+                    >
+                        Accept
+                    </BaseButton>
                 </FriendsListItem>
             </ul>
         </div>

@@ -4,6 +4,7 @@
 // =============================================================================
 import { Form } from "vee-validate"
 import { authApi } from "@/services/api/index"
+import cryptoRandomString from "crypto-random-string"
 import * as yup from "yup"
 
 // =============================================================================
@@ -26,6 +27,7 @@ const registerFormValidationSchema = yup.object({
 // =============================================================================
 const RegisterFormSubmit = async (values) => {
     const requestBody = {
+        dartpointId: cryptoRandomString({ length: 8, type: "distinguishable" }),
         displayName: values.displayName,
         email: values.email,
         password: values.password

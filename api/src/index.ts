@@ -3,7 +3,6 @@
 // =============================================================================
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
-import { SwaggerTheme, SwaggerThemeNameEnum } from "swagger-themes";
 
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
@@ -11,6 +10,7 @@ import { logger } from "hono/logger";
 
 import { userRouter } from "./router/users";
 import { authRouter } from "./router/auth";
+import { friendRequestsRouter } from "./router/friendRequests";
 import { protectedRouter } from "./router/protected";
 
 // TODO: add path aliases
@@ -19,11 +19,6 @@ import { protectedRouter } from "./router/protected";
 // Initialize Hono with OpenAPI
 // =============================================================================
 const api = new OpenAPIHono();
-
-const swaggerTheme = new SwaggerTheme();
-const gruvboxTheme = swaggerTheme.getBuffer(SwaggerThemeNameEnum.GRUVBOX);
-
-console.log(gruvboxTheme);
 
 api.doc("/doc", {
     openapi: "3.0.0",
@@ -38,8 +33,6 @@ api.doc("/doc", {
 // =============================================================================
 // Routes & middleware configuration
 // =============================================================================
-swaggerUI({ url: "/doc" });
-
 api.get("/ui", swaggerUI({ url: "/doc" }));
 
 api.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -47,6 +40,7 @@ api.use(logger());
 api.use(prettyJSON());
 
 api.route("/users", userRouter);
+api.route("/friend-requests", friendRequestsRouter);
 api.route("/auth", authRouter);
 api.route("/protected", protectedRouter);
 

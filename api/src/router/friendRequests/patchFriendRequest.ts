@@ -10,19 +10,13 @@ import { db } from "../../config/db";
 import { friendRequestSchema } from "../../models/friendRequest";
 import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
 import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { verifyJWT } from "../../middleware/verifyJWT";
+import { decode } from "hono/jwt";
 
 // =============================================================================
 // Request Schemas
 // =============================================================================
 const paramsSchema = z.object({
-    userId: z.string().openapi({
-        param: {
-            name: "userId",
-            description: "ID for request sender",
-            in: "path",
-        },
-        example: "112",
-    }),
     friendId: z.string().openapi({
         param: {
             name: "friendId",
@@ -33,20 +27,16 @@ const paramsSchema = z.object({
     }),
 });
 
-const requestSchema = friendRequestSchema
-    .pick({
-        userId: true,
-        friendId: true,
-        isAccepted: true,
-    })
-    .partial();
+const requestSchema = friendRequestSchema.pick({
+    isAccepted: true,
+});
 
 // =============================================================================
 // Route defenition
 // =============================================================================
 export const patchFriendRequestRoute = createRoute({
     method: "patch",
-    path: "{userId}/friend-requests/{friendId}",
+    path: "/{friendId}",
     summary: "Update the status of a friend request",
     request: {
         params: paramsSchema,
@@ -59,7 +49,7 @@ export const patchFriendRequestRoute = createRoute({
             description: "Updated status of the friend request",
         },
     },
-    middleware: [validateRequest(requestSchema)],
+    middleware: [validateRequest(requestSchema), verifyJWT()],
     responses: {
         200: {
             content: {
@@ -86,7 +76,7 @@ export const patchFriendRequestRoute = createRoute({
             description: "Internal server error",
         },
     },
-    tags: ["Users"],
+    tags: ["Friend requests"],
 });
 
 // =============================================================================
@@ -94,8 +84,13 @@ export const patchFriendRequestRoute = createRoute({
 // =============================================================================
 export const patchFriendRequestHandler: Handler = async (c) => {
     try {
-        const userIdParam = c.req.param("userId");
+        const token = c.get("token");
+        const decodedToken = decode(token);
+
         const friendIdParam = c.req.param("friendId");
+
+        console.log("user:", decodedToken.payload.sub);
+        console.log("fiend:", friendIdParam);
 
         const body = await c.req.json();
 
@@ -104,8 +99,8 @@ export const patchFriendRequestHandler: Handler = async (c) => {
         const updatedRequest = await db.userFriends.update({
             where: {
                 userId_friendId: {
-                    userId: Number(userIdParam),
-                    friendId: Number(friendIdParam),
+                    userId: Number(friendIdParam),
+                    friendId: Number(decodedToken.payload.sub),
                 },
             },
             data: {
@@ -113,7 +108,7 @@ export const patchFriendRequestHandler: Handler = async (c) => {
             },
         });
 
-        pusher.trigger(`friend-requests-${userIdParam}`, "accepted-request", {
+        pusher.trigger(`friend-requests-${decodedToken.payload.sub}`, "accepted-request", {
             newFriend: newFriend,
         });
 

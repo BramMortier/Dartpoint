@@ -9,6 +9,7 @@ import { z } from "@hono/zod-openapi";
 export const userSchema = z
     .object({
         id: z.number(),
+        dartpointId: z.string(),
         displayName: z.string(),
         email: z.string(),
         password: z.string(),

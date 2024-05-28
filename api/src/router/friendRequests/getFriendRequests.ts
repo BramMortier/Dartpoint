@@ -8,31 +8,17 @@ import { db } from "../../config/db";
 import { friendRequestSchema } from "../../models/friendRequest";
 import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
 import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
-
-// =============================================================================
-// Request Schemas
-// =============================================================================
-const paramsSchema = z.object({
-    userId: z.string().openapi({
-        param: {
-            name: "userId",
-            description: "ID for user's friend requests te retrieve",
-            in: "path",
-        },
-        example: "46",
-    }),
-});
+import { verifyJWT } from "../../middleware/verifyJWT";
+import { decode } from "hono/jwt";
 
 // =============================================================================
 // Route defenition
 // =============================================================================
 export const getFriendRequestsRoute = createRoute({
     method: "get",
-    path: "/{userId}/friend-requests",
+    path: "/",
     summary: "Get a users outgoing and incomming friend requests",
-    request: {
-        params: paramsSchema,
-    },
+    middleware: [verifyJWT()],
     responses: {
         200: {
             content: {
@@ -53,7 +39,7 @@ export const getFriendRequestsRoute = createRoute({
             description: "Internal server error",
         },
     },
-    tags: ["Users"],
+    tags: ["Friend requests"],
 });
 
 // =============================================================================
@@ -61,10 +47,17 @@ export const getFriendRequestsRoute = createRoute({
 // =============================================================================
 export const getFriendRequestsHandler: Handler = async (c) => {
     try {
-        const userIdParam = c.req.param("userId");
+        const token = c.get("token");
+        const decodedToken = decode(token);
 
         const requests = await db.userFriends.findMany({
-            where: { userId: Number(userIdParam) },
+            where: {
+                OR: [
+                    { userId: Number(decodedToken.payload.sub) },
+                    { friendId: Number(decodedToken.payload.sub) },
+                ],
+                NOT: { isAccepted: true },
+            },
             include: { friend: true, user: true },
         });
 

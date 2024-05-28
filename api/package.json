@@ -9,8 +9,7 @@
     "@prisma/client": "5.14.0",
     "hono": "^4.2.3",
     "prisma": "^5.12.1",
-    "pusher": "^5.2.0",
-    "swagger-themes": "^1.4.3"
+    "pusher": "^5.2.0"
   },
   "devDependencies": {
     "@types/bun": "latest"

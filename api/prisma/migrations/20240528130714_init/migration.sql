@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
+    "dartpointId" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "displayName" TEXT NOT NULL,
     "password" TEXT NOT NULL,
@@ -46,6 +47,9 @@ CREATE TABLE "user_friends" (
 
     CONSTRAINT "user_friends_pkey" PRIMARY KEY ("userId","friendId")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_dartpointId_key" ON "users"("dartpointId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");

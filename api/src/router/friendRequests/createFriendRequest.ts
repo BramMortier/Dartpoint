@@ -10,14 +10,15 @@ import { db } from "../../config/db";
 import { friendRequestSchema } from "../../models/friendRequest";
 import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
 import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { verifyJWT } from "../../middleware/verifyJWT";
+import { decode } from "hono/jwt";
 
 // =============================================================================
 // Request Schemas
 // =============================================================================
-const requestSchema = friendRequestSchema.pick({
-    userId: true,
-    friendId: true,
-    isAccepted: true,
+const requestSchema = z.object({
+    friendId: z.string(),
+    isAccepted: z.boolean(),
 });
 
 // TODO: use scheme and .pick() instead of hard coded
@@ -27,7 +28,7 @@ const requestSchema = friendRequestSchema.pick({
 // =============================================================================
 export const createFriendRequestRoute = createRoute({
     method: "post",
-    path: "/friend-requests",
+    path: "/",
     summary: "Send a friend request to a user",
     request: {
         body: {
@@ -39,7 +40,7 @@ export const createFriendRequestRoute = createRoute({
             description: "Data for sending a friend request",
         },
     },
-    middleware: [validateRequest(requestSchema)],
+    middleware: [validateRequest(requestSchema), verifyJWT()],
     responses: {
         200: {
             content: {
@@ -56,6 +57,16 @@ export const createFriendRequestRoute = createRoute({
                 },
             },
             description: "Incorrect or missing request data",
+        },
+        409: {
+            content: {
+                "application/json": {
+                    schema: ErrorResponseSchema.extend({
+                        isAccepted: z.boolean(),
+                    }),
+                },
+            },
+            description: "Request is already pending or accepted",
         },
         400: {
             content: {
@@ -74,7 +85,7 @@ export const createFriendRequestRoute = createRoute({
             description: "Internal server error",
         },
     },
-    tags: ["Users"],
+    tags: ["Friend requests"],
 });
 
 // =============================================================================
@@ -82,23 +93,47 @@ export const createFriendRequestRoute = createRoute({
 // =============================================================================
 export const createFriendRequestHandler: Handler = async (c) => {
     try {
+        const token = c.get("token");
+        const decodedToken = decode(token);
+
         const body = await c.req.json();
 
-        const requestSender = await db.user.findUnique({ where: { id: body.userId } });
-        const requestReciever = await db.user.findUnique({ where: { id: body.friendId } });
+        const requestSender = await db.user.findUnique({ where: { id: decodedToken.payload.sub } });
+        const requestReciever = await db.user.findUnique({ where: { dartpointId: body.friendId } });
 
-        if (!requestReciever || !requestSender) {
+        if (!requestReciever)
             return formattedErrorResponse(
                 c,
                 400,
                 createFriendRequestRoute.responses[400].description
             );
-        }
 
-        // TODO: check if friend request already is pending or accepted
+        const duplicateRequest = await db.userFriends.findUnique({
+            where: {
+                userId_friendId: {
+                    userId: requestReciever.id,
+                    friendId: decodedToken.payload.sub,
+                },
+            },
+        });
+
+        if (duplicateRequest)
+            return formattedErrorResponse(
+                c,
+                409,
+                createFriendRequestRoute.responses[409].description,
+                {
+                    requestSender: requestReciever,
+                    isAccepted: duplicateRequest.isAccepted,
+                }
+            );
 
         const createdRequest = await db.userFriends.create({
-            data: body,
+            data: {
+                isAccepted: body.isAccepted,
+                friendId: requestReciever.id,
+                userId: decodedToken.payload.sub,
+            },
         });
 
         pusher.trigger(`friend-requests-${requestReciever.id}`, "new-request", {

@@ -8,19 +8,13 @@ import { db } from "../../config/db";
 import { friendRequestSchema } from "../../models/friendRequest";
 import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
 import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { verifyJWT } from "../../middleware/verifyJWT";
+import { decode } from "hono/jwt";
 
 // =============================================================================
 // Request Schemas
 // =============================================================================
 const paramsSchema = z.object({
-    userId: z.string().openapi({
-        param: {
-            name: "userId",
-            description: "ID for request sender",
-            in: "path",
-        },
-        example: "46",
-    }),
     friendId: z.string().openapi({
         param: {
             name: "friendId",
@@ -36,11 +30,12 @@ const paramsSchema = z.object({
 // =============================================================================
 export const deleteFriendRequestsRoute = createRoute({
     method: "delete",
-    path: "/{userId}/friend-requests/{friendId}",
+    path: "/{friendId}",
     summary: "Delete a friend request",
     request: {
         params: paramsSchema,
     },
+    middleware: [verifyJWT()],
     responses: {
         200: {
             content: {
@@ -61,7 +56,7 @@ export const deleteFriendRequestsRoute = createRoute({
             description: "Internal server error",
         },
     },
-    tags: ["Users"],
+    tags: ["Friend requests"],
 });
 
 // =============================================================================
@@ -69,13 +64,15 @@ export const deleteFriendRequestsRoute = createRoute({
 // =============================================================================
 export const deleteFriendRequestsHandler: Handler = async (c) => {
     try {
-        const userIdParam = c.req.param("userId");
+        const token = c.get("token");
+        const decodedToken = decode(token);
+
         const friendIdParam = c.req.param("friendId");
 
         const deletedRequest = await db.userFriends.delete({
             where: {
                 userId_friendId: {
-                    userId: Number(userIdParam),
+                    userId: Number(decodedToken.payload.sub),
                     friendId: Number(friendIdParam),
                 },
             },
