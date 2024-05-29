@@ -11,6 +11,7 @@ import { logger } from "hono/logger";
 import { userRouter } from "./router/users";
 import { authRouter } from "./router/auth";
 import { friendRequestsRouter } from "./router/friendRequests";
+import { boardRouter } from "./router/boards";
 import { protectedRouter } from "./router/protected";
 
 // TODO: add path aliases
@@ -35,12 +36,17 @@ api.doc("/doc", {
 // =============================================================================
 api.get("/ui", swaggerUI({ url: "/doc" }));
 
+api.post("/throw", (c) => {
+    return c.json({ message: "request received" });
+});
+
 api.use(cors({ origin: "http://localhost:5173", credentials: true }));
 api.use(logger());
 api.use(prettyJSON());
 
 api.route("/users", userRouter);
 api.route("/friend-requests", friendRequestsRouter);
+api.route("/boards", boardRouter);
 api.route("/auth", authRouter);
 api.route("/protected", protectedRouter);
 

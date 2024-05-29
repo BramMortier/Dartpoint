@@ -21,7 +21,7 @@ model User {
 
     ownedBoards Board[]
 
-    boards BoardUsers[]
+    savedBoards BoardUsers[]
 
     friends   UserFriends[] @relation("friends")
     friendsOf UserFriends[] @relation("friends-of")
@@ -33,7 +33,7 @@ model Board {
     id        Int     @id @default(autoincrement())
     ownerId   Int
     name      String
-    code      String
+    code      String  @unique
     isVisible Boolean @default(false)
     country   String
 

@@ -15,3 +15,6 @@ export { default as FriendsListItem } from "@/components/FriendsListItem.vue"
 export { default as FriendsRequestsList } from "@/components/FriendsRequestsList.vue"
 export { default as FriendsSendRequest } from "@/components/FriendsSendRequest.vue"
 export { default as FriendsDuplicateRequestModal } from "@/components/FriendsDuplicateRequestModal.vue"
+
+export { default as DartboardsList } from "@/components/DartboardsList.vue"
+export { default as DartboardsListItem } from "@/components/DartboardsListItem.vue"

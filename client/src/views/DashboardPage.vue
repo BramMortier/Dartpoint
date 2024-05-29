@@ -68,7 +68,11 @@ const startFreeplayGame = () => {
                 <h2>Profile & statistics</h2>
             </BaseContainer>
 
-            <BaseContainer class="dashboard-page__dartboards" :background-image="myBoardsBackdrop">
+            <BaseContainer
+                class="dashboard-page__dartboards"
+                :background-image="myBoardsBackdrop"
+                @click="router.push({ name: 'DartboardsPage' })"
+            >
                 <h2>My dartboards</h2>
             </BaseContainer>
         </div>

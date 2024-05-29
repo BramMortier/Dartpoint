@@ -7,7 +7,6 @@ import { pusher } from "../../config/pusher";
 import { validateRequest } from "../../middleware/requestValidator";
 import { db } from "../../config/db";
 
-import { friendRequestSchema } from "../../models/friendRequest";
 import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
 import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
 import { verifyJWT } from "../../middleware/verifyJWT";
@@ -20,8 +19,6 @@ const requestSchema = z.object({
     friendId: z.string(),
     isAccepted: z.boolean(),
 });
-
-// TODO: use scheme and .pick() instead of hard coded
 
 // =============================================================================
 // Route defenition

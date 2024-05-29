@@ -54,6 +54,9 @@ CREATE UNIQUE INDEX "users_dartpointId_key" ON "users"("dartpointId");
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "boards_code_key" ON "boards"("code");
+
 -- AddForeignKey
 ALTER TABLE "boards" ADD CONSTRAINT "boards_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
