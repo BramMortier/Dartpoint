@@ -9,7 +9,6 @@ import { useSeoMeta } from "@unhead/vue"
 import { computed } from "vue"
 
 import { useRoute } from "vue-router"
-import { useBoardStore } from "@/stores/boardStore"
 import { useAuthStore } from "@/stores/authStore"
 import { storeToRefs } from "pinia"
 
@@ -19,7 +18,6 @@ import { storeToRefs } from "pinia"
 const route = useRoute()
 
 const { authenticatedUser } = storeToRefs(useAuthStore())
-const { connectedBoard } = storeToRefs(useBoardStore())
 
 const title = computed(() => route.meta.title || "")
 const description = computed(() => route.meta.description || "")
@@ -33,17 +31,11 @@ useSeoMeta({
 })
 
 // =============================================================================
-// Pusher event listeners
+// Realtime pusher subscriptions
 // =============================================================================
 const friendRequestsChannel = pusher.subscribe(`friend-requests-${authenticatedUser.id}`)
 
 friendRequestsChannel.bind("new-request", (data) => {
-    console.log(data)
-})
-
-const boardChannel = pusher.subscribe(`board-${connectedBoard}`)
-
-boardChannel.bind("detection", (data) => {
     console.log(data)
 })
 </script>

@@ -4,7 +4,11 @@
 // =============================================================================
 import { GameFreeplay, GameCompetition, GamePlayerCard } from "@/components/index"
 import { useGameStore } from "@/stores/gameStore"
+import { useBoardStore } from "@/stores/boardStore"
+import { useAuthStore } from "@/stores/authStore"
 import { storeToRefs } from "pinia"
+import { pusher } from "@/services/pusher"
+import { onMounted, onUnmounted } from "vue"
 
 // =============================================================================
 // Props & Events
@@ -13,11 +17,36 @@ import { storeToRefs } from "pinia"
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-const { gameSettings } = storeToRefs(useGameStore())
+const { gameSettings, gameInfo } = storeToRefs(useGameStore())
+const { authenticatedUser } = storeToRefs(useAuthStore())
+const { connectedBoard } = storeToRefs(useBoardStore())
+
+// =============================================================================
+// Realtime pusher subscriptions
+// =============================================================================
+onMounted(async () => {
+    const boardChannel = pusher.subscribe(`board-${connectedBoard.value}`)
+
+    boardChannel.bind("detection", (data) => addThrow(data))
+})
+
+onUnmounted(async () => {
+    pusher.unsubscribe(`board-${connectedBoard.value}`)
+})
 
 // =============================================================================
 // Functions
 // =============================================================================
+const addThrow = (data) => {
+    const dartData = {
+        userId: authenticatedUser.value.id,
+        ...data.dartInfo,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    }
+
+    gameInfo.value.push(dartData)
+}
 </script>
 
 <template>
@@ -28,7 +57,7 @@ const { gameSettings } = storeToRefs(useGameStore())
             </ul>
 
             <BaseContainer class="game-page__session" :is-clickable="false">
-                <h2>Session</h2>
+                <h3>Session</h3>
 
                 <div class="game-page__session-actions">
                     <BaseButton class="base-button--tertiary">Add player</BaseButton>
@@ -38,7 +67,7 @@ const { gameSettings } = storeToRefs(useGameStore())
             </BaseContainer>
 
             <BaseContainer class="game-page__presets" :is-clickable="false">
-                <h2>Game presets</h2>
+                <h3>Game presets</h3>
 
                 <BaseButton class="base-button--tertiary">Custom preset</BaseButton>
             </BaseContainer>

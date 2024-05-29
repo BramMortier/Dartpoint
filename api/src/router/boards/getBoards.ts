@@ -51,6 +51,9 @@ export const getBoardsHandler: Handler = async (c) => {
             where: {
                 userId: decodedToken.payload.sub,
             },
+            include: {
+                board: true,
+            },
         });
 
         return formattedSuccesResponse(c, 200, getBoardsRoute.responses[200].description, {

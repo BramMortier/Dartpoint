@@ -95,7 +95,9 @@ export const connectionHandler: Handler = async (c) => {
             },
         });
 
-        return formattedSuccesResponse(c, 200, connectionRoute.responses[200].description);
+        return formattedSuccesResponse(c, 200, connectionRoute.responses[200].description, {
+            board: board,
+        });
     } catch (error) {
         console.error(error);
         return formattedErrorResponse(c, 500, connectionRoute.responses[500].description);

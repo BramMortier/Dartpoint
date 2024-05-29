@@ -3,6 +3,7 @@
 // Imports
 // =============================================================================
 import { Form } from "vee-validate"
+import { boardsApi } from "@/services/api/boardsApi"
 import * as yup from "yup"
 
 // =============================================================================
@@ -20,6 +21,14 @@ const addBoardFormValidationSchema = yup.object({
 // =============================================================================
 const addBoardFormSubmit = async (values) => {
     console.log(values)
+
+    const requestBody = {
+        boardCode: values.code
+    }
+
+    const { status, message, body } = await boardsApi.connect(requestBody)
+
+    console.log(status, message, body)
 }
 </script>
 

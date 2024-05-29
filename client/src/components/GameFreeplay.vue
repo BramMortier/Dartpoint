@@ -2,7 +2,8 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { GameStatisticsItem } from "@/components/index"
+import { GameStatistics } from "@/components/index"
+
 // =============================================================================
 // Props & Events
 // =============================================================================
@@ -25,17 +26,7 @@ import { GameStatisticsItem } from "@/components/index"
                 <p class="typo-body-large">Dartshop Aalter</p>
             </div>
 
-            <ul class="game-freeplay__stats">
-                <GameStatisticsItem name="Average" value="56,7" />
-                <GameStatisticsItem name="9 Dart average" value="64,2" />
-                <GameStatisticsItem name="Total points" value="2987" />
-                <GameStatisticsItem name="Darts thrown" value="147" />
-
-                <GameStatisticsItem name="100+" value="12" />
-                <GameStatisticsItem name="140+" value="4" />
-                <GameStatisticsItem name="Highest score" value="160" />
-                <GameStatisticsItem name="T20 Percentage" value="12,5%" />
-            </ul>
+            <GameStatistics />
         </div>
     </div>
 </template>
@@ -45,12 +36,6 @@ import { GameStatisticsItem } from "@/components/index"
     &__top {
         display: flex;
         justify-content: space-between;
-    }
-
-    &__stats {
-        display: grid;
-        grid-template-columns: repeat(4, auto);
-        gap: var(--space-32) var(--space-96);
     }
 }
 </style>

@@ -8,7 +8,7 @@
 // =============================================================================
 const props = defineProps({
     name: String,
-    value: String
+    value: [String, Number]
 })
 // =============================================================================
 // Composables, Refs & Computed

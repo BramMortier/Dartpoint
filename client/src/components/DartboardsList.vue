@@ -3,6 +3,9 @@
 // Imports
 // =============================================================================
 import { DartboardsListItem } from "@/components/index"
+import { boardsApi } from "@/services/api/boardsApi"
+import { onMounted, ref } from "vue"
+
 // =============================================================================
 // Props & Events
 // =============================================================================
@@ -10,6 +13,17 @@ import { DartboardsListItem } from "@/components/index"
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const boards = ref(null)
+// =============================================================================
+// Lifecycle hooks
+// =============================================================================
+onMounted(async () => {
+    const { status, message, body } = await boardsApi.getBoards()
+
+    console.log(status, message, body)
+
+    boards.value = body.boards
+})
 
 // =============================================================================
 // Functions
@@ -21,14 +35,10 @@ import { DartboardsListItem } from "@/components/index"
 
     <ul class="dartboards-list">
         <DartboardsListItem
-            board-name="Dartpoint jurymarkt"
-            board-code="DP_KW5PPYWD"
+            v-for="item in boards"
+            :board-name="item.board.name"
+            :board-code="item.board.code"
             :total-games="67"
-        />
-        <DartboardsListItem
-            board-name="Dartpoint mancave"
-            board-code="DP_344DG7W"
-            :total-games="785"
         />
     </ul>
 </template>

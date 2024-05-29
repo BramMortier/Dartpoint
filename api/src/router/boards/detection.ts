@@ -23,9 +23,9 @@ const paramsSchema = z.object({
     }),
 });
 
-const requestSchema = z.object({
-    score: z.number(),
-});
+// const requestSchema = z.object({
+//     score: z.number(),
+// });
 
 // =============================================================================
 // Route defenition
@@ -34,18 +34,18 @@ export const detectionRoute = createRoute({
     method: "post",
     path: "/{boardCode}/detection",
     summary: "Send the data of a detected dart to the users that are connected with the board",
-    request: {
-        params: paramsSchema,
-        body: {
-            content: {
-                "application/json": {
-                    schema: requestSchema,
-                },
-            },
-            description: "Data for the detected dart",
-        },
-    },
-    middleware: [validateRequest(requestSchema)],
+    // request: {
+    //     params: paramsSchema,
+    //     body: {
+    //         content: {
+    //             "application/json": {
+    //                 schema: requestSchema,
+    //             },
+    //         },
+    //         description: "Data for the detected dart",
+    //     },
+    // },
+    // middleware: [validateRequest(requestSchema)],
     responses: {
         200: {
             content: {
@@ -84,8 +84,10 @@ export const detectionHandler: Handler = async (c) => {
 
         const body = await c.req.json();
 
+        console.log(`board-${boardCodeParam}`);
+
         pusher.trigger(`board-${boardCodeParam}`, "detection", {
-            score: body.score,
+            dartInfo: body,
         });
 
         return formattedSuccesResponse(c, 200, detectionRoute.responses[200].description);

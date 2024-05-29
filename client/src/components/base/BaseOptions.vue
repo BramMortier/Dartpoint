@@ -41,13 +41,13 @@ const changeOption = (option) => {
 
         <div class="base-options__options">
             <button
-                v-for="option in props.options"
+                v-for="item in props.options"
                 type="button"
                 class="base-options__option"
-                :class="{ 'base-options__option--selected': value === option }"
-                @click="changeOption(option)"
+                :class="{ 'base-options__option--selected': value === item }"
+                @click="changeOption(item)"
             >
-                {{ option }}
+                {{ item }}
             </button>
         </div>
     </div>

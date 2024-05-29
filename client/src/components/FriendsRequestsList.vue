@@ -32,6 +32,7 @@ const incommingRequests = computed(() => {
         requests.value.filter((request) => request.userId !== authenticatedUser.value.id)
     )
 })
+
 // =============================================================================
 // Lifecycle hooks
 // =============================================================================
@@ -83,16 +84,16 @@ const denyFriendRequest = async (requestSender) => {
 
             <ul>
                 <FriendsListItem
-                    v-for="request in outgoingRequests"
-                    :name="request.friend.displayName"
+                    v-for="item in outgoingRequests"
+                    :name="item.friend.displayName"
                     :is-online="true"
-                    :status="`Sent ${timeSince(new Date(request.createdAt))} ago`"
+                    :status="`Sent ${timeSince(new Date(item.createdAt))} ago`"
                     :show-profile-picture="true"
                     :show-status-indicator="false"
                 >
                     <BaseButton
                         class="base-button--tertiary"
-                        @click="cancelFriendRequest(request.friendId)"
+                        @click="cancelFriendRequest(item.friendId)"
                     >
                         Cancel request
                     </BaseButton>
@@ -105,15 +106,15 @@ const denyFriendRequest = async (requestSender) => {
 
             <ul>
                 <FriendsListItem
-                    v-for="request in incommingRequests"
-                    :name="request.user.displayName"
+                    v-for="item in incommingRequests"
+                    :name="item.user.displayName"
                     :is-online="true"
                     status="Online, in game"
                     :show-profile-picture="true"
                 >
                     <BaseButton
                         class="base-button--primary"
-                        @click="denyFriendRequest(request.friendId)"
+                        @click="denyFriendRequest(item.friendId)"
                     >
                         Deny
                     </BaseButton>

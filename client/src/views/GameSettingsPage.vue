@@ -73,10 +73,10 @@ const handleConfigurationFormSubmit = (values) => {
 
                 <ul class="game-settings-page__lobby-players-list">
                     <FriendsListItem
-                        v-for="player in players"
+                        v-for="item in players"
                         :show-profile-picture="true"
                         :is-online="true"
-                        :name="player.displayName"
+                        :name="item.displayName"
                         status="Online, Ready"
                         connected-board="Dartshop Aalter"
                     />

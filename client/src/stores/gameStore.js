@@ -10,12 +10,12 @@ import { useStorage } from "@vueuse/core"
 export const useGameStore = defineStore("game", () => {
     const gameSettings = useStorage("game-settings", {})
     const players = useStorage("players", [])
-    const gameInfo = useStorage("game-info", {})
+    const gameInfo = useStorage("game-info", [])
 
     const resetGame = () => {
         gameSettings.value = {}
         players.value = []
-        gameInfo.value = {}
+        gameInfo.value = []
     }
 
     return { gameSettings, players, gameInfo, resetGame }
