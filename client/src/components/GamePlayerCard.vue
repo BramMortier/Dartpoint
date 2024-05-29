@@ -6,7 +6,9 @@
 // =============================================================================
 // Props & Events
 // =============================================================================
-
+const props = defineProps({
+    inFreePlay: Boolean
+})
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
@@ -25,17 +27,17 @@
                     <p>Dartshop Aalter</p>
                 </div>
 
-                <span class="typo-h1">386</span>
+                <span v-if="!inFreePlay" class="typo-h1">386</span>
             </div>
 
-            <div class="game-player-card__right">
+            <div v-if="!inFreePlay" class="game-player-card__right">
                 <div class="game-player-card__player-stats">
                     <p>AVG</p>
                     <h3>52,3</h3>
                 </div>
             </div>
         </div>
-        <div class="game-player-card__progress-bar">
+        <div v-if="!inFreePlay" class="game-player-card__progress-bar">
             <div class="game-player-card__progress-bar-value"></div>
         </div>
     </li>

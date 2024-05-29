@@ -53,7 +53,9 @@ const addThrow = (data) => {
     <div class="game-page">
         <div class="game-page__actions">
             <ul class="game-page__players">
-                <GamePlayerCard />
+                <GamePlayerCard
+                    :in-free-play="gameSettings?.gameType === 'Freeplay' ? true : false"
+                />
             </ul>
 
             <BaseContainer class="game-page__session" :is-clickable="false">
