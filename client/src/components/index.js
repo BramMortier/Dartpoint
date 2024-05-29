@@ -18,3 +18,4 @@ export { default as FriendsDuplicateRequestModal } from "@/components/FriendsDup
 
 export { default as DartboardsList } from "@/components/DartboardsList.vue"
 export { default as DartboardsListItem } from "@/components/DartboardsListItem.vue"
+export { default as DartboardsConnect } from "@/components/DartboardsConnect.vue"

@@ -21,13 +21,29 @@ export const generalRoutes = [
     },
     {
         path: "/dartboards",
-        name: "DartboardsPage",
         component: () => import("@/views/DartboardsPage.vue"),
-        meta: {
-            protected: true,
-            title: "Dartpoint | My dartboards",
-            description: "List of all dartboards you previously connected to"
-        }
+        children: [
+            {
+                path: "",
+                name: "DartboardsPage",
+                component: () => import("@/components/DartboardsList.vue"),
+                meta: {
+                    protected: true,
+                    title: "Dartpoint | My dartboards",
+                    description: "List of all dartboards you previously connected to"
+                }
+            },
+            {
+                path: "/connect",
+                name: "DartboardsConnect",
+                component: () => import("@/components/DartboardsConnect.vue"),
+                meta: {
+                    protected: true,
+                    title: "Dartpoint | Connect board",
+                    description: "Connect to a new dartpoint device"
+                }
+            }
+        ]
     },
     {
         path: "/:pathMatch(.*)*",

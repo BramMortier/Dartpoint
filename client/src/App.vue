@@ -50,8 +50,22 @@ boardChannel.bind("detection", (data) => {
 
 <template>
     <component :is="layout">
-        <RouterView />
+        <routerView v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+                <component :is="Component" :key="route.path" />
+            </transition>
+        </routerView>
     </component>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>

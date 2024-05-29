@@ -1,11 +1,21 @@
 <script setup>
 // =============================================================================
+// Imports
+// =============================================================================
+import { useRouter } from "vue-router"
+
+// =============================================================================
 // Props & Events
 // =============================================================================
 const props = defineProps({
     title: String,
     explanation: String
 })
+
+// =============================================================================
+// Composables, Refs & Computed
+// =============================================================================
+const router = useRouter()
 </script>
 
 <template>
@@ -22,20 +32,18 @@ const props = defineProps({
 
 <style scoped lang="scss">
 .base-container-title {
-    &__title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+
+    & > div {
         display: flex;
-        flex-direction: column;
-        gap: var(--space-12);
+        align-items: center;
+        gap: var(--space-24);
+        color: var(--clr-neutral-100);
 
-        & > {
-            display: flex;
-            align-items: center;
-            gap: var(--space-24);
-            color: var(--clr-neutral-100);
-
-            & > .base-icon:hover {
-                cursor: pointer;
-            }
+        & > .base-icon:hover {
+            cursor: pointer;
         }
     }
 }

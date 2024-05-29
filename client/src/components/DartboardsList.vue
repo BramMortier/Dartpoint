@@ -17,6 +17,8 @@ import { DartboardsListItem } from "@/components/index"
 </script>
 
 <template>
+    <BaseContainerTitle title="Recent devices" />
+
     <ul class="dartboards-list">
         <DartboardsListItem
             board-name="Dartpoint jurymarkt"

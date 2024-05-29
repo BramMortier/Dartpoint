@@ -2,7 +2,7 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { DartboardsList } from "@/components/index"
+import { RouterView, useRouter } from "vue-router"
 
 // =============================================================================
 // Props & Events
@@ -11,6 +11,7 @@ import { DartboardsList } from "@/components/index"
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const router = useRouter()
 
 // =============================================================================
 // Functions
@@ -20,10 +21,13 @@ import { DartboardsList } from "@/components/index"
 <template>
     <div class="dartboards-page">
         <BaseContainer class="dartboards-page__recent-devices" :is-clickable="false">
-            <DartboardsList />
+            <RouterView />
         </BaseContainer>
 
-        <BaseContainer class="dartboards-page__add-board">
+        <BaseContainer
+            class="dartboards-page__add-board"
+            @click="router.push({ name: 'DartboardsConnect' })"
+        >
             <h2>Add new dartboard</h2>
         </BaseContainer>
     </div>
