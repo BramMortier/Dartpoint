@@ -72,7 +72,7 @@ export const detectionRoute = createRoute({
             description: "Internal server error",
         },
     },
-    tags: ["boards"],
+    tags: ["Boards"],
 });
 
 // =============================================================================

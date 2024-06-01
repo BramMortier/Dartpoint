@@ -36,7 +36,7 @@ export const getBoardsRoute = createRoute({
             description: "Internal server error",
         },
     },
-    tags: ["boards"],
+    tags: ["Boards"],
 });
 
 // =============================================================================

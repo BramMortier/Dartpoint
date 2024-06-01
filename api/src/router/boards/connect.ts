@@ -70,7 +70,7 @@ export const connectionRoute = createRoute({
             description: "Internal server error",
         },
     },
-    tags: ["boards"],
+    tags: ["Boards"],
 });
 
 // =============================================================================

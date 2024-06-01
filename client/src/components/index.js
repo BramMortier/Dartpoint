@@ -10,6 +10,8 @@ export { default as GameCompetition } from "@/components/GameCompetition.vue"
 export { default as GamePlayerCard } from "@/components/GamePlayerCard.vue"
 export { default as GameStatisticsItem } from "@/components/GameStatisticsItem.vue"
 export { default as GameStatistics } from "@/components/GameStatistics.vue"
+export { default as GameDetectedDarts } from "@/components/GameDetectedDarts.vue"
+export { default as GamePlayerHistoryInfo } from "@/components/GamePlayerHistoryInfo.vue"
 
 export { default as FriendsList } from "@/components/FriendsList.vue"
 export { default as FriendsListItem } from "@/components/FriendsListItem.vue"

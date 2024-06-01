@@ -15,23 +15,27 @@ const { gameInfo } = storeToRefs(useGameStore())
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-const totalPoints = computed(() => gameInfo.value.reduce((sum, item) => sum + item.total, 0))
+const totalPoints = computed(() => {
+    return gameInfo.value.reduce((sum, item) => sum + item.total, 0)
+})
 
-const dartsThrown = computed(() => gameInfo.value.length * 3)
+const dartsThrown = computed(() => {
+    return gameInfo.value.length * 3
+})
 
 const average = computed(() => {
-    const totalDarts = gameInfo.value.length * 3
+    const totalThrows = gameInfo.value.length
     const totalScoreSum = gameInfo.value.reduce((sum, item) => {
         return sum + item.dart1Score + item.dart2Score + item.dart3Score
     }, 0)
-    return totalDarts > 0 ? totalScoreSum / totalDarts : 0
+    return totalThrows > 0 ? parseFloat((totalScoreSum / totalThrows).toFixed(1)) : 0
 })
 
 const First9DartsAverage = computed(() => {
+    const totalThrows = gameInfo.value.length
     const firstThreeThrows = gameInfo.value.slice(0, 3) // Get the first three throws
     const totalFirstThreeThrows = firstThreeThrows.reduce((sum, item) => sum + item.total, 0)
-    const totalDarts = firstThreeThrows.length * 3 // Each throw has 3 darts
-    return totalDarts > 0 ? totalFirstThreeThrows / totalDarts : 0
+    return totalThrows > 0 ? parseFloat((totalFirstThreeThrows / 3).toFixed(1)) : 0
 })
 
 const Triple20Percentage = computed(() => {
@@ -44,7 +48,7 @@ const Triple20Percentage = computed(() => {
             (item.dart3Sector === 20 && item.dart3Multiplier === 3 ? 1 : 0)
         )
     }, 0)
-    return totalDarts > 0 ? (count / totalDarts) * 100 : 0
+    return totalDarts > 0 ? parseFloat(((count / totalDarts) * 100).toFixed(1)) : 0
 })
 
 const highestThrow = computed(() => {

@@ -13,3 +13,8 @@ export { default as History } from "@/components/icons/History.vue"
 export { default as Statistics } from "@/components/icons/Statistics.vue"
 export { default as CopyToClipboard } from "@/components/icons/CopyToClipboard.vue"
 export { default as Plus } from "@/components/icons/Plus.vue"
+
+// =============================================================================
+// Functional icon component exports
+// =============================================================================
+export { default as LogoIconSplit } from "@/components/icons/LogoIconSplit.vue"

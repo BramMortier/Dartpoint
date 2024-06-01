@@ -2,7 +2,7 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { GameStatistics } from "@/components/index"
+import { GameStatistics, GameDetectedDarts } from "@/components/index"
 
 // =============================================================================
 // Props & Events
@@ -28,11 +28,18 @@ import { GameStatistics } from "@/components/index"
 
             <GameStatistics />
         </div>
+
+        <GameDetectedDarts />
     </div>
 </template>
 
 <style scoped lang="scss">
 .game-freeplay {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
     &__top {
         display: flex;
         justify-content: space-between;

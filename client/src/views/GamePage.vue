@@ -2,7 +2,13 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { GameFreeplay, GameCompetition, GamePlayerCard } from "@/components/index"
+import {
+    GameFreeplay,
+    GameCompetition,
+    GamePlayerCard,
+    GamePlayerHistoryInfo
+} from "@/components/index"
+
 import { useGameStore } from "@/stores/gameStore"
 import { useBoardStore } from "@/stores/boardStore"
 import { useAuthStore } from "@/stores/authStore"
@@ -80,6 +86,10 @@ const addThrow = (data) => {
 
             <GameCompetition v-else-if="gameSettings?.gameType === 'Classic / X01'" />
         </BaseContainer>
+
+        <BaseContainer class="game-page__info" :is-clickable="false">
+            <GamePlayerHistoryInfo />
+        </BaseContainer>
     </div>
 </template>
 
@@ -136,7 +146,11 @@ const addThrow = (data) => {
     }
 
     &__main {
-        grid-column: span 9;
+        grid-column: span 7;
+    }
+
+    &__info {
+        grid-column: span 2;
     }
 }
 </style>
