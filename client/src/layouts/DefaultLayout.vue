@@ -2,7 +2,7 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { TheStatusHeader, TheModalWindow } from "@/components/index"
+import { TheStatusHeader, TheModalWindow, TheNotifications } from "@/components/index"
 </script>
 
 <template>
@@ -11,6 +11,7 @@ import { TheStatusHeader, TheModalWindow } from "@/components/index"
             <TheStatusHeader />
 
             <TheModalWindow />
+            <TheNotifications />
 
             <main>
                 <slot />

@@ -3,30 +3,33 @@
 // Imports
 // =============================================================================
 import { FriendsListItem } from "@/components/index"
-import { computed, ref } from "vue"
+import { friendRequestsApi } from "@/services/api"
+import { onMounted, ref } from "vue"
 
 // =============================================================================
 // Props & Events
 // =============================================================================
 const props = defineProps({
-    options: Object
+    showBackButton: { type: Boolean, default: true }
 })
 
-const placeholderData = ref([
-    { displayName: "Bram Mortier", isOnline: true, status: "In game" },
-    { displayName: "Seppe Rogge", isOnline: true, status: "In Lobby" },
-    { displayName: "Manu Van Leirberghe", isOnline: false },
-    { displayName: "Karen Mortier", isOnline: false },
-    { displayName: "Martina Maeyens", isOnline: true, status: "In game" },
-    { displayName: "Fien Haelvoet", isOnline: false },
-    { displayName: "Edward Maeyens", isOnline: true, status: "Chilling" }
-])
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-const onlineFriends = computed(() => placeholderData.value.filter((user) => user.isOnline))
+const friends = ref(null)
 
-const offlineFriends = computed(() => placeholderData.value.filter((user) => !user.isOnline))
+// =============================================================================
+// Lifecycle hooks
+// =============================================================================
+onMounted(async () => {
+    const { status, message, body } = await friendRequestsApi.getFriendRequests({
+        isAccepted: true
+    })
+
+    console.log(body)
+
+    friends.value = body.requests
+})
 
 // =============================================================================
 // Functions
@@ -35,36 +38,17 @@ const offlineFriends = computed(() => placeholderData.value.filter((user) => !us
 
 <template>
     <div class="friends-list">
-        <h2>Your Friends</h2>
+        <BaseContainerTitle title="Your friends" :show-back-button="props.showBackButton" />
 
-        <div class="friends-list__online-group">
-            <p class="typo-body-large">Online</p>
-
-            <ul class="friends-list__online-group-list">
-                <FriendsListItem
-                    v-for="item in onlineFriends"
-                    :name="item.displayName"
-                    :status="`Online, ${item.status}`"
-                    :is-online="item.isOnline"
-                    :show-profile-picture="true"
-                >
-                    <BaseButton class="base-button--tertiary"> Play </BaseButton>
-                </FriendsListItem>
-            </ul>
-        </div>
-
-        <div class="friends-list__offline-group">
-            <p class="typo-body-large">Offline</p>
-
-            <ul class="friends-list__offline-group-list">
-                <FriendsListItem
-                    v-for="item in offlineFriends"
-                    status="Offline"
-                    :name="item.displayName"
-                    :show-profile-picture="true"
-                />
-            </ul>
-        </div>
+        <ul class="friends-list__friends">
+            <FriendsListItem
+                v-for="item in friends"
+                :show-profile-picture="true"
+                :name="item.friend.displayName"
+            >
+                <BaseButton class="base-button--tertiary"> Play</BaseButton>
+            </FriendsListItem>
+        </ul>
     </div>
 </template>
 
@@ -74,35 +58,12 @@ const offlineFriends = computed(() => placeholderData.value.filter((user) => !us
 .friends-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-32);
+    gap: var(--space-24);
 
-    &__online-group,
-    &__offline-group {
+    &__friends {
         display: flex;
         flex-direction: column;
-        gap: var(--space-12);
-
-        @include styles-for(tablet) {
-            gap: var(--space-16);
-        }
-    }
-
-    &__online-group-list,
-    &__offline-group-list {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: var(--space-8);
-
-        @include styles-for(tablet) {
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-12);
-        }
-
-        @include styles-for(desktop) {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-16);
-        }
+        gap: var(--space-16);
     }
 }
 </style>

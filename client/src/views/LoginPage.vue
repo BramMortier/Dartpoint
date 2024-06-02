@@ -7,6 +7,8 @@ import { authApi } from "@/services/api/index"
 import { useRouter } from "vue-router"
 import * as yup from "yup"
 
+import { authBackground } from "@/assets/images"
+
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
@@ -35,7 +37,7 @@ const LoginFormSubmit = async (values) => {
 
 <template>
     <div class="login-page">
-        <BaseContainer class="login-page__form-container">
+        <BaseContainer class="login-page__form-container" :is-clickable="false">
             <h2>Login</h2>
 
             <Form
@@ -59,11 +61,21 @@ const LoginFormSubmit = async (values) => {
                         label="Password"
                         placeholder="Choose a password"
                     />
+
+                    <div class="login-page__link">
+                        <p>Don't have an account?</p>
+
+                        <RouterLink class="typo-body" :to="{ name: 'RegisterPage' }">
+                            Sign up
+                        </RouterLink>
+                    </div>
                 </div>
 
-                <BaseButton>Login</BaseButton>
+                <BaseButton :disabled="isSubmitting">Login</BaseButton>
             </Form>
         </BaseContainer>
+
+        <img class="login-page__background" :src="authBackground" alt="page background" />
     </div>
 </template>
 
@@ -94,6 +106,17 @@ const LoginFormSubmit = async (values) => {
         gap: var(--space-24);
     }
 
+    &__link {
+        display: flex;
+        gap: var(--space-8);
+        align-items: center;
+
+        & > a {
+            color: var(--clr-neutral-100);
+            font-weight: var(--fw-500);
+        }
+    }
+
     &__form-container {
         grid-column: span 6;
         max-width: 50rem;
@@ -101,6 +124,16 @@ const LoginFormSubmit = async (values) => {
         @include styles-for(desktop) {
             grid-column: span 4;
         }
+    }
+
+    &__background {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        object-fit: cover;
+        filter: brightness(0.8);
     }
 }
 </style>

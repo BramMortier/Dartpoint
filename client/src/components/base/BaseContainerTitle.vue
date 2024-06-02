@@ -9,7 +9,8 @@ import { useRouter } from "vue-router"
 // =============================================================================
 const props = defineProps({
     title: String,
-    explanation: String
+    explanation: String,
+    showBackButton: { type: Boolean, default: true }
 })
 
 // =============================================================================
@@ -21,12 +22,12 @@ const router = useRouter()
 <template>
     <div class="base-container-title">
         <div>
-            <BaseIcon name="arrow-left" @click="router.back()" />
+            <BaseIcon v-if="showBackButton" name="arrow-left" @click="router.back()" />
 
             <h2>{{ props.title }}</h2>
         </div>
 
-        <p class="typo-body-large">{{ props.explanation }}</p>
+        <p v-if="props.explanation" class="typo-body-large">{{ props.explanation }}</p>
     </div>
 </template>
 

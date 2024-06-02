@@ -12,12 +12,22 @@ import { verifyJWT } from "../../middleware/verifyJWT";
 import { decode } from "hono/jwt";
 
 // =============================================================================
+// Request Schemas
+// =============================================================================
+const queryParamsSchema = z.object({
+    isAccepted: z.enum(["true", "false"]).optional(),
+});
+
+// =============================================================================
 // Route defenition
 // =============================================================================
 export const getFriendRequestsRoute = createRoute({
     method: "get",
     path: "/",
     summary: "Get a users outgoing and incomming friend requests",
+    request: {
+        query: queryParamsSchema,
+    },
     middleware: [verifyJWT()],
     responses: {
         200: {
@@ -50,13 +60,15 @@ export const getFriendRequestsHandler: Handler = async (c) => {
         const token = c.get("token");
         const decodedToken = decode(token);
 
+        const isAcceptedQueryParam = c.req.query("isAccepted");
+
         const requests = await db.userFriends.findMany({
             where: {
                 OR: [
                     { userId: Number(decodedToken.payload.sub) },
                     { friendId: Number(decodedToken.payload.sub) },
                 ],
-                NOT: { isAccepted: true },
+                AND: { isAccepted: isAcceptedQueryParam === "true" ? true : false },
             },
             include: { friend: true, user: true },
         });

@@ -5,6 +5,7 @@
 import { Form } from "vee-validate"
 import { useRouter } from "vue-router"
 import { useModalStore } from "@/stores/modalStore"
+import { useNotificationStore } from "@/stores/notificationStore"
 import { friendRequestsApi } from "@/services/api"
 import { FriendsDuplicateRequestModal } from "@/components/index"
 import * as yup from "yup"
@@ -14,6 +15,7 @@ import * as yup from "yup"
 // =============================================================================
 const router = useRouter()
 const { openModal } = useModalStore()
+const { addNotification } = useNotificationStore()
 
 const sendFriendRequestFormValidationSchema = yup.object({
     id: yup.string().required("Invalid friend code!")
@@ -47,6 +49,15 @@ const SendFriendRequestFormSubmit = async (values, { resetForm }) => {
 
     resetForm()
 }
+
+const sendNotification = () => {
+    addNotification({
+        title: "Succes!",
+        message: "Deleted location succesfully",
+        type: "succes",
+        removeDelay: 2000
+    })
+}
 </script>
 
 <template>
@@ -77,6 +88,7 @@ const SendFriendRequestFormSubmit = async (values, { resetForm }) => {
 
             <BaseButton class="base-button--secondary">Send request</BaseButton>
         </Form>
+        <BaseButton @click="sendNotification">Send notification</BaseButton>
     </div>
 </template>
 

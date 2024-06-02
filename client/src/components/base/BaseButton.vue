@@ -70,5 +70,9 @@ const props = defineProps({
             box-shadow: unset;
         }
     }
+
+    &:disabled {
+        opacity: 0.5;
+    }
 }
 </style>

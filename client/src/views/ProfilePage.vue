@@ -21,7 +21,7 @@ const router = useRouter()
 <template>
     <div class="profile-page">
         <BaseContainer class="profile-page__profile-overview" :is-clickable="false">
-            <h2>Profile</h2>
+            <BaseContainerTitle title="Profile" />
         </BaseContainer>
 
         <div class="profile-page__action-buttons">

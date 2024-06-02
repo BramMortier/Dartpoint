@@ -1,7 +1,9 @@
 import { apiClient } from "@/services/api/client"
 
-const getFriendRequests = async () => {
-    return await apiClient.get(`friend-requests`).json()
+const getFriendRequests = async (queryParams = {}) => {
+    const queryParamsString = new URLSearchParams(queryParams).toString()
+
+    return await apiClient.get(`friend-requests?${queryParamsString}`).json()
 }
 
 const createFriendRequest = async (requestBody) => {

@@ -14,7 +14,9 @@ import {
     History,
     Statistics,
     CopyToClipboard,
-    Plus
+    Plus,
+    FlagBelgium,
+    Close
 } from "@/components/icons"
 
 // =============================================================================
@@ -36,6 +38,8 @@ const iconMap = {
     "arrow-right": ArrowRight,
     "arrow-left": ArrowLeft,
     "copy-to-clipboard": CopyToClipboard,
+    "flag-belgium": FlagBelgium,
+    close: Close,
     history: History,
     medal: Medal,
     plus: Plus,

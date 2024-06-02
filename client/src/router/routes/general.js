@@ -46,6 +46,10 @@ export const generalRoutes = [
         ]
     },
     {
+        path: "/",
+        redirect: { name: "LoginPage" }
+    },
+    {
         path: "/:pathMatch(.*)*",
         name: "NotFound",
         component: () => import("@/views/NotFoundPage.vue"),

@@ -3,13 +3,18 @@
 // Imports
 // =============================================================================
 import { Form } from "vee-validate"
+import { RouterLink, useRouter } from "vue-router"
 import { authApi } from "@/services/api/index"
 import cryptoRandomString from "crypto-random-string"
 import * as yup from "yup"
 
+import { authBackground } from "@/assets/images"
+
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const router = useRouter()
+
 const registerFormValidationSchema = yup.object({
     displayName: yup.string().required("a display name is required!"),
     email: yup.string().email("invalid email").required("an email is required!"),
@@ -30,7 +35,8 @@ const RegisterFormSubmit = async (values) => {
         dartpointId: cryptoRandomString({ length: 8, type: "distinguishable" }),
         displayName: values.displayName,
         email: values.email,
-        password: values.password
+        password: values.password,
+        country: "Belgium"
     }
 
     console.log(requestBody)
@@ -38,12 +44,14 @@ const RegisterFormSubmit = async (values) => {
     const { status, message, body } = await authApi.register(requestBody)
 
     console.log(status, message, body)
+
+    if (status === 201) setTimeout(() => router.push({ name: "LoginPage" }), 1000)
 }
 </script>
 
 <template>
     <div class="register-page">
-        <BaseContainer class="register-page__form-container">
+        <BaseContainer class="register-page__form-container" :is-clickable="false">
             <h2>Register an account</h2>
 
             <Form
@@ -82,11 +90,21 @@ const RegisterFormSubmit = async (values) => {
                         label="Confirm password"
                         placeholder="Confirm your password"
                     />
+
+                    <div class="register-page__link">
+                        <p>Already have a dartpoint account?</p>
+
+                        <RouterLink class="typo-body" :to="{ name: 'LoginPage' }">
+                            Login
+                        </RouterLink>
+                    </div>
                 </div>
 
                 <BaseButton>Register account</BaseButton>
             </Form>
         </BaseContainer>
+
+        <img class="register-page__background" :src="authBackground" alt="page background" />
     </div>
 </template>
 
@@ -117,6 +135,17 @@ const RegisterFormSubmit = async (values) => {
         gap: var(--space-24);
     }
 
+    &__link {
+        display: flex;
+        gap: var(--space-8);
+        align-items: center;
+
+        & > a {
+            color: var(--clr-neutral-100);
+            font-weight: var(--fw-500);
+        }
+    }
+
     &__form-container {
         grid-column: span 6;
         max-width: 50rem;
@@ -124,6 +153,16 @@ const RegisterFormSubmit = async (values) => {
         @include styles-for(desktop) {
             grid-column: span 4;
         }
+    }
+
+    &__background {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        object-fit: cover;
+        filter: brightness(0.8);
     }
 }
 </style>

@@ -78,7 +78,7 @@ const startFreeplayGame = () => {
         </div>
 
         <BaseContainer class="dashboard-page__friends-list" :is-clickable="false">
-            <FriendsList />
+            <FriendsList :show-back-button="false" />
         </BaseContainer>
     </div>
 </template>

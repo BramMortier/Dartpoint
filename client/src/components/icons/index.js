@@ -13,6 +13,8 @@ export { default as History } from "@/components/icons/History.vue"
 export { default as Statistics } from "@/components/icons/Statistics.vue"
 export { default as CopyToClipboard } from "@/components/icons/CopyToClipboard.vue"
 export { default as Plus } from "@/components/icons/Plus.vue"
+export { default as FlagBelgium } from "@/components/icons/FlagBelgium.vue"
+export { default as Close } from "@/components/icons/Close.vue"
 
 // =============================================================================
 // Functional icon component exports

@@ -1,7 +1,7 @@
 export const authRoutes = [
     {
         path: "/auth/register",
-        name: "registerPage",
+        name: "RegisterPage",
         component: () => import("@/views/RegisterPage.vue"),
         meta: {
             protected: false,
@@ -11,7 +11,7 @@ export const authRoutes = [
     },
     {
         path: "/auth/login",
-        name: "loginPage",
+        name: "LoginPage",
         component: () => import("@/views/LoginPage.vue"),
         meta: {
             protected: false,

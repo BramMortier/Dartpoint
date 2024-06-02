@@ -3,6 +3,8 @@
 // =============================================================================
 export { default as TheStatusHeader } from "@/components/TheStatusHeader.vue"
 export { default as TheModalWindow } from "@/components/TheModalWindow.vue"
+export { default as TheNotifications } from "@/components/TheNotifications.vue"
+export { default as TheNotification } from "@/components/TheNotification.vue"
 
 export { default as GameStartOptions } from "@/components/GameStartOptions.vue"
 export { default as GameFreeplay } from "@/components/GameFreeplay.vue"

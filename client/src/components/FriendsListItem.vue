@@ -7,12 +7,8 @@
 // Props & Events
 // =============================================================================
 const props = defineProps({
-    user: Object,
     name: String,
-    isOnline: Boolean,
-    status: String,
     connectedBoard: String,
-    showStatusIndicator: { type: Boolean, default: true },
     showProfilePicture: Boolean
 })
 
@@ -33,10 +29,10 @@ const props = defineProps({
             <div class="friends-list-item__info">
                 <h3>{{ props.name }}</h3>
 
-                <div class="friends-list-item__status">
-                    <div v-if="showStatusIndicator"></div>
+                <div class="friends-list-item__country">
+                    <BaseIcon name="flag-belgium" />
 
-                    <p>{{ props.status }}</p>
+                    <p>Belgium</p>
                 </div>
 
                 <p>{{ props.connectedBoard }}</p>
@@ -60,15 +56,6 @@ const props = defineProps({
     border-radius: var(--border-radius-10);
     padding: var(--space-16);
 
-    &--offline {
-        opacity: 50%;
-
-        .friends-list-item__status > div {
-            background: var(--clr-neutral-500);
-            border: none;
-        }
-    }
-
     & > div {
         display: flex;
         align-items: center;
@@ -88,17 +75,14 @@ const props = defineProps({
         gap: var(--space-4);
     }
 
-    &__status {
+    &__country {
         display: flex;
         align-items: center;
         gap: var(--space-12);
 
-        & > div {
+        & > .base-icon {
             height: 1rem;
-            width: 1rem;
-            border-radius: var(--border-radius-round);
-            background: var(--gradient-turqoise);
-            border: 2px solid var(--clr-turqoise-500);
+            width: auto;
         }
     }
 }
