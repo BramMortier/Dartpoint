@@ -74,8 +74,12 @@ const unfriend = async (friend) => {
 .friends-list-managed {
     display: flex;
     flex-direction: column;
-    gap: var(--space-24);
+    gap: var(--space-16);
     height: 100%;
+
+    @include styles-for(desktop) {
+        gap: var(--space-32);
+    }
 
     &__friends {
         display: flex;

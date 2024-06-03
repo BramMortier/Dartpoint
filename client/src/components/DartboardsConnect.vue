@@ -4,6 +4,7 @@
 // =============================================================================
 import { Form } from "vee-validate"
 import { boardsApi } from "@/services/api/boardsApi"
+import { useNotificationStore } from "@/stores/notificationStore"
 import * as yup from "yup"
 
 // =============================================================================
@@ -13,6 +14,8 @@ import * as yup from "yup"
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const { addErrorNotification, addSuccesNotification } = useNotificationStore()
+
 const addBoardFormValidationSchema = yup.object({
     code: yup.string().required("A board code is required")
 })

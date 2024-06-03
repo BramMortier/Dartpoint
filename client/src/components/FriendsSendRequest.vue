@@ -105,6 +105,8 @@ const SendFriendRequestFormSubmit = async (values, { resetForm }) => {
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/mixins.scss" as *;
+
 .friends-send-request {
     display: flex;
     flex-direction: column;

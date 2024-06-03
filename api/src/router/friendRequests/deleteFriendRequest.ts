@@ -69,6 +69,8 @@ export const deleteFriendRequestsHandler: Handler = async (c) => {
 
         const friendIdParam = c.req.param("friendId");
 
+        console.log(friendIdParam);
+
         const deletedRequest = await db.userFriends.delete({
             where: {
                 userId_friendId: {

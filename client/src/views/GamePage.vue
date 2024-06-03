@@ -46,7 +46,7 @@ onUnmounted(async () => {
 const addThrow = (data) => {
     const dartData = {
         userId: authenticatedUser.value.id,
-        ...data.dartInfo,
+        ...data.detectedDartInfo,
         createdAt: new Date(),
         updatedAt: new Date()
     }
@@ -97,32 +97,44 @@ const addThrow = (data) => {
 @use "@/assets/styles/mixins.scss" as *;
 
 .game-page {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: var(--space-16);
 
     @include styles-for(tablet) {
+        grid-template-columns: repeat(2, 1fr);
         gap: var(--space-24);
     }
 
     @include styles-for(desktop) {
         gap: var(--space-32);
-        display: grid;
         grid-template-columns: repeat(12, 1fr);
         height: 100%;
     }
 
     &__actions {
         display: flex;
+        grid-column: span 1;
+        grid-row: 2;
         flex-direction: column;
-        gap: var(--space-32);
-        grid-column: span 3;
+        gap: var(--space-16);
+
+        @include styles-for(tablet) {
+            gap: var(--space-24);
+        }
+
+        @include styles-for(desktop) {
+            gap: var(--space-32);
+            grid-row: 1;
+            grid-column: span 3;
+        }
     }
 
     &__session {
         display: flex;
         flex-direction: column;
         gap: var(--space-16);
+        width: 100%;
     }
 
     &__session-actions {
@@ -136,6 +148,7 @@ const addThrow = (data) => {
     }
 
     &__presets {
+        width: 100%;
         display: flex;
         flex-direction: column;
         gap: var(--space-16);
@@ -145,12 +158,33 @@ const addThrow = (data) => {
         }
     }
 
+    &__players {
+        display: none;
+
+        @include styles-for(desktop) {
+            display: flex;
+        }
+    }
+
     &__main {
-        grid-column: span 7;
+        grid-column: span 1;
+
+        @include styles-for(tablet) {
+            grid-column: span 2;
+        }
+
+        @include styles-for(desktop) {
+            grid-column: span 7;
+        }
     }
 
     &__info {
-        grid-column: span 2;
+        grid-column: span 1;
+        min-height: 40vh;
+
+        @include styles-for(desktop) {
+            grid-column: span 2;
+        }
     }
 }
 </style>

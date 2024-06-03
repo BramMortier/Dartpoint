@@ -39,6 +39,8 @@ const incommingRequests = computed(() => {
 onMounted(async () => {
     const { status, message, body } = await friendRequestsApi.getFriendRequests()
 
+    console.log(body.requests)
+
     requests.value = body.requests
 })
 
@@ -55,11 +57,15 @@ const acceptFriendRequest = async (requestSender) => {
         requestBody
     )
 
+    console.log(message, body, status)
+
     router.go()
 }
 
 const cancelFriendRequest = async (requestReceiver) => {
     const { status, message, body } = await friendRequestsApi.deleteFriendRequest(requestReceiver)
+
+    console.log(message, body, status)
 
     router.go()
 }
@@ -67,17 +73,13 @@ const cancelFriendRequest = async (requestReceiver) => {
 const denyFriendRequest = async (requestSender) => {
     const { status, message, body } = await friendRequestsApi.deleteFriendRequest(requestSender)
 
-    router.go()
+    console.log(message, body, status)
 }
 </script>
 
 <template>
     <div class="friends-requests-list">
-        <div class="friends-requests-list__title">
-            <BaseIcon name="arrow-left" @click="router.back()" />
-
-            <h2>Recent friend requests</h2>
-        </div>
+        <BaseContainerTitle title="Recent friend requests" />
 
         <div
             v-if="outgoingRequests && outgoingRequests.length > 0"
@@ -103,7 +105,7 @@ const denyFriendRequest = async (requestSender) => {
         </div>
 
         <div
-            v-else-if="incommingRequests && incommingRequests.length > 0"
+            v-if="incommingRequests && incommingRequests.length > 0"
             class="friends-requests-list__incomming-requests"
         >
             <p class="typo-body-large">{{ incommingRequests.length }} Incomming</p>
@@ -119,7 +121,7 @@ const denyFriendRequest = async (requestSender) => {
 
                     <BaseButton
                         class="base-button--secondary"
-                        @click="acceptFriendRequest(request.userId)"
+                        @click="acceptFriendRequest(item.userId)"
                     >
                         Accept
                     </BaseButton>
@@ -136,11 +138,17 @@ const denyFriendRequest = async (requestSender) => {
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/mixins.scss" as *;
+
 .friends-requests-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-32);
+    gap: var(--space-16);
     height: 100%;
+
+    @include styles-for(desktop) {
+        gap: var(--space-32);
+    }
 
     &__title {
         display: flex;
@@ -171,7 +179,12 @@ const denyFriendRequest = async (requestSender) => {
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        gap: var(--space-24);
+        padding-block: var(--space-64);
+        gap: var(--space-8);
+
+        @include styles-for(desktop) {
+            gap: var(--space-24);
+        }
 
         & > p {
             max-width: 25rem;

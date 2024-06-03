@@ -79,9 +79,25 @@ const throwsAbove140 = computed(() => {
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/mixins.scss" as *;
+
 .game-statistics {
     display: grid;
-    grid-template-columns: repeat(4, auto);
-    gap: var(--space-32) var(--space-96);
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-24) var(--space-48);
+
+    & > .game-statistics-item:nth-child(3),
+    & > .game-statistics-item:nth-child(4) {
+        display: none;
+
+        @include styles-for(desktop) {
+            display: flex;
+        }
+    }
+
+    @include styles-for(desktop) {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-32) var(--space-64);
+    }
 }
 </style>

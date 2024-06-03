@@ -55,36 +55,60 @@ import { LogoIconSplit } from "@/components/icons/index"
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/mixins.scss" as *;
+
 .game-detected-darts {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-48);
-    padding-bottom: var(--space-32);
+    gap: var(--space-24);
+    padding-bottom: 0;
+
+    @include styles-for(desktop) {
+        gap: var(--space-48);
+        padding-bottom: var(--space-32);
+    }
 
     &__total {
         display: flex;
         align-items: center;
-        gap: var(--space-48);
+        gap: var(--space-24);
+
+        @include styles-for(desktop) {
+            gap: var(--space-48);
+            font-size: var(--fs-64);
+        }
 
         & > span {
             font-family: var(--font);
             font-weight: var(--fw-500);
-            font-size: var(--fs-64);
+            font-size: var(--fs-48);
             color: var(--clr-neutral-100);
             line-height: var(--lh-tight);
+
+            @include styles-for(desktop) {
+                font-size: var(--fs-64);
+            }
         }
 
         & > .logo-icon-split {
-            height: 80px;
+            height: 48px;
             width: auto;
+
+            @include styles-for(desktop) {
+                height: 80px;
+            }
         }
     }
 
     &__info {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-24);
+        gap: var(--space-16);
+
+        @include styles-for(desktop) {
+            gap: var(--space-24);
+        }
     }
 
     &__dart {
@@ -92,25 +116,38 @@ import { LogoIconSplit } from "@/components/icons/index"
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: var(--space-8);
+        gap: var(--space-4);
 
-        padding: var(--space-24) var(--space-48);
+        padding: var(--space-16) var(--space-32);
         border-radius: var(--border-radius-20);
         background-color: var(--clr-neutral-700);
         border: 1px solid var(--clr-neutral-500);
 
+        @include styles-for(desktop) {
+            gap: var(--space-8);
+            padding: var(--space-24) var(--space-48);
+        }
+
         & > span {
             font-family: var(--font);
             font-weight: var(--fw-500);
-            font-size: var(--fs-96);
+            font-size: var(--fs-64);
             color: var(--clr-neutral-100);
             line-height: var(--lh-tight);
+
+            @include styles-for(desktop) {
+                font-size: var(--fs-96);
+            }
         }
 
         & > p {
-            font-size: var(--fs-48);
+            font-size: var(--fs-32);
             font-weight: var(--fw-500);
             line-height: var(--lh-tight);
+
+            @include styles-for(desktop) {
+                font-size: var(--fs-48);
+            }
         }
     }
 }

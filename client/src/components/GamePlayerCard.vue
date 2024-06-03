@@ -48,6 +48,7 @@ const props = defineProps({
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
+    width: 100%;
 
     background-color: var(--clr-neutral-800);
     border: 1px solid var(--clr-neutral-600);

@@ -83,6 +83,7 @@ onMounted(async () => {
     &__list {
         grid-column: span 8;
         max-height: 800px;
+        min-height: 40vh;
         overflow-y: scroll;
 
         &::-webkit-scrollbar {
