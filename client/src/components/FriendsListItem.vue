@@ -8,8 +8,9 @@
 // =============================================================================
 const props = defineProps({
     name: String,
-    connectedBoard: String,
-    showProfilePicture: Boolean
+    info: String,
+    showProfilePicture: { type: Boolean, default: true },
+    showCountry: { type: Boolean, default: true }
 })
 
 // =============================================================================
@@ -29,13 +30,13 @@ const props = defineProps({
             <div class="friends-list-item__info">
                 <h3>{{ props.name }}</h3>
 
-                <div class="friends-list-item__country">
+                <div v-if="showCountry" class="friends-list-item__country">
                     <BaseIcon name="flag-belgium" />
 
                     <p>Belgium</p>
                 </div>
 
-                <p>{{ props.connectedBoard }}</p>
+                <p>{{ props.info }}</p>
             </div>
         </div>
 

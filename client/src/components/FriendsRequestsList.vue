@@ -79,17 +79,18 @@ const denyFriendRequest = async (requestSender) => {
             <h2>Recent friend requests</h2>
         </div>
 
-        <div class="friends-requests-list__outgoing-requests">
-            <p class="typo-body-large">Outgoing</p>
+        <div
+            v-if="outgoingRequests && outgoingRequests.length > 0"
+            class="friends-requests-list__outgoing-requests"
+        >
+            <p class="typo-body-large">{{ outgoingRequests.length }} Outgoing</p>
 
             <ul>
                 <FriendsListItem
                     v-for="item in outgoingRequests"
                     :name="item.friend.displayName"
-                    :is-online="true"
-                    :status="`Sent ${timeSince(new Date(item.createdAt))} ago`"
-                    :show-profile-picture="true"
-                    :show-status-indicator="false"
+                    :show-country="false"
+                    :info="`Sent ${timeSince(new Date(item.createdAt))} ago`"
                 >
                     <BaseButton
                         class="base-button--tertiary"
@@ -101,17 +102,14 @@ const denyFriendRequest = async (requestSender) => {
             </ul>
         </div>
 
-        <div class="friends-requests-list__incomming-requests">
-            <p class="typo-body-large">Incomming</p>
+        <div
+            v-else-if="incommingRequests && incommingRequests.length > 0"
+            class="friends-requests-list__incomming-requests"
+        >
+            <p class="typo-body-large">{{ incommingRequests.length }} Incomming</p>
 
             <ul>
-                <FriendsListItem
-                    v-for="item in incommingRequests"
-                    :name="item.user.displayName"
-                    :is-online="true"
-                    status="Online, in game"
-                    :show-profile-picture="true"
-                >
+                <FriendsListItem v-for="item in incommingRequests" :name="item.user.displayName">
                     <BaseButton
                         class="base-button--primary"
                         @click="denyFriendRequest(item.friendId)"
@@ -128,6 +126,12 @@ const denyFriendRequest = async (requestSender) => {
                 </FriendsListItem>
             </ul>
         </div>
+
+        <div v-else class="friends-requests-list__empty">
+            <h2>Empty</h2>
+
+            <p class="typo-body-large">You currently have no new requests to process</p>
+        </div>
     </div>
 </template>
 
@@ -136,6 +140,7 @@ const denyFriendRequest = async (requestSender) => {
     display: flex;
     flex-direction: column;
     gap: var(--space-32);
+    height: 100%;
 
     &__title {
         display: flex;
@@ -159,6 +164,22 @@ const denyFriendRequest = async (requestSender) => {
             flex-direction: column;
             gap: var(--space-16);
         }
+    }
+
+    &__empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: var(--space-24);
+
+        & > p {
+            max-width: 25rem;
+            text-align: center;
+        }
+
+        width: 100%;
+        height: 100%;
     }
 }
 </style>

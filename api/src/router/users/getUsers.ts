@@ -3,11 +3,11 @@
 // =============================================================================
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
-import { db } from "../../config/db";
+import { db } from "@/config/db";
 
-import { userSchema } from "../../models/user";
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { userSchema } from "@/models/user";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
 
 // =============================================================================
 // Route defenition
@@ -20,8 +20,8 @@ export const getUsersRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema.extend({
-                        data: z.object({ users: z.array(userSchema) }),
+                    schema: ResponseSchema.extend({
+                        body: z.object({ users: z.array(userSchema) }),
                     }),
                 },
             },
@@ -30,7 +30,7 @@ export const getUsersRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -46,11 +46,11 @@ export const getUsersHandler: Handler = async (c) => {
     try {
         const users = await db.user.findMany();
 
-        return formattedSuccesResponse(c, 200, getUsersRoute.responses[200].description, {
+        return formattedResponse(c, 200, getUsersRoute.responses[200].description, {
             users: users,
         });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, getUsersRoute.responses[500].description);
+        return formattedResponse(c, 500, getUsersRoute.responses[500].description);
     }
 };

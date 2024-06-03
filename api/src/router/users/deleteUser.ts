@@ -3,11 +3,11 @@
 // =============================================================================
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
-import { db } from "../../config/db";
+import { db } from "@/config/db";
 
-import { userSchema } from "../../models/user";
-import { SuccesResponseSchema, ErrorResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { userSchema } from "@/models/user";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
 
 // =============================================================================
 // Request Schemas
@@ -33,17 +33,25 @@ export const deleteUserRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema.extend({
-                        data: z.object({ deletedUser: userSchema }),
+                    schema: ResponseSchema.extend({
+                        body: z.object({ deletedUser: userSchema }),
                     }),
                 },
             },
             description: "Successfully deleted user",
         },
+        404: {
+            content: {
+                "application/json": {
+                    schema: ResponseSchema,
+                },
+            },
+            description: "User doesn't exist",
+        },
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -59,20 +67,25 @@ export const deleteUserHandler: Handler = async (c) => {
     const userId = c.req.param("userId");
 
     try {
+        const user = await db.user.findUnique({
+            where: {
+                id: Number(userId),
+            },
+        });
+
+        if (!user) return formattedResponse(c, 404, deleteUserRoute.responses[404].description);
+
         const deletedUser = await db.user.delete({
             where: {
                 id: Number(userId),
             },
         });
 
-        return formattedSuccesResponse(
-            c,
-            200,
-            deleteUserRoute.responses[200].description,
-            deletedUser
-        );
+        return formattedResponse(c, 200, deleteUserRoute.responses[200].description, {
+            deletedUser: deletedUser,
+        });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, deleteUserRoute.responses[500].description);
+        return formattedResponse(c, 500, deleteUserRoute.responses[500].description);
     }
 };

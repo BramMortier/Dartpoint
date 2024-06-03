@@ -4,8 +4,8 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
 
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedSuccesResponse } from "../../utils/formattedResponse";
+import { ResponseSchema } from "../../models/response";
+import { formattedResponse } from "../../utils/formattedResponse";
 import { verifyJWT } from "../../middleware/verifyJWT";
 
 // =============================================================================
@@ -20,7 +20,7 @@ export const getSecretRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema.extend({
+                    schema: ResponseSchema.extend({
                         data: z.object({ secret: z.string() }),
                     }),
                 },
@@ -30,7 +30,7 @@ export const getSecretRoute = createRoute({
         401: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Unauthorized",
@@ -38,7 +38,7 @@ export const getSecretRoute = createRoute({
         403: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Forbidden",
@@ -46,7 +46,7 @@ export const getSecretRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -59,5 +59,5 @@ export const getSecretRoute = createRoute({
 // Route handler
 // =============================================================================
 export const getSecretHandler: Handler = async (c) => {
-    return formattedSuccesResponse(c, 200, getSecretRoute.responses[200].description);
+    return formattedResponse(c, 200, getSecretRoute.responses[200].description);
 };

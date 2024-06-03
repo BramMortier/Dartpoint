@@ -5,6 +5,7 @@
 import { Form } from "vee-validate"
 import { authApi } from "@/services/api/index"
 import { useRouter } from "vue-router"
+import { useNotificationStore } from "@/stores/notificationStore"
 import * as yup from "yup"
 
 import { authBackground } from "@/assets/images"
@@ -13,6 +14,7 @@ import { authBackground } from "@/assets/images"
 // Composables, Refs & Computed
 // =============================================================================
 const router = useRouter()
+const { addErrorNotification, addSuccesNotification } = useNotificationStore()
 
 const loginFormValidationSchema = yup.object({
     email: yup.string().email("invalid email").required("an email is required!"),
@@ -27,11 +29,19 @@ const LoginFormSubmit = async (values) => {
         password: values.password
     }
 
-    console.log(requestBody)
+    try {
+        const { status, message, body } = await authApi.login(requestBody)
 
-    const { status, message, body } = await authApi.login(requestBody)
+        if (status === 400) addErrorNotification({ message })
+        if (status === 401) addErrorNotification({ message })
 
-    if (status === 200) setTimeout(() => router.push({ name: "DashboardPage" }), 1000)
+        if (status === 200) {
+            addSuccesNotification({ message })
+            setTimeout(() => router.push({ name: "DashboardPage" }), 1000)
+        }
+    } catch (error) {
+        addErrorNotification({ message: "Server is not responding" })
+    }
 }
 </script>
 
@@ -45,6 +55,7 @@ const LoginFormSubmit = async (values) => {
                 class="login-page__form"
                 @submit="LoginFormSubmit"
                 :validation-schema="loginFormValidationSchema"
+                v-slot="{ isSubmitting }"
             >
                 <div class="login-page__form-fields">
                     <BaseInput

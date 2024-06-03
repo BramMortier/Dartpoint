@@ -26,7 +26,7 @@ export const profileRoutes = [
             {
                 path: "",
                 name: "FriendsPage",
-                component: () => import("@/components/FriendsList.vue"),
+                component: () => import("@/components/FriendsListManaged.vue"),
                 meta: {
                     protected: true,
                     title: "Dartpoint | Friends",

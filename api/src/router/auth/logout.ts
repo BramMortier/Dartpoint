@@ -5,8 +5,8 @@ import { deleteCookie } from "hono/cookie";
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
 
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
 
 // =============================================================================
 // Route defenition
@@ -19,7 +19,7 @@ export const logoutRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Logout succesfull",
@@ -27,7 +27,7 @@ export const logoutRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -45,9 +45,9 @@ export const logoutHandler: Handler = async (c) => {
             secure: true,
         });
 
-        return formattedSuccesResponse(c, 200, logoutRoute.responses[200].description);
+        return formattedResponse(c, 200, logoutRoute.responses[200].description);
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, logoutRoute.responses[500].description);
+        return formattedResponse(c, 500, logoutRoute.responses[500].description);
     }
 };

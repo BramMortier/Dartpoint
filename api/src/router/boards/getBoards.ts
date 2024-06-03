@@ -5,9 +5,10 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
 import { db } from "../../config/db";
 
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
-import { verifyJWT } from "../../middleware/verifyJWT";
+import { boardSchema } from "@/models/board";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
+import { verifyJWT } from "@/middleware/verifyJWT";
 import { decode } from "hono/jwt";
 
 // =============================================================================
@@ -22,7 +23,9 @@ export const getBoardsRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema,
+                    schema: ResponseSchema.extend({
+                        body: z.object({ boards: boardSchema }),
+                    }),
                 },
             },
             description: "Successfully retrieved the users saved devices",
@@ -30,7 +33,7 @@ export const getBoardsRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -56,11 +59,11 @@ export const getBoardsHandler: Handler = async (c) => {
             },
         });
 
-        return formattedSuccesResponse(c, 200, getBoardsRoute.responses[200].description, {
+        return formattedResponse(c, 200, getBoardsRoute.responses[200].description, {
             boards: boards,
         });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, getBoardsRoute.responses[500].description);
+        return formattedResponse(c, 500, getBoardsRoute.responses[500].description);
     }
 };

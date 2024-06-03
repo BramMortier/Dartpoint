@@ -3,12 +3,12 @@
 // =============================================================================
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
-import { db } from "../../config/db";
+import { db } from "@/config/db";
 
-import { friendRequestSchema } from "../../models/friendRequest";
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
-import { verifyJWT } from "../../middleware/verifyJWT";
+import { friendRequestSchema } from "@/models/friendRequest";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
+import { verifyJWT } from "@/middleware/verifyJWT";
 import { decode } from "hono/jwt";
 
 // =============================================================================
@@ -40,8 +40,8 @@ export const deleteFriendRequestsRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema.extend({
-                        data: z.object({ requests: z.array(friendRequestSchema) }),
+                    schema: ResponseSchema.extend({
+                        body: z.object({ requests: z.array(friendRequestSchema) }),
                     }),
                 },
             },
@@ -50,7 +50,7 @@ export const deleteFriendRequestsRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -78,14 +78,11 @@ export const deleteFriendRequestsHandler: Handler = async (c) => {
             },
         });
 
-        return formattedSuccesResponse(
-            c,
-            200,
-            deleteFriendRequestsRoute.responses[200].description,
-            { deletedRequest: deletedRequest }
-        );
+        return formattedResponse(c, 200, deleteFriendRequestsRoute.responses[200].description, {
+            deletedRequest: deletedRequest,
+        });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, deleteFriendRequestsRoute.responses[500].description);
+        return formattedResponse(c, 500, deleteFriendRequestsRoute.responses[500].description);
     }
 };

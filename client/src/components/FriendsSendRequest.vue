@@ -8,6 +8,7 @@ import { useModalStore } from "@/stores/modalStore"
 import { useNotificationStore } from "@/stores/notificationStore"
 import { friendRequestsApi } from "@/services/api"
 import { FriendsDuplicateRequestModal } from "@/components/index"
+
 import * as yup from "yup"
 
 // =============================================================================
@@ -15,7 +16,7 @@ import * as yup from "yup"
 // =============================================================================
 const router = useRouter()
 const { openModal } = useModalStore()
-const { addNotification } = useNotificationStore()
+const { addErrorNotification, addSuccesNotification } = useNotificationStore()
 
 const sendFriendRequestFormValidationSchema = yup.object({
     id: yup.string().required("Invalid friend code!")
@@ -30,33 +31,45 @@ const SendFriendRequestFormSubmit = async (values, { resetForm }) => {
         friendId: values.id
     }
 
-    const { status, message, body, error } =
-        await friendRequestsApi.createFriendRequest(requestBody)
+    const { status, message, body } = await friendRequestsApi.createFriendRequest(requestBody)
 
-    console.log(status, message, body, error)
+    console.log(status, message, body)
 
-    if (status === 409 && !error.isAccepted)
-        openModal({
-            component: FriendsDuplicateRequestModal,
-            props: { requestSender: error.requestSender, isAccepted: false }
-        })
+    if (status === 400) addErrorNotification({ message })
 
-    if (error.isAccepted)
-        openModal({
-            component: FriendsDuplicateRequestModal,
-            props: { requestSender: error.requestSender, isAccepted: true }
-        })
+    if (status === 409) {
+        if (body?.incommingRequest?.isAccepted === false) {
+            openModal({
+                component: FriendsDuplicateRequestModal,
+                props: { request: body.incommingRequest, type: "incomming" }
+            })
+        }
+
+        if (body?.outgoingRequest?.isAccepted === false) {
+            openModal({
+                component: FriendsDuplicateRequestModal,
+                props: { request: body.outgoingRequest, type: "outgoing" }
+            })
+        }
+
+        if (body?.incommingRequest?.isAccepted === true) {
+            openModal({
+                component: FriendsDuplicateRequestModal,
+                props: { request: body.incommingRequest, type: "incomming" }
+            })
+        }
+
+        if (body?.outgoingRequest?.isAccepted === true) {
+            openModal({
+                component: FriendsDuplicateRequestModal,
+                props: { request: body.outgoingRequest, type: "outgoing" }
+            })
+        }
+    }
+
+    if (status === 200) addSuccesNotification({ message, removeDelay: 4000 })
 
     resetForm()
-}
-
-const sendNotification = () => {
-    addNotification({
-        title: "Succes!",
-        message: "Deleted location succesfully",
-        type: "succes",
-        removeDelay: 2000
-    })
 }
 </script>
 
@@ -88,7 +101,6 @@ const sendNotification = () => {
 
             <BaseButton class="base-button--secondary">Send request</BaseButton>
         </Form>
-        <BaseButton @click="sendNotification">Send notification</BaseButton>
     </div>
 </template>
 

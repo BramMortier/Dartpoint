@@ -3,13 +3,13 @@
 // =============================================================================
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
-import { pusher } from "../../config/pusher";
-import { validateRequest } from "../../middleware/requestValidator";
-import { db } from "../../config/db";
+import { pusher } from "@/config/pusher";
+import { validateRequest } from "@/middleware/requestValidator";
+import { db } from "@/config/db";
 
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
-import { verifyJWT } from "../../middleware/verifyJWT";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
+import { verifyJWT } from "@/middleware/verifyJWT";
 import { decode } from "hono/jwt";
 
 // =============================================================================
@@ -42,7 +42,7 @@ export const createFriendRequestRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Successfully sent request",
@@ -50,7 +50,7 @@ export const createFriendRequestRoute = createRoute({
         422: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Incorrect or missing request data",
@@ -58,8 +58,8 @@ export const createFriendRequestRoute = createRoute({
         409: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema.extend({
-                        isAccepted: z.boolean(),
+                    schema: ResponseSchema.extend({
+                        body: z.object({ isAccepted: z.boolean() }),
                     }),
                 },
             },
@@ -68,7 +68,7 @@ export const createFriendRequestRoute = createRoute({
         400: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Invalid friend code",
@@ -76,7 +76,7 @@ export const createFriendRequestRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -98,32 +98,38 @@ export const createFriendRequestHandler: Handler = async (c) => {
         const requestSender = await db.user.findUnique({ where: { id: decodedToken.payload.sub } });
         const requestReciever = await db.user.findUnique({ where: { dartpointId: body.friendId } });
 
-        if (!requestReciever)
-            return formattedErrorResponse(
-                c,
-                400,
-                createFriendRequestRoute.responses[400].description
-            );
+        if (!requestReciever || requestSender?.id === requestReciever?.id)
+            return formattedResponse(c, 400, createFriendRequestRoute.responses[400].description);
 
-        const duplicateRequest = await db.userFriends.findUnique({
+        const incommingRequest = await db.userFriends.findUnique({
             where: {
                 userId_friendId: {
                     userId: requestReciever.id,
                     friendId: decodedToken.payload.sub,
                 },
             },
+            include: { friend: true, user: true },
         });
 
-        if (duplicateRequest)
-            return formattedErrorResponse(
-                c,
-                409,
-                createFriendRequestRoute.responses[409].description,
-                {
-                    requestSender: requestReciever,
-                    isAccepted: duplicateRequest.isAccepted,
-                }
-            );
+        if (incommingRequest)
+            return formattedResponse(c, 409, createFriendRequestRoute.responses[409].description, {
+                incommingRequest: incommingRequest,
+            });
+
+        const outgoingRequest = await db.userFriends.findUnique({
+            where: {
+                userId_friendId: {
+                    userId: decodedToken.payload.sub,
+                    friendId: requestReciever.id,
+                },
+            },
+            include: { friend: true, user: true },
+        });
+
+        if (outgoingRequest)
+            return formattedResponse(c, 409, createFriendRequestRoute.responses[409].description, {
+                outgoingRequest: outgoingRequest,
+            });
 
         const createdRequest = await db.userFriends.create({
             data: {
@@ -137,14 +143,11 @@ export const createFriendRequestHandler: Handler = async (c) => {
             requestSender: requestSender,
         });
 
-        return formattedSuccesResponse(
-            c,
-            200,
-            createFriendRequestRoute.responses[200].description,
-            { createdRequest: createdRequest }
-        );
+        return formattedResponse(c, 200, createFriendRequestRoute.responses[200].description, {
+            createdRequest: createdRequest,
+        });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, createFriendRequestRoute.responses[500].description);
+        return formattedResponse(c, 500, createFriendRequestRoute.responses[500].description);
     }
 };

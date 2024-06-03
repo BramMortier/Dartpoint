@@ -16,6 +16,7 @@ export { default as GameDetectedDarts } from "@/components/GameDetectedDarts.vue
 export { default as GamePlayerHistoryInfo } from "@/components/GamePlayerHistoryInfo.vue"
 
 export { default as FriendsList } from "@/components/FriendsList.vue"
+export { default as FriendsListManaged } from "@/components/FriendsListManaged.vue"
 export { default as FriendsListItem } from "@/components/FriendsListItem.vue"
 export { default as FriendsRequestsList } from "@/components/FriendsRequestsList.vue"
 export { default as FriendsSendRequest } from "@/components/FriendsSendRequest.vue"

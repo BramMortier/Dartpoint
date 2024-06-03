@@ -8,8 +8,8 @@ import { validateRequest } from "../../middleware/requestValidator";
 import { db } from "../../config/db";
 
 import { friendRequestSchema } from "../../models/friendRequest";
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { ResponseSchema } from "../../models/response";
+import { formattedResponse } from "../../utils/formattedResponse";
 import { verifyJWT } from "../../middleware/verifyJWT";
 import { decode } from "hono/jwt";
 
@@ -54,7 +54,7 @@ export const patchFriendRequestRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Successfully updated status of friend request",
@@ -62,7 +62,7 @@ export const patchFriendRequestRoute = createRoute({
         422: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Incorrect or missing request data",
@@ -70,7 +70,7 @@ export const patchFriendRequestRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -112,11 +112,11 @@ export const patchFriendRequestHandler: Handler = async (c) => {
             newFriend: newFriend,
         });
 
-        return formattedSuccesResponse(c, 200, patchFriendRequestRoute.responses[200].description, {
+        return formattedResponse(c, 200, patchFriendRequestRoute.responses[200].description, {
             updatedRequest: updatedRequest,
         });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, patchFriendRequestRoute.responses[500].description);
+        return formattedResponse(c, 500, patchFriendRequestRoute.responses[500].description);
     }
 };

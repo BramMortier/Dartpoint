@@ -10,6 +10,7 @@ import { authRoutes } from "@/router/routes/auth"
 
 import { authApi } from "@/services/api"
 import { useAuthStore } from "@/stores/authStore"
+import { storeToRefs } from "pinia"
 
 // =============================================================================
 // Router configuration
@@ -23,14 +24,14 @@ const router = createRouter({
 // Navigation guard
 // =============================================================================
 router.beforeEach(async (to) => {
-    const { setUser } = useAuthStore()
+    const { authenticatedUser } = storeToRefs(useAuthStore())
 
     if (!to.meta.protected) return
     const { status, message, body } = await authApi.getAuth()
 
     if (status !== 200) return { name: "LoginPage" }
 
-    setUser(body.user)
+    authenticatedUser.value = body.authenticatedUser
     console.log(message, body)
 })
 

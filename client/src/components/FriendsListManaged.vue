@@ -17,8 +17,8 @@ const props = defineProps({
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-const friends = ref(null)
 const router = useRouter()
+const friends = ref(null)
 
 // =============================================================================
 // Lifecycle hooks
@@ -36,23 +36,22 @@ onMounted(async () => {
 // =============================================================================
 // Functions
 // =============================================================================
+const unfriend = async (friend) => {
+    const { status, message, body } = await friendRequestsApi.deleteFriendRequest(friend)
+}
 </script>
 
 <template>
-    <div class="friends-list">
+    <div class="friends-list-managed">
         <BaseContainerTitle title="Your friends" :show-back-button="props.showBackButton" />
 
-        <ul v-if="friends && friends.length > 0" class="friends-list__friends">
-            <FriendsListItem
-                v-for="item in friends"
-                :show-profile-picture="true"
-                :name="item.friend.displayName"
-            >
-                <BaseButton class="base-button--tertiary">Play</BaseButton>
+        <ul v-if="friends && friends.length > 0" class="friends-list-managed__friends">
+            <FriendsListItem v-for="item in friends" :name="item.friend.displayName">
+                <BaseButton @click="unfriend(item.friend.id)">Unfriend</BaseButton>
             </FriendsListItem>
         </ul>
 
-        <div class="friends-list__empty">
+        <div v-else class="friends-list-managed__empty">
             <h2>You don't have any friends</h2>
 
             <p class="typo-body-large">
@@ -72,7 +71,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 @use "@/assets/styles/mixins.scss" as *;
 
-.friends-list {
+.friends-list-managed {
     display: flex;
     flex-direction: column;
     gap: var(--space-24);

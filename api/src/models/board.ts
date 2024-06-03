@@ -4,12 +4,17 @@
 import { z } from "@hono/zod-openapi";
 
 // =============================================================================
-// Schema
+// Schema(s)
 // =============================================================================
-export const ResponseSchema = z
+export const boardSchema = z
     .object({
-        code: z.number(),
-        message: z.string(),
-        body: z.object({}).optional(),
+        id: z.number(),
+        ownerId: z.number(),
+        name: z.string(),
+        code: z.string(),
+        isVisible: z.boolean(),
+        country: z.string(),
     })
-    .openapi("Response");
+    .openapi("Board");
+
+export type Board = z.infer<typeof boardSchema>;

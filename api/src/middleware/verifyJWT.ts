@@ -4,7 +4,7 @@
 import { verify, decode } from "hono/jwt";
 import { getCookie } from "hono/cookie";
 import { MiddlewareHandler } from "hono";
-import { formattedErrorResponse } from "../utils/formattedResponse";
+import { formattedResponse } from "../utils/formattedResponse";
 import { SignatureKey } from "hono/utils/jwt/jws";
 
 // =============================================================================
@@ -15,17 +15,17 @@ export const verifyJWT = (): MiddlewareHandler => {
         try {
             const token = getCookie(c, "token");
             console.log(token);
-            if (!token) return formattedErrorResponse(c, 401, "Unauthorized");
+            if (!token) return formattedResponse(c, 401, "Unauthorized");
 
             const validToken = await verify(token, process.env.JWT_SECRET as SignatureKey);
-            if (!validToken) return formattedErrorResponse(c, 403, "Forbidden");
+            if (!validToken) return formattedResponse(c, 403, "Forbidden");
 
             c.set("token", token);
 
             return next();
         } catch (error) {
             console.error(error);
-            return formattedErrorResponse(c, 500, "Internal server error");
+            return formattedResponse(c, 500, "Internal server error");
         }
     };
 };

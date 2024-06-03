@@ -5,8 +5,10 @@
 import { Form } from "vee-validate"
 import { RouterLink, useRouter } from "vue-router"
 import { authApi } from "@/services/api/index"
-import cryptoRandomString from "crypto-random-string"
+import { useNotificationStore } from "@/stores/notificationStore"
+
 import * as yup from "yup"
+import cryptoRandomString from "crypto-random-string"
 
 import { authBackground } from "@/assets/images"
 
@@ -14,6 +16,7 @@ import { authBackground } from "@/assets/images"
 // Composables, Refs & Computed
 // =============================================================================
 const router = useRouter()
+const { addErrorNotification, addSuccesNotification } = useNotificationStore()
 
 const registerFormValidationSchema = yup.object({
     displayName: yup.string().required("a display name is required!"),
@@ -39,13 +42,18 @@ const RegisterFormSubmit = async (values) => {
         country: "Belgium"
     }
 
-    console.log(requestBody)
+    try {
+        const { status, message, body } = await authApi.register(requestBody)
 
-    const { status, message, body } = await authApi.register(requestBody)
+        if (status === 409) addErrorNotification({ message })
 
-    console.log(status, message, body)
-
-    if (status === 201) setTimeout(() => router.push({ name: "LoginPage" }), 1000)
+        if (status === 201) {
+            addSuccesNotification({ message })
+            setTimeout(() => router.push({ name: "LoginPage" }), 1000)
+        }
+    } catch (error) {
+        addErrorNotification({ message: "Server is not responding" })
+    }
 }
 </script>
 
@@ -59,6 +67,7 @@ const RegisterFormSubmit = async (values) => {
                 class="register-page__form"
                 @submit="RegisterFormSubmit"
                 :validation-schema="registerFormValidationSchema"
+                v-slot="{ isSubmitting }"
             >
                 <div class="register-page__form-fields">
                     <BaseInput
@@ -100,7 +109,7 @@ const RegisterFormSubmit = async (values) => {
                     </div>
                 </div>
 
-                <BaseButton>Register account</BaseButton>
+                <BaseButton :disabled="isSubmitting">Register account</BaseButton>
             </Form>
         </BaseContainer>
 

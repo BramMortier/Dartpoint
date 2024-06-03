@@ -4,11 +4,11 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
 import { validateRequest } from "../../middleware/requestValidator";
-import { db } from "../../config/db";
+import { db } from "@/config/db";
 
-import { userSchema } from "../../models/user";
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { userSchema } from "@/models/user";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
 
 // =============================================================================
 // Request Schemas
@@ -43,8 +43,8 @@ export const registerRoute = createRoute({
         201: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema.extend({
-                        data: z.object({ user: userSchema }),
+                    schema: ResponseSchema.extend({
+                        body: z.object({ user: userSchema }),
                     }),
                 },
             },
@@ -53,7 +53,7 @@ export const registerRoute = createRoute({
         422: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Incorrect or missing request data",
@@ -61,7 +61,7 @@ export const registerRoute = createRoute({
         409: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "An account with this email already exists",
@@ -69,7 +69,7 @@ export const registerRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -87,7 +87,7 @@ export const registerHandler: Handler = async (c) => {
 
         const duplicateUser = await db.user.findUnique({ where: { email: body.email } });
         if (duplicateUser)
-            return formattedErrorResponse(c, 409, registerRoute.responses[409].description);
+            return formattedResponse(c, 409, registerRoute.responses[409].description);
 
         body.password = await Bun.password.hash(body.password, {
             algorithm: "argon2id",
@@ -99,11 +99,11 @@ export const registerHandler: Handler = async (c) => {
             data: body,
         });
 
-        return formattedSuccesResponse(c, 201, registerRoute.responses[201].description, {
-            user: createdUser,
+        return formattedResponse(c, 201, registerRoute.responses[201].description, {
+            createdUser: createdUser,
         });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, registerRoute.responses[500].description);
+        return formattedResponse(c, 500, registerRoute.responses[500].description);
     }
 };

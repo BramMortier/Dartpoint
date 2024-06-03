@@ -3,11 +3,11 @@
 // =============================================================================
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
-import { db } from "../../config/db";
+import { db } from "@/config/db";
 
-import { userSchema } from "../../models/user";
-import { SuccesResponseSchema, ErrorResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { userSchema } from "@/models/user";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
 
 // =============================================================================
 // Request Schemas
@@ -33,17 +33,25 @@ export const getUserRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema.extend({
-                        data: z.object({ user: userSchema }),
+                    schema: ResponseSchema.extend({
+                        body: z.object({ user: userSchema }),
                     }),
                 },
             },
             description: "Successfully retrieved user",
         },
+        404: {
+            content: {
+                "application/json": {
+                    schema: ResponseSchema,
+                },
+            },
+            description: "User doesn't exist",
+        },
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -61,9 +69,11 @@ export const getUserHandler: Handler = async (c) => {
 
         const user = await db.user.findUnique({ where: { id: Number(userIdParam) } });
 
-        return formattedSuccesResponse(c, 200, getUserRoute.responses[200].description, user);
+        if (!user) return formattedResponse(c, 404, getUserRoute.responses[404].description);
+
+        return formattedResponse(c, 200, getUserRoute.responses[200].description, { user: user });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, getUserRoute.responses[500].description);
+        return formattedResponse(c, 500, getUserRoute.responses[500].description);
     }
 };

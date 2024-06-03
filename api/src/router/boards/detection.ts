@@ -3,11 +3,11 @@
 // =============================================================================
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
-import { pusher } from "../../config/pusher";
-import { validateRequest } from "../../middleware/requestValidator";
+import { pusher } from "@/config/pusher";
+import { validateRequest } from "@/middleware/requestValidator";
 
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
 
 // =============================================================================
 // Request Schemas
@@ -50,7 +50,7 @@ export const detectionRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Successfully sent detected dart",
@@ -58,7 +58,7 @@ export const detectionRoute = createRoute({
         422: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Incorrect or missing request data",
@@ -66,7 +66,7 @@ export const detectionRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -87,12 +87,12 @@ export const detectionHandler: Handler = async (c) => {
         console.log(`board-${boardCodeParam}`);
 
         pusher.trigger(`board-${boardCodeParam}`, "detection", {
-            dartInfo: body,
+            detectedDartInfo: body,
         });
 
-        return formattedSuccesResponse(c, 200, detectionRoute.responses[200].description);
+        return formattedResponse(c, 200, detectionRoute.responses[200].description);
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, detectionRoute.responses[500].description);
+        return formattedResponse(c, 500, detectionRoute.responses[500].description);
     }
 };

@@ -9,7 +9,11 @@ const props = defineProps({
 
 <template>
     <button class="base-button" :class="props.class">
-        <slot>Placeholder</slot>
+        <span class="typo-h4">
+            <slot>Placeholder</slot>
+        </span>
+
+        <div class="base-button__loader"></div>
     </button>
 </template>
 
@@ -17,6 +21,7 @@ const props = defineProps({
 @use "@/assets/styles/mixins.scss" as *;
 
 .base-button {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,11 +35,6 @@ const props = defineProps({
     border: 2px solid var(--clr-red-500);
     outline: none;
     box-shadow: 0 0 0 0px var(--clr-neutral-700);
-
-    font-family: var(--font);
-    font-size: var(--fs-16);
-    font-weight: var(--fw-500);
-    color: var(--clr-white);
 
     transition: all ease-in 0.15s;
 
@@ -52,7 +52,6 @@ const props = defineProps({
         height: 4rem;
         padding-inline: var(--space-32);
         border-radius: var(--border-radius-20);
-        font-size: var(--fs-20);
     }
 
     &--secondary {
@@ -71,8 +70,43 @@ const props = defineProps({
         }
     }
 
+    &__loader {
+        position: absolute;
+        opacity: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: var(--border-radius-round);
+
+        border: 3px solid transparent;
+        border-top: 3px solid var(--clr-neutral-100);
+        border-right: 3px solid var(--clr-neutral-100);
+        border-left: 3px solid var(--clr-neutral-100);
+
+        animation: spin 2s linear infinite;
+
+        transition: all ease-in 0.15s;
+    }
+
     &:disabled {
+        pointer-events: none;
         opacity: 0.5;
+
+        & > span {
+            opacity: 0;
+        }
+
+        .base-button__loader {
+            opacity: 1;
+        }
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }
 </style>

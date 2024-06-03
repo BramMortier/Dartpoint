@@ -3,12 +3,12 @@
 // =============================================================================
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
-import { db } from "../../config/db";
-import { validateRequest } from "../../middleware/requestValidator";
+import { db } from "@/config/db";
+import { validateRequest } from "@/middleware/requestValidator";
 
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
-import { verifyJWT } from "../../middleware/verifyJWT";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
+import { verifyJWT } from "@/middleware/verifyJWT";
 import { decode } from "hono/jwt";
 
 // =============================================================================
@@ -40,7 +40,7 @@ export const connectionRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Successfully made connection",
@@ -48,7 +48,7 @@ export const connectionRoute = createRoute({
         400: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Invalid or wrong board code",
@@ -56,7 +56,7 @@ export const connectionRoute = createRoute({
         422: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Incorrect or missing request data",
@@ -64,7 +64,7 @@ export const connectionRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -85,8 +85,7 @@ export const connectionHandler: Handler = async (c) => {
 
         const board = await db.board.findUnique({ where: { code: body.boardCode } });
 
-        if (!board)
-            return formattedErrorResponse(c, 400, connectionRoute.responses[400].description);
+        if (!board) return formattedResponse(c, 400, connectionRoute.responses[400].description);
 
         await db.boardUsers.create({
             data: {
@@ -95,11 +94,11 @@ export const connectionHandler: Handler = async (c) => {
             },
         });
 
-        return formattedSuccesResponse(c, 200, connectionRoute.responses[200].description, {
+        return formattedResponse(c, 200, connectionRoute.responses[200].description, {
             board: board,
         });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, connectionRoute.responses[500].description);
+        return formattedResponse(c, 500, connectionRoute.responses[500].description);
     }
 };

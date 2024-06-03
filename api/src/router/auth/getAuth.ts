@@ -3,12 +3,12 @@
 // =============================================================================
 import { createRoute, z } from "@hono/zod-openapi";
 import { Handler } from "hono";
-import { db } from "../../config/db";
+import { db } from "@/config/db";
 
-import { userSchema } from "../../models/user";
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
-import { verifyJWT } from "../../middleware/verifyJWT";
+import { userSchema } from "@/models/user";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
+import { verifyJWT } from "@/middleware/verifyJWT";
 import { decode } from "hono/jwt";
 
 // =============================================================================
@@ -23,8 +23,8 @@ export const getAuthRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema.extend({
-                        data: z.object({ user: userSchema }),
+                    schema: ResponseSchema.extend({
+                        body: z.object({ authenticatedUser: userSchema }),
                     }),
                 },
             },
@@ -33,7 +33,7 @@ export const getAuthRoute = createRoute({
         400: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "User not found",
@@ -41,7 +41,7 @@ export const getAuthRoute = createRoute({
         401: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Unauthorized",
@@ -49,7 +49,7 @@ export const getAuthRoute = createRoute({
         403: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Forbidden",
@@ -57,7 +57,7 @@ export const getAuthRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -76,13 +76,13 @@ export const getAuthHandler: Handler = async (c) => {
         });
 
         if (!authenticatedUser)
-            return formattedErrorResponse(c, 400, getAuthRoute.responses[400].description);
+            return formattedResponse(c, 400, getAuthRoute.responses[400].description);
 
-        return formattedSuccesResponse(c, 200, getAuthRoute.responses[200].description, {
-            user: authenticatedUser,
+        return formattedResponse(c, 200, getAuthRoute.responses[200].description, {
+            authenticatedUser: authenticatedUser,
         });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, getAuthRoute.responses[500].description);
+        return formattedResponse(c, 500, getAuthRoute.responses[500].description);
     }
 };

@@ -6,11 +6,11 @@ import { setCookie } from "hono/cookie";
 import { sign } from "hono/jwt";
 import { Handler } from "hono";
 import { SignatureKey } from "hono/utils/jwt/jws";
-import { db } from "../../config/db";
+import { db } from "@/config/db";
 
-import { userSchema } from "../../models/user";
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { userSchema } from "@/models/user";
+import { ResponseSchema } from "@/models/response";
+import { formattedResponse } from "@/utils/formattedResponse";
 
 // =============================================================================
 // Request Schemas
@@ -43,7 +43,7 @@ export const loginRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema.extend({
+                    schema: ResponseSchema.extend({
                         data: z.object({ accessToken: z.string() }),
                     }),
                 },
@@ -53,7 +53,7 @@ export const loginRoute = createRoute({
         422: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Incorrect or missing request data",
@@ -61,7 +61,7 @@ export const loginRoute = createRoute({
         400: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "No account associated with this email address",
@@ -69,7 +69,7 @@ export const loginRoute = createRoute({
         401: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Incorrect password or email",
@@ -77,7 +77,7 @@ export const loginRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -94,11 +94,10 @@ export const loginHandler: Handler = async (c) => {
         const body: requestSchema = await c.req.json();
 
         const user = await db.user.findUnique({ where: { email: body.email } });
-        if (!user) return formattedErrorResponse(c, 400, loginRoute.responses[400].description);
+        if (!user) return formattedResponse(c, 400, loginRoute.responses[400].description);
 
         const validPassword = await Bun.password.verify(body.password, user.password);
-        if (!validPassword)
-            return formattedErrorResponse(c, 401, loginRoute.responses[401].description);
+        if (!validPassword) return formattedResponse(c, 401, loginRoute.responses[401].description);
 
         const tokenPayload = {
             sub: user.id,
@@ -115,11 +114,11 @@ export const loginHandler: Handler = async (c) => {
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         });
 
-        return formattedSuccesResponse(c, 200, loginRoute.responses[200].description, {
-            accessToken,
+        return formattedResponse(c, 200, loginRoute.responses[200].description, {
+            accessToken: accessToken,
         });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, loginRoute.responses[500].description);
+        return formattedResponse(c, 500, loginRoute.responses[500].description);
     }
 };

@@ -6,8 +6,8 @@ import { Handler } from "hono";
 import { db } from "../../config/db";
 
 import { friendRequestSchema } from "../../models/friendRequest";
-import { ErrorResponseSchema, SuccesResponseSchema } from "../../models/response";
-import { formattedErrorResponse, formattedSuccesResponse } from "../../utils/formattedResponse";
+import { ResponseSchema } from "../../models/response";
+import { formattedResponse } from "../../utils/formattedResponse";
 import { verifyJWT } from "../../middleware/verifyJWT";
 import { decode } from "hono/jwt";
 
@@ -33,7 +33,7 @@ export const getFriendRequestsRoute = createRoute({
         200: {
             content: {
                 "application/json": {
-                    schema: SuccesResponseSchema.extend({
+                    schema: ResponseSchema.extend({
                         data: z.object({ requests: z.array(friendRequestSchema) }),
                     }),
                 },
@@ -43,7 +43,7 @@ export const getFriendRequestsRoute = createRoute({
         500: {
             content: {
                 "application/json": {
-                    schema: ErrorResponseSchema,
+                    schema: ResponseSchema,
                 },
             },
             description: "Internal server error",
@@ -73,11 +73,11 @@ export const getFriendRequestsHandler: Handler = async (c) => {
             include: { friend: true, user: true },
         });
 
-        return formattedSuccesResponse(c, 200, getFriendRequestsRoute.responses[200].description, {
+        return formattedResponse(c, 200, getFriendRequestsRoute.responses[200].description, {
             requests: requests,
         });
     } catch (error) {
         console.error(error);
-        return formattedErrorResponse(c, 500, getFriendRequestsRoute.responses[500].description);
+        return formattedResponse(c, 500, getFriendRequestsRoute.responses[500].description);
     }
 };

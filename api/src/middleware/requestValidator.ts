@@ -2,7 +2,7 @@
 // Imports
 // =============================================================================
 import { MiddlewareHandler } from "hono";
-import { formattedErrorResponse } from "../utils/formattedResponse";
+import { formattedResponse } from "../utils/formattedResponse";
 import { ZodSchema } from "zod/lib";
 
 // =============================================================================
@@ -16,17 +16,13 @@ export const validateRequest = (schema: ZodSchema): MiddlewareHandler => {
 
             const parsed = schema.safeParse(body);
             if (parsed.error)
-                return formattedErrorResponse(
-                    c,
-                    422,
-                    "Incorrect or missing request data",
-                    parsed.error
-                );
+                return formattedResponse(c, 422, "Incorrect or missing request data", {
+                    error: parsed.error,
+                });
 
             await next();
         } catch (error) {
-            console.log(error);
-            return formattedErrorResponse(c, 500, "Internal server error");
+            return formattedResponse(c, 500, "Internal server error");
         }
     };
 };
