@@ -24,6 +24,7 @@ import { onMounted, onUnmounted } from "vue"
 // Composables, Refs & Computed
 // =============================================================================
 const { gameSettings, gameInfo } = storeToRefs(useGameStore())
+const { addThrow } = useGameStore()
 const { authenticatedUser } = storeToRefs(useAuthStore())
 const { connectedBoard } = storeToRefs(useBoardStore())
 
@@ -33,7 +34,7 @@ const { connectedBoard } = storeToRefs(useBoardStore())
 onMounted(async () => {
     const boardChannel = pusher.subscribe(`board-${connectedBoard.value}`)
 
-    boardChannel.bind("detection", (data) => addThrow(data))
+    boardChannel.bind("detection", (data) => addThrow(data.detectedDartInfo))
 })
 
 onUnmounted(async () => {
@@ -43,16 +44,6 @@ onUnmounted(async () => {
 // =============================================================================
 // Functions
 // =============================================================================
-const addThrow = (data) => {
-    const dartData = {
-        userId: authenticatedUser.value.id,
-        ...data.detectedDartInfo,
-        createdAt: new Date(),
-        updatedAt: new Date()
-    }
-
-    gameInfo.value.push(dartData)
-}
 </script>
 
 <template>

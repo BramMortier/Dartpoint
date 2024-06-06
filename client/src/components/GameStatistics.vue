@@ -10,57 +10,69 @@ import { computed } from "vue"
 // =============================================================================
 // Props & Events
 // =============================================================================
-const { gameInfo } = storeToRefs(useGameStore())
+const { gameInfo, currentPlayer } = storeToRefs(useGameStore())
 
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const currentPlayerTurns = computed(() => gameInfo.value[currentPlayer.value.id].turns)
+
 const totalPoints = computed(() => {
-    return gameInfo.value.reduce((sum, item) => sum + item.total, 0)
+    if (currentPlayerTurns.value.length === 0) return 0
+    return currentPlayerTurns.value.reduce((sum, item) => sum + item.total, 0)
 })
 
 const dartsThrown = computed(() => {
-    return gameInfo.value.length * 3
+    if (currentPlayerTurns.value.length === 0) return 0
+    return currentPlayerTurns.value.length * 3
 })
 
 const average = computed(() => {
-    const totalThrows = gameInfo.value.length
-    const totalScoreSum = gameInfo.value.reduce((sum, item) => {
-        return sum + item.dart1Score + item.dart2Score + item.dart3Score
+    if (currentPlayerTurns.value.length === 0) return 0
+
+    const totalTurns = currentPlayerTurns.value.length
+    const totalScoreSum = currentPlayerTurns.value.reduce((sum, item) => {
+        return sum + item.dart1_score + item.dart2_score + item.dart3_score
     }, 0)
-    return totalThrows > 0 ? parseFloat((totalScoreSum / totalThrows).toFixed(1)) : 0
+
+    return parseFloat((totalScoreSum / totalTurns).toFixed(1))
 })
 
 const First9DartsAverage = computed(() => {
-    const totalThrows = gameInfo.value.length
-    const firstThreeThrows = gameInfo.value.slice(0, 3) // Get the first three throws
-    const totalFirstThreeThrows = firstThreeThrows.reduce((sum, item) => sum + item.total, 0)
-    return totalThrows > 0 ? parseFloat((totalFirstThreeThrows / 3).toFixed(1)) : 0
+    if (currentPlayerTurns.value.length === 0) return 0
+
+    const firstThreeTurns = currentPlayerTurns.value.slice(0, 3)
+    const totalFirstThreeTurns = firstThreeTurns.reduce((sum, item) => sum + item.total, 0)
+
+    return parseFloat((totalFirstThreeTurns / firstThreeTurns.length).toFixed(1))
 })
 
 const Triple20Percentage = computed(() => {
-    const totalDarts = gameInfo.value.length * 3
-    const count = gameInfo.value.reduce((sum, item) => {
+    if (currentPlayerTurns.value.length === 0) return 0
+
+    const totalDarts = currentPlayerTurns.value.length * 3
+    const count = currentPlayerTurns.value.reduce((sum, item) => {
         return (
             sum +
-            (item.dart1Sector === 20 && item.dart1Multiplier === 3 ? 1 : 0) +
-            (item.dart2Sector === 20 && item.dart2Multiplier === 3 ? 1 : 0) +
-            (item.dart3Sector === 20 && item.dart3Multiplier === 3 ? 1 : 0)
+            (item.dart1_zone === 20 && item.dart1_multiplier === 3 ? 1 : 0) +
+            (item.dart2_zone === 20 && item.dart2_multiplier === 3 ? 1 : 0) +
+            (item.dart3_zone === 20 && item.dart3_multiplier === 3 ? 1 : 0)
         )
     }, 0)
-    return totalDarts > 0 ? parseFloat(((count / totalDarts) * 100).toFixed(1)) : 0
+
+    return parseFloat(((count / totalDarts) * 100).toFixed(1))
 })
 
 const highestThrow = computed(() => {
-    return gameInfo.value.reduce((max, item) => (item.total > max ? item.total : max), 0)
+    return currentPlayerTurns.value.reduce((max, item) => (item.total > max ? item.total : max), 0)
 })
 
 const throwsAbove100 = computed(() => {
-    return gameInfo.value.filter((item) => item.total > 100).length
+    return currentPlayerTurns.value.filter((item) => item.total > 100).length
 })
 
 const throwsAbove140 = computed(() => {
-    return gameInfo.value.filter((item) => item.total > 140).length
+    return currentPlayerTurns.value.filter((item) => item.total > 140).length
 })
 </script>
 
@@ -73,7 +85,7 @@ const throwsAbove140 = computed(() => {
 
         <GameStatisticsItem name="100+" :value="throwsAbove100" />
         <GameStatisticsItem name="140+" :value="throwsAbove140" />
-        <GameStatisticsItem name="Highest score" :value="highestThrow" />
+        <GameStatisticsItem name="Highest" :value="highestThrow" />
         <GameStatisticsItem name="T20 Percentage" :value="`${Triple20Percentage}%`" />
     </ul>
 </template>

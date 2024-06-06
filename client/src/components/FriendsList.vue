@@ -52,7 +52,7 @@ onMounted(async () => {
             </FriendsListItem>
         </ul>
 
-        <div class="friends-list__empty">
+        <div v-else class="friends-list__empty">
             <h2>You don't have any friends</h2>
 
             <p class="typo-body-large">

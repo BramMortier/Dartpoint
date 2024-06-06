@@ -16,18 +16,18 @@ const props = defineProps({
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-const { gameInfo } = storeToRefs(useGameStore())
+const { gameInfo, currentPlayer } = storeToRefs(useGameStore())
 
 const gamePlayerHistoryInfo = computed(() => {
     return [
         {
             label: "Current session",
-            scores: gameInfo.value.map((game) => ({
-                dartsThrown: [game.dart1IsThrown, game.dart2IsThrown, game.dart3IsThrown].filter(
-                    Boolean
-                ).length,
-                totalScore: game.total
-            }))
+            scores: gameInfo.value[currentPlayer.value.id].turns.map((turn) => {
+                return {
+                    dartsThrown: [turn.thrown1, turn.thrown2, turn.thrown3].filter(Boolean).length,
+                    totalScore: turn.total
+                }
+            })
         }
     ]
 })

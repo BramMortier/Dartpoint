@@ -2,15 +2,33 @@
 // =============================================================================
 // Imports
 // =============================================================================
+import { GameDetectedDart } from "@/components/index"
 import { LogoIconSplit } from "@/components/icons/index"
+import { useGameStore } from "@/stores/gameStore"
+import { storeToRefs } from "pinia"
+import { computed } from "vue"
 
 // =============================================================================
 // Props & Events
 // =============================================================================
+const { currentTurn } = storeToRefs(useGameStore())
 
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const totalScore = computed(() => {
+    if (currentTurn.value.length === 0) {
+        return 0
+    } else {
+        return currentTurn.value.reduce((total, dart) => total + dart.dart_score, 0)
+    }
+})
+
+const dartsThrown = computed(() => {
+    if (currentTurn.value.length === 0) return 0
+
+    return currentTurn.value.filter((dart) => dart.thrown).length
+})
 
 // =============================================================================
 // Functions
@@ -20,36 +38,15 @@ import { LogoIconSplit } from "@/components/icons/index"
 <template>
     <div class="game-detected-darts">
         <div class="game-detected-darts__total">
-            <LogoIconSplit :darts-thrown="2" />
+            <LogoIconSplit :darts-thrown="dartsThrown" />
 
-            <span>43</span>
+            <span>{{ totalScore }}</span>
         </div>
 
         <div class="game-detected-darts__info">
-            <div
-                class="game-detected-darts__dart"
-                :class="{ 'game-detected-darts__dart--missed': false }"
-            >
-                <span>5</span>
-
-                <p>S5</p>
-            </div>
-
-            <div
-                class="game-detected-darts__dart"
-                :class="{ 'game-detected-darts__dart--missed': false }"
-            >
-                <span>38</span>
-
-                <p>D19</p>
-            </div>
-
-            <div
-                class="game-detected-darts__dart"
-                :class="{ 'game-detected-darts__dart--missed': true }"
-            >
-                <p>MISS</p>
-            </div>
+            <GameDetectedDart :detected-dart="currentTurn[0]" />
+            <GameDetectedDart :detected-dart="currentTurn[1]" />
+            <GameDetectedDart :detected-dart="currentTurn[2]" />
         </div>
     </div>
 </template>
@@ -108,46 +105,6 @@ import { LogoIconSplit } from "@/components/icons/index"
 
         @include styles-for(desktop) {
             gap: var(--space-24);
-        }
-    }
-
-    &__dart {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: var(--space-4);
-
-        padding: var(--space-16) var(--space-32);
-        border-radius: var(--border-radius-20);
-        background-color: var(--clr-neutral-700);
-        border: 1px solid var(--clr-neutral-500);
-
-        @include styles-for(desktop) {
-            gap: var(--space-8);
-            padding: var(--space-24) var(--space-48);
-        }
-
-        & > span {
-            font-family: var(--font);
-            font-weight: var(--fw-500);
-            font-size: var(--fs-64);
-            color: var(--clr-neutral-100);
-            line-height: var(--lh-tight);
-
-            @include styles-for(desktop) {
-                font-size: var(--fs-96);
-            }
-        }
-
-        & > p {
-            font-size: var(--fs-32);
-            font-weight: var(--fw-500);
-            line-height: var(--lh-tight);
-
-            @include styles-for(desktop) {
-                font-size: var(--fs-48);
-            }
         }
     }
 }

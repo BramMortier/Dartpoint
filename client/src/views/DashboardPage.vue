@@ -22,7 +22,7 @@ import cryptoRandomString from "crypto-random-string"
 const router = useRouter()
 const { authenticatedUser } = storeToRefs(useAuthStore())
 const { gameSettings, players } = storeToRefs(useGameStore())
-const { resetGame } = useGameStore()
+const { resetGame, addPlayer } = useGameStore()
 
 // =============================================================================
 // Functions
@@ -30,7 +30,7 @@ const { resetGame } = useGameStore()
 const startFreeplayGame = () => {
     resetGame()
 
-    players.value = [...players.value, authenticatedUser.value]
+    addPlayer(authenticatedUser.value)
 
     gameSettings.value = {
         gameType: "Freeplay"
