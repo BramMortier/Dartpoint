@@ -32,13 +32,13 @@ const { connectedBoard } = storeToRefs(useBoardStore())
 // Realtime pusher subscriptions
 // =============================================================================
 onMounted(async () => {
-    const boardChannel = pusher.subscribe(`board-${connectedBoard.value}`)
+    const boardChannel = pusher.subscribe(`board-${connectedBoard?.value.code}`)
 
     boardChannel.bind("detection", (data) => addThrow(data.detectedDartInfo))
 })
 
 onUnmounted(async () => {
-    pusher.unsubscribe(`board-${connectedBoard.value}`)
+    pusher.unsubscribe(`board-${connectedBoard?.value.code}`)
 })
 
 // =============================================================================

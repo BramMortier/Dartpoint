@@ -4,12 +4,10 @@
 // =============================================================================
 import { Form } from "vee-validate"
 import { FriendsListItem } from "@/components/index"
-import { onMounted } from "vue"
 import * as yup from "yup"
 
 import { useRouter, useRoute } from "vue-router"
 import { useGameStore } from "@/stores/gameStore"
-import { useAuthStore } from "@/stores/authStore"
 import { storeToRefs } from "pinia"
 
 // =============================================================================
@@ -22,10 +20,7 @@ import { storeToRefs } from "pinia"
 const route = useRoute()
 const router = useRouter()
 
-const { authenticatedUser } = storeToRefs(useAuthStore())
-
 const { gameSettings, players } = storeToRefs(useGameStore())
-const { resetGame } = useGameStore()
 
 const startingScoreOptions = ["170", "301", "501", "701"]
 const legsOptions = ["1 leg", "3 legs", "5 legs", "Custom"]
@@ -36,19 +31,9 @@ const configurationValidationSchema = yup.object({
 })
 
 // =============================================================================
-// Lifecycle hooks
-// =============================================================================
-onMounted(() => {
-    resetGame()
-    players.value = [...players.value, authenticatedUser.value]
-})
-
-// =============================================================================
 // Functions
 // =============================================================================
 const handleConfigurationFormSubmit = (values) => {
-    console.log(values)
-
     gameSettings.value = {
         gameType: "Classic / X01",
         startingScore: values.startingScore,
@@ -75,7 +60,6 @@ const handleConfigurationFormSubmit = (values) => {
                     <FriendsListItem
                         v-for="item in players"
                         :show-profile-picture="true"
-                        :is-online="true"
                         :name="item.displayName"
                         status="Online, Ready"
                         connected-board="Dartshop Aalter"

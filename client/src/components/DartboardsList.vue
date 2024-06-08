@@ -34,19 +34,21 @@ onMounted(async () => {
     <BaseContainerTitle title="Recent devices" />
 
     <ul class="dartboards-list">
-        <DartboardsListItem
-            v-for="item in boards"
-            :board-name="item.board.name"
-            :board-code="item.board.code"
-            :total-games="67"
-        />
+        <DartboardsListItem v-for="item in boards" :board="item.board" :total-games="67" />
     </ul>
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/mixins.scss" as *;
+
 .dartboards-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: var(--space-32);
+
+    @include styles-for(tablet) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-32);
+    }
 }
 </style>

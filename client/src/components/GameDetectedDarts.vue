@@ -101,7 +101,13 @@ const dartsThrown = computed(() => {
     &__info {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-16);
+        gap: var(--space-12);
+        width: 100%;
+
+        @include styles-for(tablet) {
+            width: fit-content;
+            gap: var(--space-16);
+        }
 
         @include styles-for(desktop) {
             gap: var(--space-24);

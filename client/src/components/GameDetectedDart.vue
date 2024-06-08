@@ -29,7 +29,13 @@ const multiplierLetter = computed(() => {
 </script>
 
 <template>
-    <div class="game-detected-dart" :class="{ 'game-detected-dart--missed': false }">
+    <div
+        class="game-detected-dart"
+        :class="[
+            { 'game-detected-dart--missed': false },
+            { 'game-detected-dart--hit': props.detectedDart }
+        ]"
+    >
         <span>{{ props.detectedDart?.dart_score }}</span>
 
         <p>{{ multiplierLetter }}{{ props.detectedDart?.dart_zone }}</p>
@@ -44,18 +50,31 @@ const multiplierLetter = computed(() => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: var(--space-4);
-    min-width: 13.75rem;
-    min-height: 15rem;
+    min-width: 33%;
+    min-height: 140px;
 
-    padding: var(--space-16) var(--space-32);
+    padding: var(--space-16) var(--space-16);
     border-radius: var(--border-radius-20);
     background-color: var(--clr-neutral-700);
     border: 1px solid var(--clr-neutral-500);
 
+    @include styles-for(tablet) {
+        gap: var(--space-4);
+        padding: var(--space-16) var(--space-32);
+        min-width: 140px;
+        min-height: 160px;
+    }
+
     @include styles-for(desktop) {
+        min-width: 13.75rem;
+        min-height: 15rem;
         gap: var(--space-8);
         padding: var(--space-24) var(--space-48);
+    }
+
+    &--hit {
+        background: var(--gradient-turqoise);
+        border: 2px solid var(--clr-turqoise-500);
     }
 
     & > span {
@@ -74,6 +93,7 @@ const multiplierLetter = computed(() => {
         font-size: var(--fs-32);
         font-weight: var(--fw-500);
         line-height: var(--lh-tight);
+        color: var(--clr-neutral-100);
 
         @include styles-for(desktop) {
             font-size: var(--fs-48);

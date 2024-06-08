@@ -32,7 +32,11 @@ const props = defineProps({
 .game-statistics-item {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+
+    @include styles-for(tablet) {
+        align-items: flex-end;
+    }
 
     & > span {
         font-family: var(--font);

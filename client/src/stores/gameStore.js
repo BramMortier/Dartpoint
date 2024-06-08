@@ -17,6 +17,8 @@ export const useGameStore = defineStore("game", () => {
     const currentPlayer = computed(() => players.value.find((player) => player.isPlaying))
 
     const addPlayer = (playerData) => {
+        console.log(playerData)
+
         playerData.isPlaying = players.value.length === 0
 
         players.value.push(playerData)

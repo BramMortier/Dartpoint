@@ -3,6 +3,7 @@
 // Imports
 // =============================================================================
 import { GameStatisticsItem } from "@/components/index"
+import { useWindowSize } from "@vueuse/core"
 import { useGameStore } from "@/stores/gameStore"
 import { storeToRefs } from "pinia"
 import { computed } from "vue"
@@ -10,11 +11,15 @@ import { computed } from "vue"
 // =============================================================================
 // Props & Events
 // =============================================================================
-const { gameInfo, currentPlayer } = storeToRefs(useGameStore())
+const props = defineProps({
+    numberOfStats: Number
+})
 
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const { width: screenWidth } = useWindowSize()
+const { gameInfo, currentPlayer } = storeToRefs(useGameStore())
 const currentPlayerTurns = computed(() => gameInfo.value[currentPlayer.value.id].turns)
 
 const totalPoints = computed(() => {
@@ -78,15 +83,39 @@ const throwsAbove140 = computed(() => {
 
 <template>
     <ul class="game-statistics">
-        <GameStatisticsItem name="Average" :value="average" />
-        <GameStatisticsItem name="9 Dart average" :value="First9DartsAverage" />
-        <GameStatisticsItem name="Total points" :value="totalPoints" />
-        <GameStatisticsItem name="Darts thrown" :value="dartsThrown" />
+        <GameStatisticsItem v-if="props.numberOfStats > 3" name="Average" :value="average" />
+        <GameStatisticsItem
+            v-if="props.numberOfStats > 3"
+            name="9 Dart average"
+            :value="First9DartsAverage"
+        />
+        <GameStatisticsItem
+            v-if="props.numberOfStats > 3 && screenWidth > 1599"
+            name="Total points"
+            :value="totalPoints"
+        />
+        <GameStatisticsItem
+            v-if="props.numberOfStats > 3 && screenWidth > 1599"
+            name="Darts thrown"
+            :value="dartsThrown"
+        />
 
-        <GameStatisticsItem name="100+" :value="throwsAbove100" />
-        <GameStatisticsItem name="140+" :value="throwsAbove140" />
-        <GameStatisticsItem name="Highest" :value="highestThrow" />
-        <GameStatisticsItem name="T20 Percentage" :value="`${Triple20Percentage}%`" />
+        <GameStatisticsItem v-if="props.numberOfStats > 3" name="100+" :value="throwsAbove100" />
+        <GameStatisticsItem
+            v-if="props.numberOfStats > 3 && screenWidth > 767"
+            name="140+"
+            :value="throwsAbove140"
+        />
+        <GameStatisticsItem
+            v-if="props.numberOfStats > 3 && screenWidth > 767"
+            name="Highest"
+            :value="highestThrow"
+        />
+        <GameStatisticsItem
+            v-if="props.numberOfStats > 3"
+            name="T20 Percentage"
+            :value="`${Triple20Percentage}%`"
+        />
     </ul>
 </template>
 
@@ -95,16 +124,12 @@ const throwsAbove140 = computed(() => {
 
 .game-statistics {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-24) var(--space-48);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-16) var(--space-24);
 
-    & > .game-statistics-item:nth-child(3),
-    & > .game-statistics-item:nth-child(4) {
-        display: none;
-
-        @include styles-for(desktop) {
-            display: flex;
-        }
+    @include styles-for(tablet) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-24) var(--space-48);
     }
 
     @include styles-for(desktop) {

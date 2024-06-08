@@ -3,13 +3,13 @@
 // Imports
 // =============================================================================
 import { useBoardStore } from "@/stores/boardStore"
+import { storeToRefs } from "pinia"
 
 // =============================================================================
 // Props & Events
 // =============================================================================
 const props = defineProps({
-    boardName: String,
-    boardCode: String,
+    board: null,
     totalGames: Number,
     lastOnline: Date
 })
@@ -17,46 +17,50 @@ const props = defineProps({
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-const { connectedBoard } = useBoardStore()
+const { connectedBoard } = storeToRefs(useBoardStore())
+const { connect, disconnect } = useBoardStore()
 
 // =============================================================================
 // Functions
 // =============================================================================
-const connect = (boardCode) => (connectedBoard.value = boardCode)
-
-const disconnect = () => (connectedBoard.value = null)
 </script>
 
 <template>
     <div class="dartboards-list-item">
         <div class="dartboards-list-item__status">
             <div class="dartboards-list-item__status-info">
-                <h3>{{ props.boardName }}</h3>
+                <h3>{{ props.board.name }}</h3>
 
                 <div>
                     <div
                         class="dartboards-list-item__status-indicator"
                         :class="{
                             'dartboards-list-item__status-indicator--off':
-                                props.boardCode !== connectedBoard
+                                props.board.code !== connectedBoard?.code
                         }"
                     ></div>
 
-                    <p>{{ props.boardCode === connectedBoard ? "Connected" : "Not connected" }}</p>
+                    <p>
+                        {{
+                            props.board.code === connectedBoard?.code
+                                ? "Connected"
+                                : "Not connected"
+                        }}
+                    </p>
                 </div>
             </div>
 
             <div class="dartboards-list-item__action-button">
                 <BaseButton
-                    v-if="props.boardCode !== connectedBoard"
+                    v-if="props.board.code !== connectedBoard?.code"
                     class="base-button--tertiary"
-                    @click="connect(props.boardCode)"
+                    @click="connect(props.board)"
                 >
                     Connect
                 </BaseButton>
 
                 <BaseButton
-                    v-if="props.boardCode === connectedBoard"
+                    v-if="props.board.code === connectedBoard?.code"
                     class="base-button--tertiary"
                     @click="disconnect"
                 >
@@ -75,13 +79,13 @@ const disconnect = () => (connectedBoard.value = null)
             <li class="dartboards-list-item__info-item">
                 <p>Last online</p>
 
-                <p class="typo-h3">1d ago</p>
+                <p class="typo-h3">0s ago</p>
             </li>
 
             <li class="dartboards-list-item__info-item">
                 <p>Board code</p>
 
-                <p class="typo-h3">{{ props.boardCode }}</p>
+                <p class="typo-h3">{{ props.board.code }}</p>
             </li>
         </ul>
     </div>

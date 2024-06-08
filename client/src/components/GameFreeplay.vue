@@ -26,7 +26,7 @@ import { GameStatistics, GameDetectedDarts } from "@/components/index"
                 <p class="typo-body-large">Dartshop Aalter</p>
             </div>
 
-            <GameStatistics />
+            <GameStatistics :number-of-stats="8" />
         </div>
 
         <GameDetectedDarts />
@@ -40,8 +40,12 @@ import { GameStatistics, GameDetectedDarts } from "@/components/index"
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: var(--space-64);
+    gap: var(--space-32);
     height: 100%;
+
+    @include styles-for(tablet) {
+        gap: var(--space-64);
+    }
 
     &__top {
         display: flex;
@@ -61,8 +65,6 @@ import { GameStatistics, GameDetectedDarts } from "@/components/index"
         flex-direction: column;
         align-items: center;
 
-        @include styles-for(tablet) {
-        }
         @include styles-for(desktop) {
             align-items: start;
         }

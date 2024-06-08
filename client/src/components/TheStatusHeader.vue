@@ -4,6 +4,7 @@
 // =============================================================================
 import { useWindowSize } from "@vueuse/core"
 import { useAuthStore } from "@/stores/authStore"
+import { useBoardStore } from "@/stores/boardStore"
 import { useRouter } from "vue-router"
 import { storeToRefs } from "pinia"
 
@@ -17,6 +18,7 @@ import { profilePicturePlaceholder } from "@/assets/images"
 // Composables, Refs & Computed
 // =============================================================================
 const { authenticatedUser } = storeToRefs(useAuthStore())
+const { connectedBoard } = storeToRefs(useBoardStore())
 const { width: screenWidth } = useWindowSize()
 const router = useRouter()
 
@@ -36,13 +38,15 @@ const router = useRouter()
         <div v-if="authenticatedUser" class="header__connected-board">
             <h4>Connected board</h4>
 
-            <div class="header__connected-board-info">
-                <p>Dartshop Madhouse</p>
+            <div v-if="connectedBoard?.name" class="header__connected-board-info">
+                <p>{{ connectedBoard.name }}</p>
 
                 <span></span>
 
-                <p>DP859623</p>
+                <p>{{ connectedBoard.code }}</p>
             </div>
+
+            <p v-else>No board connected</p>
         </div>
 
         <div v-if="authenticatedUser" class="header__user">

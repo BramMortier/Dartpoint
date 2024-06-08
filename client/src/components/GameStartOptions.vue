@@ -3,6 +3,9 @@
 // Imports
 // =============================================================================
 import { useRouter } from "vue-router"
+import { useGameStore } from "@/stores/gameStore"
+import { useAuthStore } from "@/stores/authStore"
+import { storeToRefs } from "pinia"
 
 import cryptoRandomString from "crypto-random-string"
 
@@ -14,23 +17,27 @@ import cryptoRandomString from "crypto-random-string"
 // Composables, Refs & Computed
 // =============================================================================
 const router = useRouter()
+const { resetGame, addPlayer } = useGameStore()
+const { authenticatedUser } = storeToRefs(useAuthStore())
 
 // =============================================================================
 // Functions
 // =============================================================================
+const createGame = () => {
+    resetGame()
+
+    addPlayer(authenticatedUser.value)
+
+    router.push({
+        name: "GameSettingsPage",
+        params: { id: cryptoRandomString({ length: 8, type: "distinguishable" }) }
+    })
+}
 </script>
 
 <template>
     <div class="game-start-options">
-        <div
-            class="game-start-options__create-game"
-            @click.stop="
-                router.push({
-                    name: 'GameSettingsPage',
-                    params: { id: cryptoRandomString({ length: 8, type: 'distinguishable' }) }
-                })
-            "
-        >
+        <div class="game-start-options__create-game" @click.stop="createGame">
             <BaseIcon class="game-start-options__deco" name="logo-icon" />
 
             <div>

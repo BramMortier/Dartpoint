@@ -2,6 +2,8 @@
 // =============================================================================
 // Imports
 // =============================================================================
+import { useBoardStore } from "@/stores/boardStore"
+import { storeToRefs } from "pinia"
 
 // =============================================================================
 // Props & Events
@@ -12,7 +14,7 @@ const props = defineProps({
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-
+const { connectedBoard } = storeToRefs(useBoardStore())
 // =============================================================================
 // Functions
 // =============================================================================
@@ -24,7 +26,10 @@ const props = defineProps({
             <div class="game-player-card__left">
                 <div class="game-player-card__player-info">
                     <h4>Bram Mortier</h4>
-                    <p>Dartshop Aalter</p>
+
+                    <p v-if="connectedBoard?.name">{{ connectedBoard.name }}</p>
+
+                    <p v-else>No board connected</p>
                 </div>
 
                 <span v-if="!inFreePlay" class="typo-h1">386</span>

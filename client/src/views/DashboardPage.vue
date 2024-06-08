@@ -21,7 +21,7 @@ import cryptoRandomString from "crypto-random-string"
 // =============================================================================
 const router = useRouter()
 const { authenticatedUser } = storeToRefs(useAuthStore())
-const { gameSettings, players } = storeToRefs(useGameStore())
+const { gameSettings } = storeToRefs(useGameStore())
 const { resetGame, addPlayer } = useGameStore()
 
 // =============================================================================

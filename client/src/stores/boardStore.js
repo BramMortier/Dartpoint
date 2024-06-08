@@ -2,13 +2,21 @@
 // Imports
 // =============================================================================
 import { defineStore } from "pinia"
-import { ref } from "vue"
+import { useStorage } from "@vueuse/core"
 
 // =============================================================================
 // Store configuration
 // =============================================================================
 export const useBoardStore = defineStore("board", () => {
-    const connectedBoard = ref("DP_KW5PPYWD")
+    const connectedBoard = useStorage("connected-board", {})
 
-    return { connectedBoard }
+    const connect = (board) => {
+        connectedBoard.value = board
+    }
+
+    const disconnect = () => {
+        connectedBoard.value = {}
+    }
+
+    return { connectedBoard, connect, disconnect }
 })
