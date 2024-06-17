@@ -3,6 +3,9 @@
 // Imports
 // =============================================================================
 import { GameStatistics, GameDetectedDarts } from "@/components/index"
+import { useGameStore } from "@/stores/gameStore"
+import { useBoardStore } from "@/stores/boardStore"
+import { storeToRefs } from "pinia"
 
 // =============================================================================
 // Props & Events
@@ -11,19 +14,24 @@ import { GameStatistics, GameDetectedDarts } from "@/components/index"
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
+const { currentPlayer } = storeToRefs(useGameStore())
+const { connectedBoard } = storeToRefs(useBoardStore())
 
 // =============================================================================
 // Functions
 // =============================================================================
+const disableDetection = () => {
+    console.log("Disabled detection")
+}
 </script>
 
 <template>
     <div class="game-freeplay">
         <div class="game-freeplay__top">
             <div class="game-freeplay__player-info">
-                <h2>Bram Mortier</h2>
+                <h2>{{ currentPlayer.displayName }}</h2>
 
-                <p class="typo-body-large">Dartshop Aalter</p>
+                <p class="typo-body-large">{{ connectedBoard.name }}</p>
             </div>
 
             <GameStatistics variant="extensive" />

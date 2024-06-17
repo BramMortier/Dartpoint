@@ -56,6 +56,7 @@ const { modalState } = storeToRefs(useModalStore())
         display: flex;
         align-items: center;
         justify-content: center;
+        backdrop-filter: blur(7px);
     }
 
     &::-webkit-scrollbar {

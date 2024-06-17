@@ -13,6 +13,7 @@ import { computed } from "vue"
 const props = defineProps({
     info: Object
 })
+
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
@@ -22,12 +23,16 @@ const gamePlayerHistoryInfo = computed(() => {
     return [
         {
             label: "Current session",
-            scores: gameInfo.value[currentPlayer.value.id].turns.map((turn) => {
-                return {
-                    dartsThrown: [turn.thrown1, turn.thrown2, turn.thrown3].filter(Boolean).length,
-                    totalScore: turn.total
-                }
-            })
+            scores: gameInfo.value[currentPlayer.value.id].turns
+                .map((turn) => {
+                    return {
+                        dartsThrown: [turn.thrown1, turn.thrown2, turn.thrown3].filter(Boolean)
+                            .length,
+                        totalScore: turn.total
+                    }
+                })
+                .slice(-10)
+                .reverse()
         }
     ]
 })
@@ -91,6 +96,10 @@ const gamePlayerHistoryInfo = computed(() => {
 
         & > p {
             font-size: var(--fs-48);
+        }
+
+        &:first-child > p {
+            font-size: var(--fs-64);
         }
     }
 }

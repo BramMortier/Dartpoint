@@ -1,18 +1,24 @@
 // =============================================================================
 // Imports
 // =============================================================================
+import { GameCollectingDartsModal } from "@/components"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
-import { computed } from "vue"
+import { useModalStore } from "./modalStore"
+import { computed, ref } from "vue"
 
 // =============================================================================
 // Store configuration
 // =============================================================================
 export const useGameStore = defineStore("game", () => {
+    const { openModal } = useModalStore()
+
     const gameSettings = useStorage("game-settings", {})
     const players = useStorage("players", [])
     const gameInfo = useStorage("game-info", {})
     const currentTurn = useStorage("current-turn", [])
+
+    const isCollectingDarts = ref(false)
 
     const currentPlayer = computed(() => players.value.find((player) => player.isPlaying))
 
@@ -30,6 +36,12 @@ export const useGameStore = defineStore("game", () => {
     }
 
     const addThrow = (throwData) => {
+        if (isCollectingDarts.value) return
+
+        currentTurn.value.push(throwData)
+
+        console.log(currentTurn.value.length)
+
         if (currentTurn.value.length === 3) {
             let formattedThrow = {}
             let counter = 1
@@ -52,10 +64,12 @@ export const useGameStore = defineStore("game", () => {
 
             gameInfo.value[currentPlayer.value.id].turns.push(formattedThrow)
 
-            currentTurn.value = []
-        }
+            isCollectingDarts.value = true
+            openModal({ component: GameCollectingDartsModal })
 
-        currentTurn.value.push(throwData)
+            // Enable when automatic removing of darts is added back
+            // currentTurn.value = []
+        }
     }
 
     const resetGame = () => {
@@ -70,6 +84,7 @@ export const useGameStore = defineStore("game", () => {
         players,
         gameInfo,
         currentTurn,
+        isCollectingDarts,
         currentPlayer,
         resetGame,
         addThrow,

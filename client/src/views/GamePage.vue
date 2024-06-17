@@ -6,11 +6,13 @@ import {
     GameFreeplay,
     GameCompetition,
     GamePlayerCard,
-    GamePlayerHistoryInfo
+    GamePlayerHistoryInfo,
+    GameConfirmQuitModal
 } from "@/components/index"
 
 import { useGameStore } from "@/stores/gameStore"
 import { useBoardStore } from "@/stores/boardStore"
+import { useModalStore } from "@/stores/modalStore"
 import { storeToRefs } from "pinia"
 import { pusher } from "@/services/pusher"
 import { onMounted, onUnmounted } from "vue"
@@ -23,6 +25,7 @@ import { onMounted, onUnmounted } from "vue"
 // Composables, Refs & Computed
 // =============================================================================
 const { addThrow } = useGameStore()
+const { openModal } = useModalStore()
 const { gameSettings, players } = storeToRefs(useGameStore())
 const { connectedBoard } = storeToRefs(useBoardStore())
 
@@ -61,7 +64,9 @@ onUnmounted(async () => {
                 <div class="game-page__session-actions">
                     <BaseButton class="base-button--tertiary">Add player</BaseButton>
 
-                    <BaseButton>Quit game</BaseButton>
+                    <BaseButton @click="openModal({ component: GameConfirmQuitModal })">
+                        Quit game
+                    </BaseButton>
                 </div>
             </BaseContainer>
 

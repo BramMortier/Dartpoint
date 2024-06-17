@@ -17,6 +17,8 @@ export { default as GameDetectedDart } from "@/components/GameDetectedDart.vue"
 export { default as GamePlayerHistoryInfo } from "@/components/GamePlayerHistoryInfo.vue"
 export { default as GameConfiguration } from "@/components/GameConfiguration.vue"
 export { default as GameAddGuest } from "@/components/GameAddGuest.vue"
+export { default as GameConfirmQuitModal } from "@/components/GameConfirmQuitModal.vue"
+export { default as GameCollectingDartsModal } from "@/components/GameCollectingDartsModal.vue"
 
 export { default as FriendsList } from "@/components/FriendsList.vue"
 export { default as FriendsListManaged } from "@/components/FriendsListManaged.vue"
