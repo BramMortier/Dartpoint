@@ -11,7 +11,6 @@ import {
 
 import { useGameStore } from "@/stores/gameStore"
 import { useBoardStore } from "@/stores/boardStore"
-import { useAuthStore } from "@/stores/authStore"
 import { storeToRefs } from "pinia"
 import { pusher } from "@/services/pusher"
 import { onMounted, onUnmounted } from "vue"
@@ -23,9 +22,8 @@ import { onMounted, onUnmounted } from "vue"
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
-const { gameSettings, gameInfo } = storeToRefs(useGameStore())
 const { addThrow } = useGameStore()
-const { authenticatedUser } = storeToRefs(useAuthStore())
+const { gameSettings, players } = storeToRefs(useGameStore())
 const { connectedBoard } = storeToRefs(useBoardStore())
 
 // =============================================================================
@@ -51,6 +49,8 @@ onUnmounted(async () => {
         <div class="game-page__actions">
             <ul class="game-page__players">
                 <GamePlayerCard
+                    v-for="item in players"
+                    :player="item"
                     :in-free-play="gameSettings?.gameType === 'Freeplay' ? true : false"
                 />
             </ul>
@@ -154,6 +154,8 @@ onUnmounted(async () => {
 
         @include styles-for(desktop) {
             display: flex;
+            flex-direction: column;
+            gap: var(--space-16);
         }
     }
 

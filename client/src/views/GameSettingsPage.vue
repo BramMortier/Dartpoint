@@ -2,12 +2,11 @@
 // =============================================================================
 // Imports
 // =============================================================================
-import { Form } from "vee-validate"
 import { FriendsListItem } from "@/components/index"
-import * as yup from "yup"
 
-import { useRouter, useRoute } from "vue-router"
+import { useRouter, useRoute, RouterView } from "vue-router"
 import { useGameStore } from "@/stores/gameStore"
+import { useBoardStore } from "@/stores/boardStore"
 import { storeToRefs } from "pinia"
 
 // =============================================================================
@@ -20,39 +19,19 @@ import { storeToRefs } from "pinia"
 const route = useRoute()
 const router = useRouter()
 
-const { gameSettings, players } = storeToRefs(useGameStore())
-
-const startingScoreOptions = ["170", "301", "501", "701"]
-const legsOptions = ["1 leg", "3 legs", "5 legs", "Custom"]
-
-const configurationValidationSchema = yup.object({
-    startingScore: yup.string(),
-    legs: yup.string()
-})
+const { players } = storeToRefs(useGameStore())
+const { connectedBoard } = storeToRefs(useBoardStore())
 
 // =============================================================================
 // Functions
 // =============================================================================
-const handleConfigurationFormSubmit = (values) => {
-    gameSettings.value = {
-        gameType: "Classic / X01",
-        startingScore: values.startingScore,
-        legs: values.legs
-    }
-
-    router.push({ name: "GamePage" })
-}
 </script>
 
 <template>
     <div class="game-settings-page">
         <div class="game-settings-page__lobby-info">
             <BaseContainer class="game-settings-page__lobby-players" :is-clickable="false">
-                <div>
-                    <BaseIcon name="arrow-left" @click="router.back()" />
-
-                    <h2>Lobby</h2>
-                </div>
+                <BaseContainerTitle title="Lobby" :show-back-button="false" />
 
                 <p class="typo-body-large">{{ players.length }} Players</p>
 
@@ -61,12 +40,21 @@ const handleConfigurationFormSubmit = (values) => {
                         v-for="item in players"
                         :show-profile-picture="true"
                         :name="item.displayName"
-                        status="Online, Ready"
-                        connected-board="Dartshop Aalter"
+                        :info="connectedBoard.name"
                     />
 
                     <div class="game-settings-page__lobby-add-player">
-                        <BaseButton class="base-button--tertiary"> Add player </BaseButton>
+                        <BaseButton
+                            class="base-button--tertiary"
+                            @click="
+                                router.push({
+                                    name: 'GameAddGuest',
+                                    params: { id: route.params.id }
+                                })
+                            "
+                        >
+                            Add guest
+                        </BaseButton>
                     </div>
                 </ul>
             </BaseContainer>
@@ -82,48 +70,8 @@ const handleConfigurationFormSubmit = (values) => {
             </BaseContainer>
         </div>
 
-        <BaseContainer class="game-settings-page__configuration" :is-clickable="false">
-            <h2>Speltype</h2>
-
-            <h2>Classic / X01</h2>
-
-            <p class="typo-body-large">
-                The classic X01 dart game involves players starting with a score of 501 (standard)
-                and aiming to reduce it to exactly zero, finishing with a double. Each turn, players
-                throw three darts.
-            </p>
-
-            <Form
-                id="game-settings-form"
-                class="game-settings-page__configuration-form"
-                @submit="handleConfigurationFormSubmit"
-                :validation-schema="configurationValidationSchema"
-            >
-                <div class="game-settings-page__configuration-form-fields">
-                    <BaseOptions
-                        id="game-settings-starting-score"
-                        name="startingScore"
-                        label="Starting score"
-                        :options="startingScoreOptions"
-                        :default-option="startingScoreOptions[1]"
-                    />
-
-                    <BaseOptions
-                        id="game-settings-legs"
-                        name="legs"
-                        label="Race to"
-                        :options="legsOptions"
-                        :default-option="legsOptions[1]"
-                    />
-                </div>
-
-                <div class="game-settings-page__configuration-action-buttons">
-                    <BaseButton type="button" @click="router.push({ name: 'DashboardPage' })">
-                        Quit lobby
-                    </BaseButton>
-                    <BaseButton class="base-button--secondary">Start game</BaseButton>
-                </div>
-            </Form>
+        <BaseContainer class="game-settings-page__main" :is-clickable="false">
+            <RouterView />
         </BaseContainer>
     </div>
 </template>
@@ -227,29 +175,8 @@ const handleConfigurationFormSubmit = (values) => {
         }
     }
 
-    &__configuration {
+    &__main {
         grid-column: span 8;
-    }
-
-    &__configuration-form {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: var(--space-64);
-        height: 100%;
-    }
-
-    &__configuration-form-fields {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-24);
-    }
-
-    &__configuration-action-buttons {
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        gap: var(--space-24);
     }
 }
 </style>

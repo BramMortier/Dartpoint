@@ -9,12 +9,14 @@ import { storeToRefs } from "pinia"
 // Props & Events
 // =============================================================================
 const props = defineProps({
-    inFreePlay: Boolean
+    inFreePlay: Boolean,
+    player: Object
 })
 // =============================================================================
 // Composables, Refs & Computed
 // =============================================================================
 const { connectedBoard } = storeToRefs(useBoardStore())
+
 // =============================================================================
 // Functions
 // =============================================================================
@@ -25,20 +27,20 @@ const { connectedBoard } = storeToRefs(useBoardStore())
         <div class="game-player-card__main">
             <div class="game-player-card__left">
                 <div class="game-player-card__player-info">
-                    <h4>Bram Mortier</h4>
+                    <h4>{{ props.player.displayName }}</h4>
 
                     <p v-if="connectedBoard?.name">{{ connectedBoard.name }}</p>
 
                     <p v-else>No board connected</p>
                 </div>
 
-                <span v-if="!inFreePlay" class="typo-h1">386</span>
+                <span v-if="!inFreePlay" class="typo-h1">501</span>
             </div>
 
             <div v-if="!inFreePlay" class="game-player-card__right">
                 <div class="game-player-card__player-stats">
                     <p>AVG</p>
-                    <h3>52,3</h3>
+                    <h3>0</h3>
                 </div>
             </div>
         </div>
@@ -93,7 +95,7 @@ const { connectedBoard } = storeToRefs(useBoardStore())
 
     &__progress-bar-value {
         height: 100%;
-        width: 68%;
+        width: 100%;
         border-radius: var(--border-radius-3);
         background-color: var(--clr-turqoise-500);
     }

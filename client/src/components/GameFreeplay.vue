@@ -26,7 +26,7 @@ import { GameStatistics, GameDetectedDarts } from "@/components/index"
                 <p class="typo-body-large">Dartshop Aalter</p>
             </div>
 
-            <GameStatistics :number-of-stats="8" />
+            <GameStatistics variant="extensive" />
         </div>
 
         <GameDetectedDarts />

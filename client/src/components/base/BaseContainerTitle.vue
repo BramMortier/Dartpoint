@@ -36,6 +36,7 @@ const router = useRouter()
     display: flex;
     flex-direction: column;
     gap: var(--space-12);
+    width: fit-content;
 
     & > div {
         display: flex;
@@ -46,6 +47,10 @@ const router = useRouter()
         & > .base-icon:hover {
             cursor: pointer;
         }
+    }
+
+    & > p {
+        max-width: 60rem;
     }
 }
 </style>

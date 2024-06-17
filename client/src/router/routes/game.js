@@ -21,12 +21,28 @@ export const gameRoutes = [
     },
     {
         path: "/game/:id/settings",
-        name: "GameSettingsPage",
         component: () => import("@/views/GameSettingsPage.vue"),
-        meta: {
-            protected: true,
-            title: "Dartpoint | Game settings",
-            description: "Configure game settings"
-        }
+        children: [
+            {
+                path: "",
+                name: "GameSettingsPage",
+                component: () => import("@/components/GameConfiguration.vue"),
+                meta: {
+                    protected: true,
+                    title: "Dartpoint | Game settings",
+                    description: "Configure game settings"
+                }
+            },
+            {
+                path: "add-guest",
+                name: "GameAddGuest",
+                component: () => import("@/components/GameAddGuest.vue"),
+                meta: {
+                    protected: true,
+                    title: "Dartpoint | Add a guest",
+                    description: "Add a guest"
+                }
+            }
+        ]
     }
 ]
